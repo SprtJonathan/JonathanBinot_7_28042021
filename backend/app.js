@@ -3,29 +3,22 @@
 const express = require("express"); // Utilisation du framework node Express afin de simplifier la création de l'application
 const rateLimit = require('express-rate-limit'); // Package permettant de limiter les attaques par brute force en limitant le nombre de requêtes par IP
 const bodyParser = require("body-parser"); // Package permettant d'analyser le corps des requêtes
-const mongoose = require("mongoose"); // Package permettant de se connecter à la BDD mongoDB
+let mysql = require('mysql'); // Package permettant de se connecter à la base de données mysql
 const path = require("path"); // Package permettant le travail sur les fichiers locaux (utile pour la gestion des images)
+const db = require("./config/config"); // Importation de la configuration de la connexion à la BDD
 
 // Utilisation de helmet :
 // Il protège l'application de vulnérabilités répandues.
 // C'est une collection de middlewares liés à la sécurité des requêtes HTTP
 let helmet = require("helmet");
 
-const postRoutes = require("./routes/post"); // Routes utilisées pour les sauces
+//const postRoutes = require("./routes/post"); // Routes utilisées pour les sauces
 const userRoutes = require("./routes/user"); // Routes utilisées pour les utilisateurs
 
-// Sécurisation des identifiants de connexion au cluster dans une variable d'environnement
-const dotenv = require("dotenv"); // Les identifiants sont contenus dans le fichier .env dans l'archive contenant les livrables
-dotenv.config();
-
-// Connexion à la base de données
-mongoose
-  .connect(process.env.DB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }) //process.env.DB_URL est la variable contenant les informations de connexion
-  .then(() => console.log("Connexion à MongoDB réussie !")) // Si la connexion se fait, alors on envoie un message à la console informant de la réussite
-  .catch(() => console.log("Connexion à MongoDB échouée !")); // Si la connexion échoue, alors l'affiche dans la console
+db.connect(function (err) {
+  if (err) throw err;
+  console.log("Connected to database!");
+});
 
 const app = express(); // Création de l'application utilisant express
 
@@ -59,7 +52,7 @@ app.use(helmet());
 
 app.use("/images", express.static(path.join(__dirname, "images"))); // Permet de charger les images contenues dans le dossier image de l'application
 
-app.use("/api/posts", postRoutes);
-app.use("/api/auth", limiter, userRoutes); // Utilisation du limiteur de requêtes par IP pour la route d'authentification
+//app.use("/api/posts", postRoutes);
+app.use("/api/auth", userRoutes); // Utilisation du limiteur de requêtes par IP pour la route d'authentification
 
 module.exports = app; // Exportation afin d'importer l'application dans le server.js
