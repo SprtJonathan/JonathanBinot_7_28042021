@@ -7,10 +7,10 @@ const validator = require('validator'); // Le validateur permet de vérifier que
 const db = require("../config/config"); // Importation de la configuration de la connexion à la BDD
 
 exports.register = (req, res, next) => { // Middleware pour l'inscription
-    const email = req.body.email;
     const username = req.body.username;
     const fname = req.body.fname;
     const lname = req.body.lname;
+    const email = req.body.email;
     const password = req.body.password;
 
     bcrypt
@@ -20,21 +20,30 @@ exports.register = (req, res, next) => { // Middleware pour l'inscription
                 let sql = "INSERT INTO users (username, fname, lname, email, password) VALUES (?, ?, ?, ?, ?)";     // préparation de la requete SQL
                 let inserts = [username, fname, lname, email, hash];                                                       // utilisation des valeurs à insérer
                 sql = mysql.format(sql, inserts);
-                const register = db.query(sql, (error, user) => {            // envoi de la requête a la base de données
-                    if (!error) {                                               // si aucune erreur après la requête
-                        res.status(201).json({                                  // on retourne
-                            message: "L'utilisateur a été créé avec succès !",  // on renvoi un message de confirmation
-                            token: jwt.sign(                                    // fonction sign qui prend les données que nous allons encoder à l'intérieur du token
-                                { userId: user.insertId, accessLevel: 0 },     // création d'un objet avec le UserId et le niveau d'acces pour être sur de la correspondance
-                                process.env.JWT_TOKEN,              // clé secrète pour l'encodage
-                                { expiresIn: process.env.JWT_EXPIRATION }       // configuration de l'expiration du token
+                db.query(sql, (error, user) => {            // Envoi de la requête à la base de données
+                    if (!error) {                                               // Si aucune erreur n'est enregistrée
+                        res.status(201).json({
+                            message: "L'utilisateur a été créé avec succès !",  // Alors, on renvoie un message de confirmation
+                            user: {
+                                userId: user.userId,
+                                username: user.username,
+                                fname: user.fname,
+                                lname: user.lname,
+                                profilePictureUrl: user.pp,
+                                roleId: user.roleId
+                            },
+                            token: jwt.sign( // Création du token jwt
+                                { userId: user.userId, roleId: user.roleId },
+                                process.env.JWT_TOKEN,
+                                { expiresIn: process.env.JWT_EXPIRATION }
                             )
                         });
                     } else {
                         console.log(error);
-                        return res.status(409).json({ error: "Cet utilisateur existe déjà !" })      // erreur utilisateur déjà existant
+                        return res.status(409).json({ error: "Cet utilisateur existe déjà !" })      // Erreur: utilisateur déjà existant
                     }
                 });
+
             }
             else {
                 return res.status(400).json({ error: "Format email incorrect" });
@@ -45,17 +54,22 @@ exports.register = (req, res, next) => { // Middleware pour l'inscription
 };
 
 exports.login = (req, res, next) => { // Middleware pour la connexion
-    const email = req.body.email;
+    const credentials = req.body.credentials;
     const password = req.body.password;
+    let sql = `SELECT * FROM users WHERE email = ?`;
+    if (validator.isEmail(credentials)) {
+        sql = `SELECT * FROM users WHERE email = ?`;
+    } else {
+        sql = `SELECT * FROM users WHERE username = ?`;
+    }
+    sql = mysql.format(sql, [credentials]);
 
-    if (!email || !password) { throw 'Champs vides' }
-    let sql = `SELECT * FROM users WHERE email= ?`
-
-    db.query(sql, email, (err, result) => {
+    db.query(sql, (err, result) => {
         if (result.length > 0) {
             bcrypt.compare(password, result[0].password)
                 .then(valid => {
                     if (!valid) {
+                        console.log("User not found")
                         return res.status(401).json({ error: 'Mot de passe incorrect !' });
                     } else {
                         console.log('User connected');
@@ -65,18 +79,50 @@ exports.login = (req, res, next) => { // Middleware pour la connexion
                                 username: result[0].username,
                                 fname: result[0].fname,
                                 lname: result[0].lname,
-                                role: result[0].role
+                                profilePictureUrl: result[0].pp,
+                                roleId: result[0].roleId
                             },
                             token: jwt.sign(
-                                { userId: result[0].userId, role: result[0].role },
+                                { userId: result[0].userId, roleId: result[0].roleId },
                                 process.env.JWT_TOKEN,
-                                { expiresIn: 'JWT_TOKEN' }
+                                { expiresIn: process.env.JWT_EXPIRATION }
                             )
                         });
-                        console.log(user);
                     }
                 })
                 .catch(error => res.status(500).json({ error }));
+        } else {
+            console.log("user not found")
+            return res.status(401).json({ error: 'Nom d\'utilisateur ou mot de passe incorrect !' });
+        }
+
+    })
+
+};
+
+exports.deleteAccount = (req, res, next) => { // Middleware pour la suppression du compte
+    const userId = req.body.userId;
+    const password = req.body.password;
+    let sql = `DELETE FROM users WHERE userId = ?`;
+    sql = mysql.format(sql, [userId, password]);
+
+    db.query(sql, (err, result) => {
+        if (result.length > 0) {
+            bcrypt.compare(password, result[0].password)
+                .then(valid => {
+                    if (!valid) {
+                        console.log("Mot de passe incorrect, suppression annulée")
+                        return res.status(401).json({ error: 'Mot de passe incorrect !' });
+                    } else {
+                        console.log('Suppression possible');
+                        res.status(200).json({
+                        })
+                    }
+                })
+                .catch(error => res.status(500).json({ error }));
+        } else {
+            console.log("user not found")
+            return res.status(401).json({ error: 'Nom d\'utilisateur ou mot de passe incorrect !' });
         }
     })
 };

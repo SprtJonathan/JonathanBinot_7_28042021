@@ -3,7 +3,6 @@
 const express = require("express"); // Utilisation du framework node Express afin de simplifier la création de l'application
 const rateLimit = require('express-rate-limit'); // Package permettant de limiter les attaques par brute force en limitant le nombre de requêtes par IP
 const bodyParser = require("body-parser"); // Package permettant d'analyser le corps des requêtes
-let mysql = require('mysql'); // Package permettant de se connecter à la base de données mysql
 const path = require("path"); // Package permettant le travail sur les fichiers locaux (utile pour la gestion des images)
 const db = require("./config/config"); // Importation de la configuration de la connexion à la BDD
 
@@ -11,9 +10,6 @@ const db = require("./config/config"); // Importation de la configuration de la 
 // Il protège l'application de vulnérabilités répandues.
 // C'est une collection de middlewares liés à la sécurité des requêtes HTTP
 let helmet = require("helmet");
-
-//const postRoutes = require("./routes/post"); // Routes utilisées pour les sauces
-const userRoutes = require("./routes/user"); // Routes utilisées pour les utilisateurs
 
 db.connect(function (err) {
   if (err) throw err;
@@ -51,6 +47,9 @@ app.use(bodyParser.json());
 app.use(helmet());
 
 app.use("/images", express.static(path.join(__dirname, "images"))); // Permet de charger les images contenues dans le dossier image de l'application
+
+//const postRoutes = require("./routes/post"); // Routes utilisées pour les sauces
+const userRoutes = require("./routes/user"); // Routes utilisées pour les utilisateurs
 
 //app.use("/api/posts", postRoutes);
 app.use("/api/auth", userRoutes); // Utilisation du limiteur de requêtes par IP pour la route d'authentification

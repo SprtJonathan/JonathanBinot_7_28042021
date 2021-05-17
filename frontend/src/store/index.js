@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
+import userStore from './modules/user'
 
-Vue.use(Vuex)
+Vue.use(Vuex, axios)
 
 export default new Vuex.Store({
   state: {
@@ -11,5 +13,6 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
+    userStore
   }
 })

@@ -1,14 +1,22 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/register">Register</router-link> |
-      <router-link to="/login">Login</router-link>
-    </div>
-    <router-view/>
+    <header>
+      <div id="nav">
+        <router-link to="/">Accueil</router-link> |
+        <router-link to="/Auth">Authentification</router-link>
+      </div>
+    </header>
+    <main>
+      <router-view />
+    </main>
   </div>
 </template>
 
 <style lang="scss">
+@import "@/modules/_variables";
+body {
+  background-image: url('./assets/images/background/1.jpg');
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -22,10 +30,10 @@
 
   a {
     font-weight: bold;
-    color: #2c3e50;
+    color: $secondary-color;
 
     &.router-link-exact-active {
-      color: #42b983;
+      color: $primary-color;
     }
   }
 }
