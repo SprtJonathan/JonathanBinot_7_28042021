@@ -3,7 +3,7 @@
     <button
       type="submit"
       class="btn btn-danger button"
-      @click="deleteAccount(user.userId)"
+      @click="deleteAccount(user)"
     >
       <h2 class="">
         <b-icon-exclamation-triangle-fill></b-icon-exclamation-triangle-fill>
@@ -11,7 +11,7 @@
         <b-icon-exclamation-triangle-fill></b-icon-exclamation-triangle-fill>
       </h2>
     </button>
-    <button type="submit" class="btn btn-warning button" @click="disconnect()">
+    <button type="submit" class="btn btn-warning button" @click="logout()">
       <h2 class="">
         <b-icon-exclamation-triangle-fill></b-icon-exclamation-triangle-fill>
         Se déconnecter {{ user.username }}
@@ -27,56 +27,45 @@ import axios from "axios";
 let apiPort = "3000";
 let apiUrl = "http://localhost:" + apiPort + "/api/";
 
-import { mapState } from "vuex";
-
 import Login from "@/components/Login.vue";
 
 export default {
-  name: "user",
-  mounted: function() {
-    if (this.$store.state.user.userId == -1) {
-      this.$router.push("/");
-      return;
-    }
-    this.$store.dispatch("getUserInfos");
-  },
-  computed: {
-    ...mapState({
-      user: "user",
-      userInfos: "userInfos",
-      token: "token",
-    }),
-  },
   data() {
     return {
-      user: {
-        userId: "",
-        username: "",
-        fname: "",
-        lname: "",
-        email: "",
-        roleId: "",
-      },
+      user: "",
     };
   },
   components: {
     Login,
   },
+  created() {
+    axios
+      .get(apiUrl + "auth/", {
+        headers: { Authorization: "Bearer " + localStorage.token },
+      })
+      .then((response) => (this.user = response.data.user))
+      .catch((err) => console.log(err));
+  },
   methods: {
-    deleteAccount(userId) {
+    deleteAccount(user) {
+      console.log("User : " + this.user);
       axios
-        .delete(apiUrl + "auth/" + userId)
-        .then((result) => {
-          console.log(result);
-          alert("Utilisateur supprimé");
+        .delete(apiUrl + "auth/users/" + user.userId, {
+          headers: { Authorization: "Bearer " + localStorage.token },
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .then((response) => {
+          console.log(response);
+          localStorage.clear();
+          this.$store.dispatch("user/logout").then(() => {
+            this.$router.push("/Auth");
+          });
+        })
+        .catch((err) => console.log(err));
     },
-    disconnect() {
-      this.$store.commit("LOG_OUT");
-      this.$router.push("/");
+    logout() {
+      this.$store.dispatch("user/logout").then(() => {
+        this.$router.push("/Auth");
+      });
     },
   },
 };

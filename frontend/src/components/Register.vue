@@ -85,7 +85,7 @@
       <input
         type="password"
         class="form-control"
-        id="passwordConfirmation"
+        id="password"
         autocomplete="new-password"
         v-model="passwordConfirmation"
         placeholder="Confirmez le mot de passe"

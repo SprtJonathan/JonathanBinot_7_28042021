@@ -36,7 +36,10 @@ exports.register = (req, res, next) => { // Middleware pour l'inscription
                             token: jwt.sign({
                                 userId: user.userId,
                                 roleId: user.roleId
-                            })
+                            },
+                                process.env.JWT_TOKEN,
+                                { expiresIn: process.env.JWT_EXPIRATION }
+                            )
                         });
                     } else {
                         console.log(error);
@@ -103,11 +106,51 @@ exports.login = (req, res, next) => { // Middleware pour la connexion
 
 };
 
-exports.deleteAccount = (req, res, next) => { // Middleware pour la suppression du compte
-    const userParams = req.params.id;
-    let sql = `DELETE FROM users WHERE userId = ?`;
-    sql = mysql.format(sql, [userParams]);
+exports.getOneUser = (req, res, next) => {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
+    const userId = decodedToken.userId;
+    let sql = `SELECT * FROM users WHERE userId = ?`;
+    sql = mysql.format(sql, [userId])
+    console.log("Token : " + token);
+    console.log(decodedToken);
+    console.log("User ID : " + userId)
+    db.query(sql, (err, result) => {
+        console.log(result);
+        if (result != null) {
+            return res.status(200).json({
+                user: {
+                    userId: result.userId,
+                }
 
+            });
+        } else {
+            console.log("user not found")
+            return res.status(401).json({ error: 'Utilisateur introuvable !' });
+        }
+
+    })
+};
+
+exports.getAllUsers = (req, res, next) => {
+    let sql = `SELECT * FROM users WHERE userId = ?`;
+    db.query(sql, (err, result)
+        .then((users) => res.status(200).json({
+            users
+        }))
+        .catch((err) => res.status(401).json({
+            err
+        })));
+};
+
+exports.deleteAccount = (req, res, next) => { // Middleware pour la suppression du compte
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
+    const userId = decodedToken.userId;
+    console.log(userId)
+    let sql = `DELETE FROM users WHERE userId = ?`;
+    sql = mysql.format(sql, [userId]);
+    console.log("userFound " + userId)
     db.query(sql, (err, result) => {
 
         if (err) throw err;
