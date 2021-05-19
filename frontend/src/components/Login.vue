@@ -6,11 +6,13 @@
         <label for="credentials">Adresse email ou nom d'utilisateur</label>
         <input
           type="text"
-          v-model="credentials"
+          autocomplete="username"
+          v-model="userCredentials.credentials"
           class="form-control"
           id="credentials"
           aria-describedby="emailHelp"
           placeholder="Email ou nom d'utilisateur"
+          required
         />
 
         <label for="password">Mot de passe</label>
@@ -19,15 +21,13 @@
           type="password"
           class="form-control"
           id="password"
-          v-model="password"
+          autocomplete="current-password"
+          v-model="userCredentials.password"
           placeholder="Mot de passe"
+          required
         />
       </div>
-      <button
-        type="submit"
-        class="btn btn-primary button"
-        @click="login"
-      >
+      <button type="submit" class="btn btn-primary button" @click="login()">
         Connexion
       </button>
     </article>
@@ -39,24 +39,40 @@ import axios from "axios";
 let apiPort = "3000";
 let apiUrl = "http://localhost:" + apiPort + "/api/";
 
+import { mapState } from "vuex";
+
 export default {
   name: "Login",
-  props: {
-    msg: String,
-  },
   data() {
     return {
-      credentials: null,
-      password: null,
+      userCredentials: {
+        credentials: null,
+        password: null,
+      },
+      msg: "",
     };
   },
+  computed: {
+    ...mapState(["user"]),
+  },
+  components: {},
   methods: {
     login() {
-      let existingUser = {
+      /*let existingUser = {
         credentials: this.credentials,
         password: this.password,
-      };
-      axios.post(apiUrl + "auth/login", existingUser);
+      };*/
+      if (this.userCredentials.credentials !== null || this.userCredentials.password !== null) {
+        axios
+          .post(apiUrl + "auth/login", this.userCredentials)
+          .then((response) => {
+            localStorage.setItem("token", response.data.token);
+            location.replace(location.origin);
+          })
+          .catch((error) => console.log(error));
+      } else {
+        console.log("Erreur est survenue !");
+      }
     },
   },
 };

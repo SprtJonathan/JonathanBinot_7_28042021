@@ -5,6 +5,7 @@ const rateLimit = require('express-rate-limit'); // Package permettant de limite
 const bodyParser = require("body-parser"); // Package permettant d'analyser le corps des requêtes
 const path = require("path"); // Package permettant le travail sur les fichiers locaux (utile pour la gestion des images)
 const db = require("./config/config"); // Importation de la configuration de la connexion à la BDD
+const cors = require("cors")
 
 // Utilisation de helmet :
 // Il protège l'application de vulnérabilités répandues.
@@ -17,7 +18,7 @@ db.connect(function (err) {
 });
 
 const app = express(); // Création de l'application utilisant express
-
+app.use(cors())
 // Middleware permettant de corriger les erreurs CORS pouvant survenir à cause de sécurités et ainsi permettre la connexion à tout utilisateur
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");

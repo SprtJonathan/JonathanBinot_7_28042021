@@ -29,14 +29,14 @@ exports.register = (req, res, next) => { // Middleware pour l'inscription
                                 username: user.username,
                                 fname: user.fname,
                                 lname: user.lname,
+                                email: user.email,
                                 profilePictureUrl: user.pp,
                                 roleId: user.roleId
                             },
-                            token: jwt.sign( // Création du token jwt
-                                { userId: user.userId, roleId: user.roleId },
-                                process.env.JWT_TOKEN,
-                                { expiresIn: process.env.JWT_EXPIRATION }
-                            )
+                            token: jwt.sign({
+                                userId: user.userId,
+                                roleId: user.roleId
+                            })
                         });
                     } else {
                         console.log(error);
@@ -50,7 +50,7 @@ exports.register = (req, res, next) => { // Middleware pour l'inscription
             }
         })
 
-        .catch((error) => res.status(500).json({ error })); // Si une erreur est retournée, elle provient du serveur, alors on renvoie un code 500
+        .catch((error) => res.status(500).json({ message: error })); // Si une erreur est retournée, elle provient du serveur, alors on renvoie un code 500
 };
 
 exports.login = (req, res, next) => { // Middleware pour la connexion
@@ -79,11 +79,14 @@ exports.login = (req, res, next) => { // Middleware pour la connexion
                                 username: result[0].username,
                                 fname: result[0].fname,
                                 lname: result[0].lname,
+                                email: result[0].email,
                                 profilePictureUrl: result[0].pp,
                                 roleId: result[0].roleId
                             },
-                            token: jwt.sign(
-                                { userId: result[0].userId, roleId: result[0].roleId },
+                            token: jwt.sign({
+                                userId: result[0].userId,
+                                roleId: result[0].roleId
+                            },
                                 process.env.JWT_TOKEN,
                                 { expiresIn: process.env.JWT_EXPIRATION }
                             )
@@ -101,28 +104,14 @@ exports.login = (req, res, next) => { // Middleware pour la connexion
 };
 
 exports.deleteAccount = (req, res, next) => { // Middleware pour la suppression du compte
-    const userId = req.body.userId;
-    const password = req.body.password;
+    const userParams = req.params.id;
     let sql = `DELETE FROM users WHERE userId = ?`;
-    sql = mysql.format(sql, [userId, password]);
+    sql = mysql.format(sql, [userParams]);
 
     db.query(sql, (err, result) => {
-        if (result.length > 0) {
-            bcrypt.compare(password, result[0].password)
-                .then(valid => {
-                    if (!valid) {
-                        console.log("Mot de passe incorrect, suppression annulée")
-                        return res.status(401).json({ error: 'Mot de passe incorrect !' });
-                    } else {
-                        console.log('Suppression possible');
-                        res.status(200).json({
-                        })
-                    }
-                })
-                .catch(error => res.status(500).json({ error }));
-        } else {
-            console.log("user not found")
-            return res.status(401).json({ error: 'Nom d\'utilisateur ou mot de passe incorrect !' });
-        }
+
+        if (err) throw err;
+        res.send(result);
+
     })
 };

@@ -21,6 +21,9 @@ const routes = [
     name: 'Profile',
     component: () => import('../views/Profile.vue'),
     props: true,
+    meta: {
+      requiresAuth: true
+    }
   },
 ]
 
@@ -29,15 +32,15 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-	if (to.matched.some(record => record.meta.requiresAuth)) {
-		if (store.getters['auth/isLoggedIn']) {
-			next()
-			return
-		}
-		next( {path: '/auth'})
-	} else {
-		next()
-	}
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (store.getters['user/isUserConnected']) {
+      next()
+      return
+    }
+    next({ path: '/user' })
+  } else {
+    next()
+  }
 })
 
 

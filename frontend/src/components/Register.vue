@@ -8,8 +8,10 @@
           class="form-control"
           id="username"
           type="text"
+          autocomplete="username"
           v-model="username"
           placeholder="Nom d'utilisateur"
+          required
         />
         <button
           class="btn btn-secondary"
@@ -40,8 +42,10 @@
         class="form-control"
         id="fname"
         type="text"
+        autocomplete="given-name"
         v-model="fname"
         placeholder="Prénom"
+        required
       />
 
       <label for="lname">Nom de famille</label>
@@ -49,8 +53,10 @@
         class="form-control"
         id="lname"
         type="text"
+        autocomplete="family-name"        
         v-model="lname"
         placeholder="Nom"
+        required
       />
 
       <label for="email">Adresse email</label>
@@ -59,8 +65,10 @@
         v-model="email"
         class="form-control"
         id="email"
+        autocomplete="email"
         aria-describedby="emailHelp"
         placeholder="Email"
+        required
       />
 
       <label for="password">Mot de passe</label>
@@ -68,8 +76,20 @@
         type="password"
         class="form-control"
         id="password"
+        autocomplete="new-password"
         v-model="password"
         placeholder="Mot de passe"
+        required
+      />
+      <label for="password">Confirmation du mot de passe</label>
+      <input
+        type="password"
+        class="form-control"
+        id="passwordConfirmation"
+        autocomplete="new-password"
+        v-model="passwordConfirmation"
+        placeholder="Confirmez le mot de passe"
+        required
       />
       <button type="submit" class="btn btn-primary button" @click="register">
         S'inscrire
@@ -80,7 +100,7 @@
 
 <script>
 import axios from "axios";
-import randomWords from '@/assets/text/randomWords.json';
+import randomWords from "@/assets/text/randomWords.json";
 let apiPort = "3000";
 let apiUrl = "http://localhost:" + apiPort + "/api/";
 
@@ -96,6 +116,7 @@ export default {
       lname: "",
       email: "",
       password: "",
+      passwordConfirmation: "",
     };
   },
   methods: {
@@ -107,16 +128,27 @@ export default {
         email: this.email,
         password: this.password,
       };
-      axios.post(apiUrl + "auth/register", newUser).then((result) => {
-        console.log(result);
-        alert("Utilisateur enregistré");
-      });
+
+      if (this.password == this.passwordConfirmation) {
+        axios.post(apiUrl + "auth/register", newUser).then((result) => {
+          console.log(result);
+          alert("Utilisateur enregistré");
+        });
+      } else {
+        alert("Les mots de passe ne correspondent pas");
+      }
     },
+
     readRandLine() {
-      let randIntAdjectives = Math.floor(Math.random() * randomWords.adjectives.length) + 0;
-      let randIntNames = Math.floor(Math.random() * randomWords.names.length) + 0;
-      let randIntNumber = JSON.stringify(Math.floor(Math.random() * 999) + 0)
-      this.username = randomWords.adjectives[randIntAdjectives] + randomWords.names[randIntNames] + randIntNumber;
+      let randIntAdjectives =
+        Math.floor(Math.random() * randomWords.adjectives.length) + 0;
+      let randIntNames =
+        Math.floor(Math.random() * randomWords.names.length) + 0;
+      let randIntNumber = JSON.stringify(Math.floor(Math.random() * 999) + 0);
+      this.username =
+        randomWords.adjectives[randIntAdjectives] +
+        randomWords.names[randIntNames] +
+        randIntNumber;
     },
   },
 };
