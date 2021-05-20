@@ -13,47 +13,51 @@ exports.register = (req, res, next) => { // Middleware pour l'inscription
     const email = req.body.email;
     const password = req.body.password;
 
-    bcrypt
-        .hash(password, 10) // Salage du mot de passe 10 fois
-        .then((hash) => {
-            if (validator.isEmail(req.body.email)) { // Si la forme de l'email est correcte, alors on crée le nouvel utilisateur
-                let sql = "INSERT INTO users (username, fname, lname, email, password) VALUES (?, ?, ?, ?, ?)";     // préparation de la requete SQL
-                let inserts = [username, fname, lname, email, hash];                                                       // utilisation des valeurs à insérer
-                sql = mysql.format(sql, inserts);
-                db.query(sql, (error, user) => {            // Envoi de la requête à la base de données
-                    if (!error) {                                               // Si aucune erreur n'est enregistrée
-                        res.status(201).json({
-                            message: "L'utilisateur a été créé avec succès !",  // Alors, on renvoie un message de confirmation
-                            user: {
-                                userId: user.userId,
-                                username: user.username,
-                                fname: user.fname,
-                                lname: user.lname,
-                                email: user.email,
-                                profilePictureUrl: user.pp,
-                                roleId: user.roleId
-                            },
-                            token: jwt.sign({
-                                userId: user.userId,
-                                roleId: user.roleId
-                            },
-                                process.env.JWT_TOKEN,
-                                { expiresIn: process.env.JWT_EXPIRATION }
-                            )
-                        });
-                    } else {
-                        console.log(error);
-                        return res.status(409).json({ error: "Cet utilisateur existe déjà !" })      // Erreur: utilisateur déjà existant
-                    }
-                });
+    if (email == null || fname == null || lname == null || password == null) {
+        return res.status(400).json({ error: "Champs vides" });
+    } else {
+        bcrypt
+            .hash(password, 10) // Salage du mot de passe 10 fois
+            .then((hash) => {
+                if (validator.isEmail(req.body.email)) { // Si la forme de l'email est correcte, alors on crée le nouvel utilisateur
+                    let sql = "INSERT INTO users (username, fname, lname, email, password) VALUES (?, ?, ?, ?, ?)";     // préparation de la requete SQL
+                    let inserts = [username, fname, lname, email, hash];                                                       // utilisation des valeurs à insérer
+                    sql = mysql.format(sql, inserts);
+                    db.query(sql, (error, user) => {            // Envoi de la requête à la base de données
+                        if (!error) {                                               // Si aucune erreur n'est enregistrée
+                            res.status(201).json({
+                                message: "L'utilisateur a été créé avec succès !",  // Alors, on renvoie un message de confirmation
+                                user: {
+                                    userId: user.userId,
+                                    username: user.username,
+                                    fname: user.fname,
+                                    lname: user.lname,
+                                    email: user.email,
+                                    profilePictureUrl: user.pp,
+                                    roleId: user.roleId
+                                },
+                                token: jwt.sign({
+                                    userId: user.userId,
+                                    roleId: user.roleId
+                                },
+                                    process.env.JWT_TOKEN,
+                                    { expiresIn: process.env.JWT_EXPIRATION }
+                                )
+                            });
+                        } else {
+                            console.log(error);
+                            return res.status(409).json({ error: "Erreur: Cet utilisateur existe déjà !" })      // Erreur: utilisateur déjà existant
+                        }
+                    });
 
-            }
-            else {
-                return res.status(400).json({ error: "Format email incorrect" });
-            }
-        })
+                }
+                else {
+                    return res.status(400).json({ error: "Format email incorrect" });
+                }
+            })
 
-        .catch((error) => res.status(500).json({ message: error })); // Si une erreur est retournée, elle provient du serveur, alors on renvoie un code 500
+            .catch((error) => res.status(500).json({ message: error })); // Si une erreur est retournée, elle provient du serveur, alors on renvoie un code 500
+    }
 };
 
 exports.login = (req, res, next) => { // Middleware pour la connexion

@@ -36,9 +36,11 @@ export default {
     Login,
     Register,
   },
-  data: () => ({
-    isHidden: false,
-  }),
+  data() {
+    return {
+      isHidden: false,
+    };
+  },
   methods: {
     hideForm() {
       this.isHidden = !this.isHidden;
@@ -65,7 +67,6 @@ button {
     color: $secondary-color;
     transition: 0.3s;
   }
-  
 }
 .already-button {
   background-color: $primary-color;

@@ -1,6 +1,6 @@
 <template>
   <section>
-    <article class="form-block container card">
+    <article id="form-block" class="form-block container card">
       <h2>Connexion</h2>
       <div class="form-group">
         <label for="credentials">Adresse email ou nom d'utilisateur</label>
