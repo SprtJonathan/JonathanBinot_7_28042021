@@ -116,35 +116,60 @@ exports.getOneUser = (req, res, next) => {
     const userId = decodedToken.userId;
     let sql = `SELECT * FROM users WHERE userId = ?`;
     sql = mysql.format(sql, [userId])
-    console.log("Token : " + token);
-    console.log(decodedToken);
-    console.log("User ID : " + userId)
+    //console.log("Token : " + token);
+    //console.log(decodedToken);
+    //console.log("User ID : " + userId)
     db.query(sql, (err, result) => {
-        console.log(result);
-        if (result != null) {
+        console.log(result[0]);
+        if (result.length > 0) {
             return res.status(200).json({
                 user: {
-                    userId: result.userId,
+                    userId: result[0].userId,
+                    username: result[0].username,
+                    fname: result[0].fname,
+                    lname: result[0].lname,
+                    email: result[0].email,
+                    profilePictureUrl: result[0].profilePictureUrl,
+                    roleId: result[0].roleId,
+                    createdOn: result[0].createdOn,
+                    lastUpdated: result[0].lastUpdated
                 }
-
             });
         } else {
-            console.log("user not found")
-            return res.status(401).json({ error: 'Utilisateur introuvable !' });
+            return res.status(401).json(() => {
+                err;
+                console.log("Utilisateur introuvable")
+            });
         }
 
     })
 };
 
 exports.getAllUsers = (req, res, next) => {
-    let sql = `SELECT * FROM users WHERE userId = ?`;
-    db.query(sql, (err, result)
-        .then((users) => res.status(200).json({
-            users
-        }))
-        .catch((err) => res.status(401).json({
-            err
-        })));
+    let sql = `SELECT * FROM users`;
+    db.query(sql, (err, result) => {
+        console.log(result[0]);
+        if (result.length > 0) {
+            return res.status(200).json({
+                users: {
+                    userId: result[0].userId,
+                    username: result[0].username,
+                    fname: result[0].fname,
+                    lname: result[0].lname,
+                    email: result[0].email,
+                    profilePictureUrl: result[0].profilePictureUrl,
+                    roleId: result[0].roleId,
+                    createdOn: result[0].createdOn,
+                    lastUpdated: result[0].lastUpdated
+                }
+            });
+        } else {
+            return res.status(401).json(() => {
+                err;
+                console.log("Aucun utilisateur enregistré")
+            });
+        }
+    })
 };
 
 exports.deleteAccount = (req, res, next) => { // Middleware pour la suppression du compte
