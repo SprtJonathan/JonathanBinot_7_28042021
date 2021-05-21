@@ -4,6 +4,8 @@ const mysql = require('mysql'); // Package permettant de se connecter à la base
 
 const validator = require('validator'); // Le validateur permet de vérifier que le format d'email entré est correct
 
+const fs = require("fs"); // Import de fs qui permet d'accéder au file-system (pour l'enregistrement d'images)
+
 const db = require("../config/config"); // Importation de la configuration de la connexion à la BDD
 
 exports.register = (req, res, next) => { // Middleware pour l'inscription
@@ -12,6 +14,7 @@ exports.register = (req, res, next) => { // Middleware pour l'inscription
     const lname = req.body.lname;
     const email = req.body.email;
     const password = req.body.password;
+    const profilePicture = `${req.protocol}://${req.get("host")}/images/userProfilePictures/default.png`
 
     if (email == null || fname == null || lname == null || password == null) {
         return res.status(400).json({ error: "Champs vides" });
@@ -20,8 +23,8 @@ exports.register = (req, res, next) => { // Middleware pour l'inscription
             .hash(password, 10) // Salage du mot de passe 10 fois
             .then((hash) => {
                 if (validator.isEmail(req.body.email)) { // Si la forme de l'email est correcte, alors on crée le nouvel utilisateur
-                    let sql = "INSERT INTO users (username, fname, lname, email, password) VALUES (?, ?, ?, ?, ?)";     // préparation de la requete SQL
-                    let inserts = [username, fname, lname, email, hash];                                                       // utilisation des valeurs à insérer
+                    let sql = "INSERT INTO users (username, fname, lname, email, password, profilePictureUrl) VALUES (?, ?, ?, ?, ?, ?)";     // préparation de la requete SQL
+                    let inserts = [username, fname, lname, email, hash, profilePicture];                                                       // utilisation des valeurs à insérer
                     sql = mysql.format(sql, inserts);
                     db.query(sql, (error, user) => {            // Envoi de la requête à la base de données
                         if (!error) {                                               // Si aucune erreur n'est enregistrée
@@ -120,7 +123,7 @@ exports.getOneUser = (req, res, next) => {
     //console.log(decodedToken);
     //console.log("User ID : " + userId)
     db.query(sql, (err, result) => {
-        console.log(result[0]);
+        //console.log(result[0]);
         if (result.length > 0) {
             return res.status(200).json({
                 user: {
@@ -185,5 +188,54 @@ exports.deleteAccount = (req, res, next) => { // Middleware pour la suppression 
         if (err) throw err;
         res.send(result);
 
+    })
+};
+
+exports.editProfilePicture = (req, res, next) => { // Middleware pour la suppression du compte
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
+    const userId = decodedToken.userId;
+    const newProfilePicture = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
+    const lastUpdated = 'CURRENT_TIMESTAMP';
+    console.log(newProfilePicture)
+    let sql = `UPDATE users SET profilePictureUrl = ?, lastUpdated = ? WHERE userId = ?;`;
+    sql = mysql.format(sql, [newProfilePicture, lastUpdated, userId]);
+    console.log("userFound " + userId)
+    db.query(sql, (err, result) => {
+        console.log(result[0]);
+        if (result.length > 0) {
+            return res.status(200).json({
+                message: "Utilisateur modifié"
+            });
+        } else {
+            return res.status(401).json(() => {
+                err;
+                console.log("Échec de la modification")
+            });
+        }
+    })
+};
+
+exports.editAccount = (req, res, next) => { // Middleware pour la suppression du compte
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
+    const userId = decodedToken.userId;
+    const newProfilePicture = req.body.newProfilePicture;
+    console.log(newProfilePicture)
+    let sql = `UPDATE users SET profilePictureUrl = ? WHERE userId = ?;`;
+    sql = mysql.format(sql, [newProfilePicture, userId]);
+    console.log("userFound " + userId)
+    db.query(sql, (err, result) => {
+        console.log(result[0]);
+        if (result.length > 0) {
+            return res.status(200).json({
+                message: "Utilisateur modifié"
+            });
+        } else {
+            return res.status(401).json(() => {
+                err;
+                console.log("Échec de la modification")
+            });
+        }
     })
 };
