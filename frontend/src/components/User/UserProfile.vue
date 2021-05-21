@@ -94,10 +94,12 @@ h3 {
   &--content {
     display: flex;
     flex-direction: column;
+    margin: auto;
   }
   &--informations {
     display: flex;
     flex-direction: column;
+    margin: auto;
   }
 }
 
@@ -110,13 +112,15 @@ h3 {
 
 @media (min-width: 1280px) {
   .profile-block {
+    &--content {
+      margin: auto;
+    }
+    margin: auto;
     &--informations {
+      margin: auto;
       display: flex;
       flex-direction: row;
     }
-  }
-  .profile-card {
-    width: 20vw;
   }
 }
 </style>

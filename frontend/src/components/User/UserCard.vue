@@ -108,7 +108,7 @@ export default {
 .profile-card {
   display: flex;
   margin: auto;
-  width: 90%;
+  width: 40%;
   border-radius: 25px;
   .profile-picture {
     &--block {
