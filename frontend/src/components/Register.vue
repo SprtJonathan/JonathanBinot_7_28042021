@@ -308,6 +308,10 @@ export default {
             .then((result) => {
               console.log(result);
               alert("Utilisateur enregistré");
+              localStorage.setItem("token", result.data.token);
+              localStorage.setItem("user", JSON.stringify(result.data.user));
+              console.log(localStorage.getItem("token"));
+              location.replace(location.origin);
             })
             .catch((error) => {
               let errorMessage = error.toString();

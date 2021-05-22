@@ -1,19 +1,6 @@
 <template>
   <div id="app">
-    <header>
-      <div id="nav">
-        <router-link v-if="isUserConnected" to="/">Accueil</router-link> |
-        <router-link v-if="!isUserConnected" to="/Auth"
-          >Authentification</router-link
-        >
-        |
-        <router-link v-if="isUserConnected" to="/Profile">Profile</router-link>
-      </div>
-      <div id="userStatus" v-if="isUserConnected">
-        <div>{{ user.username }}</div>
-        <button @click="logout">LOGOUT</button>
-      </div>
-    </header>
+    <Header />
     <main>
       <router-view />
     </main>
@@ -21,7 +8,7 @@
 </template>
 
 <script>
-//import userStatus from '@/components/userStatus.vue'
+import Header from "@/components/Header.vue";
 export default {
   data() {
     return {
@@ -29,16 +16,11 @@ export default {
     };
   },
 
+  components: { Header },
+
   computed: {
     isUserConnected() {
       return this.$store.getters["user/isUserConnected"];
-    },
-  },
-  methods: {
-    logout() {
-      this.$store.dispatch("user/logout").then(() => {
-        this.$router.push("/Auth");
-      });
     },
   },
 };

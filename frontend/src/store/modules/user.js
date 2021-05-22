@@ -8,6 +8,7 @@ let instance = axios.create({
 });
 
 let user = localStorage.getItem('user');
+let token = localStorage.getItem('token')
 if (!user) {
     user = {
         userId: "",
@@ -16,7 +17,7 @@ if (!user) {
 } else {
     try {
         user = JSON.parse(user);
-        instance.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
+        instance.defaults.headers.common['Authorization'] = `Bearer ${token.token}`;
     } catch (ex) {
         user = {
             userId: -1,
@@ -65,7 +66,6 @@ const userStore = {
     },
     getters: {
         isUserConnected: state => !!state.token,
-        authStatus: state => state.status,
     }
 }
 

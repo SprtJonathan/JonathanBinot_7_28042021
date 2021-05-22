@@ -16,10 +16,9 @@
       <h3>Informations sur votre compte :</h3>
       <div class="profile-block--informations container">
         <UserCard />
-        <EditUserCard />
       </div>
 
-      <DeleteUser />
+      <DeleteUser v-show="isProfileFromUser" />
     </div>
   </div>
 </template>
@@ -27,7 +26,7 @@
 <script>
 import axios from "axios";
 import UserCard from "@/components/User/UserCard.vue";
-import EditUserCard from "@/components/User/EditUserCard.vue";
+//import EditUserCard from "@/components/User/EditUserCard.vue"; <EditUserCard v-show="isProfileFromUser" />
 import DeleteUser from "@/components/User/DeleteUser.vue";
 
 let apiPort = "3000";
@@ -37,25 +36,40 @@ export default {
   data() {
     return {
       user: "",
+      userPage: "",
+      isProfileFromUser: false,
+      routeUserId: this.$route.params.userId,
     };
   },
   created() {
+    /*let sentData = {
+      id: this.routeUserId,
+    };*/
+    //console.log(sentData);
     axios
-      .get(apiUrl + "auth/", {
+      .get(apiUrl + "auth/users/" + this.routeUserId, {
         headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {
         this.user = response.data.user;
-        console.log(response.data.user);
+        console.log(this.user);
+        if (this.routeUserId == this.user.userId) {
+          this.isProfileFromUser = true;
+        } else {
+          this.isProfileFromUser = false;
+        }
+        console.log(this.routeUserId);
       })
       .catch((err) => console.log(err));
   },
 
   components: {
     UserCard,
-    EditUserCard,
+    //EditUserCard,
     DeleteUser,
   },
+
+  methods: {},
 };
 </script>
 <style scoped lang="scss">

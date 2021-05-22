@@ -58,15 +58,16 @@ export default {
   components: {},
   methods: {
     login() {
-      /*let existingUser = {
-        credentials: this.credentials,
-        password: this.password,
-      };*/
-      if (this.userCredentials.credentials !== null || this.userCredentials.password !== null) {
+      if (
+        this.userCredentials.credentials !== null ||
+        this.userCredentials.password !== null
+      ) {
         axios
           .post(apiUrl + "auth/login", this.userCredentials)
           .then((response) => {
             localStorage.setItem("token", response.data.token);
+            localStorage.setItem("user", JSON.stringify(response.data.user));
+            console.log(localStorage.getItem("token"));
             location.replace(location.origin);
           })
           .catch((error) => console.log(error));

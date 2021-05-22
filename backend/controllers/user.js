@@ -114,6 +114,8 @@ exports.login = (req, res, next) => { // Middleware pour la connexion
 };
 
 exports.getOneUser = (req, res, next) => {
+    const urlUserId = req.body.id;
+    console.log(urlUserId)
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
     const userId = decodedToken.userId;
@@ -121,7 +123,7 @@ exports.getOneUser = (req, res, next) => {
     sql = mysql.format(sql, [userId])
     //console.log("Token : " + token);
     //console.log(decodedToken);
-    //console.log("User ID : " + userId)
+    console.log("User ID : " + userId)
     db.query(sql, (err, result) => {
         //console.log(result[0]);
         if (result.length > 0) {

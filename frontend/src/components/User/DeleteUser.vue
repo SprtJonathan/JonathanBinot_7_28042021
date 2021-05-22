@@ -21,8 +21,15 @@ let apiPort = "3000";
 let apiUrl = "http://localhost:" + apiPort + "/api/";
 
 export default {
+  data() {
+    return {
+      user: "",
+    };
+  },
   methods: {
     deleteAccount(user) {
+      user = JSON.parse(localStorage.getItem("user"));
+
       console.log("User : " + this.user);
       axios
         .delete(apiUrl + "auth/users/" + user.userId, {
