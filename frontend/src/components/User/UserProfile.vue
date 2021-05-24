@@ -17,6 +17,9 @@
       <div class="profile-block--informations container">
         <UserCard />
       </div>
+      <div class="profile-block--informations container">
+        <EditUserCard v-show="isProfileFromUser" />
+      </div>
 
       <DeleteUser v-show="isProfileFromUser" />
     </div>
@@ -26,7 +29,7 @@
 <script>
 import axios from "axios";
 import UserCard from "@/components/User/UserCard.vue";
-//import EditUserCard from "@/components/User/EditUserCard.vue"; <EditUserCard v-show="isProfileFromUser" />
+import EditUserCard from "@/components/User/EditUserCard.vue"; 
 import DeleteUser from "@/components/User/DeleteUser.vue";
 
 let apiPort = "3000";
@@ -46,8 +49,10 @@ export default {
       id: this.routeUserId,
     };*/
     //console.log(sentData);
+    let userData = JSON.parse(localStorage.getItem("user"));
+    console.log(userData.userId);
     axios
-      .get(apiUrl + "auth/users/" + this.routeUserId, {
+      .get(apiUrl + "auth/users/" + userData.userId, {
         headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {
@@ -65,7 +70,7 @@ export default {
 
   components: {
     UserCard,
-    //EditUserCard,
+    EditUserCard,
     DeleteUser,
   },
 

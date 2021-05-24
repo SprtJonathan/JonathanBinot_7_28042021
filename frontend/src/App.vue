@@ -30,6 +30,7 @@ export default {
 @import "@/modules/_variables";
 body {
   background-image: url("./assets/images/background/1.jpg");
+  backdrop-filter: blur(5px);
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -47,7 +48,7 @@ body {
     color: $secondary-color;
 
     &.router-link-exact-active {
-      color: $primary-color;
+      color: $secondary-color;
     }
   }
 }

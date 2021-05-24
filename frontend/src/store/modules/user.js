@@ -29,13 +29,17 @@ if (!user) {
 const userStore = {
     namespaced: true,
     state: {
-        status: '',
         token: localStorage.getItem('token') || '',
-        user: JSON.parse(localStorage.getItem('user')) || {
+        user: JSON.parse(localStorage.getItem("user")) || {
             userId: '',
-            nom: '',
-            prenom: '',
-            isAdmin: ''
+            username: '',
+            fname: '',
+            lname: '',
+            email: '',
+            profilePictureUrl: '',
+            roleId: '',
+            createdOn: '',
+            lastUpdated: ''
         }
     },
     actions: {
@@ -43,24 +47,11 @@ const userStore = {
             commit('LOGOUT')
             localStorage.removeItem('token')
             localStorage.removeItem('user')
-            localStorage.removeItem('status')
             delete axios.defaults.headers.common['Authorization']
         }
     },
     mutations: {
-        AUTH_REQUEST(state) {
-            state.status = 'loading'
-        },
-        AUTH_SUCCESS(state, payload) {
-            state.status = 'success'
-            state.token = payload.token
-            state.user = payload.user
-        },
-        AUTH_ERROR(state) {
-            state.status = 'error'
-        },
         LOGOUT(state) {
-            state.status = ''
             state.token = ''
         },
     },

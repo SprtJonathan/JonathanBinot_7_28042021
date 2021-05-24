@@ -35,20 +35,22 @@ export default {
     return {
       user: "",
       selectedImage: null,
+      routeUserId: this.$route.params.userId,
     };
   },
   created() {
-    let userData = JSON.parse(localStorage.getItem("user"));
-    console.log(userData.userId);
     axios
-      .get(apiUrl + "auth/users/" + userData.userId, {
+      .get(apiUrl + "auth/users/" + this.routeUserId, {
         headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {
         this.user = response.data.user;
-        console.log(response.data.user);
+        console.log(this.routeUserId);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        console.log(this.routeUserId);
+      });
   },
   methods: {},
 };
@@ -56,11 +58,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../modules/_variables";
-.upload-photo {
-  opacity: 0;
-  position: absolute;
-  z-index: -1;
-}
 .profile-card {
   display: flex;
   margin: auto;

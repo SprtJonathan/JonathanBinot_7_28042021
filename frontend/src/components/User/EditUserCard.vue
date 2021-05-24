@@ -74,7 +74,7 @@
           class="form-control"
           id="old-password"
           autocomplete="new-password"
-          v-model="user.password"
+          v-model="password"
           placeholder="Ancien mot de passe"
           required
         />
@@ -84,7 +84,7 @@
           class="form-control"
           id="password"
           autocomplete="new-password"
-          v-model="password"
+          v-model="newPassword"
           placeholder="Nouveau mot de passe"
           required
         />
@@ -107,14 +107,12 @@
         {{ formError }}
       </div>
     </section>
-    <!--<article class="account-info card">
-      <p>Email : {{ user.email }}</p>
+    <article class="account-info card">
       <p>Compte créé le : {{ user.createdOn }}</p>
-
-      <div class="edit-username">
-        <input class="edit-username--input" />
-      </div>
-    </article>-->
+      <p v-show="wasAccountUpdated">
+        Dernière modification le : {{ user.lastUpdated }}
+      </p>
+    </article>
   </div>
 </template>
 
@@ -129,6 +127,11 @@ export default {
     return {
       user: "",
       selectedImage: null,
+      wasAccountUpdated: false,
+      password: "",
+      newPassword: "",
+      formError: "",
+      hasError: false,
     };
   },
   created() {
@@ -141,11 +144,17 @@ export default {
       .then((response) => {
         this.user = response.data.user;
         console.log(response.data.user);
+        if (this.user.createdOn == this.user.lastUpdated) {
+          this.wasAccountUpdated = false;
+        } else {
+          this.wasAccountUpdated = true;
+        }
       })
       .catch((err) => console.log(err));
   },
   methods: {
     editUser() {
+      /* Vérifications */
       this.formError = "";
       let formBoolean = false;
       // Vérification des caractères via des regex
@@ -279,43 +288,26 @@ export default {
         this.hasError = true;
       } else {
         // Construction de l'objet contenant les infos utilisateur
-        this.selectedImage = event.target.files[0];
         let userEdited = {
           username: this.user.username,
           fname: this.user.fname,
           lname: this.user.lname,
           email: this.user.email,
           password: this.password,
-          profilePictureUrl: this.selectedImage
+          newPassword: this.newPassword,
+          //profilePictureUrl: this.selectedImage,
         };
-        console.log("Formulaire validé");
         formBoolean = true; // Si aucune erreur n'est retournée alors on définit la variable comme vraie pour que le formulaire puisse être envoyé
 
-        
-        console.log(this.selectedImage);
-        const formData = new FormData();
-        formData.append("image", this.selectedImage);
-        console.log(this.selectedImage.name);
-        axios
-          .put(apiUrl + "auth/users/" + this.user.userId, FormData, {
-            headers: { Authorization: "Bearer " + localStorage.token },
-          })
-          .then((response) => {
-            console.log("image upload response > ", response);
-            this.$router.go();
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-
-        if (this.password == this.user.password && formBoolean == true) {
+        if (formBoolean == true) {
           axios
             .put(apiUrl + "auth/users/" + this.user.userId, userEdited, {
               headers: { Authorization: "Bearer " + localStorage.token },
             })
             .then((result) => {
               console.log(result);
-              alert("Utilisateur enregistré");
+              alert("Utilisateur modifié");
+              location.replace(location.origin);
             })
             .catch((error) => {
               let errorMessage = error.toString();
@@ -324,6 +316,7 @@ export default {
               this.formError = errorString.toString();
               console.log(this.formError);
               this.hasError = true;
+              alert("Mot de passe erroné");
             });
         } else {
           alert("Mot de passe erroné");

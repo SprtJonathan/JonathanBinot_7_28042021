@@ -36,7 +36,7 @@ exports.register = (req, res, next) => { // Middleware pour l'inscription
                                     fname: user.fname,
                                     lname: user.lname,
                                     email: user.email,
-                                    profilePictureUrl: user.pp,
+                                    profilePictureUrl: user.result[0].profilePictureUrl,
                                     roleId: user.roleId
                                 },
                                 token: jwt.sign({
@@ -90,7 +90,7 @@ exports.login = (req, res, next) => { // Middleware pour la connexion
                                 fname: result[0].fname,
                                 lname: result[0].lname,
                                 email: result[0].email,
-                                profilePictureUrl: result[0].pp,
+                                profilePictureUrl: result[0].profilePictureUrl,
                                 roleId: result[0].roleId
                             },
                             token: jwt.sign({
@@ -114,7 +114,7 @@ exports.login = (req, res, next) => { // Middleware pour la connexion
 };
 
 exports.getOneUser = (req, res, next) => {
-    const urlUserId = req.body.id;
+    const urlUserId = req.params.id;
     console.log(urlUserId)
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
@@ -193,51 +193,62 @@ exports.deleteAccount = (req, res, next) => { // Middleware pour la suppression 
     })
 };
 
-exports.editProfilePicture = (req, res, next) => { // Middleware pour la suppression du compte
-    const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
-    const userId = decodedToken.userId;
-    const newProfilePicture = `${req.protocol}://${req.get("host")}/images/${req.file.filename}`;
-    const lastUpdated = 'CURRENT_TIMESTAMP';
-    console.log(newProfilePicture)
-    let sql = `UPDATE users SET profilePictureUrl = ?, lastUpdated = ? WHERE userId = ?;`;
-    sql = mysql.format(sql, [newProfilePicture, lastUpdated, userId]);
-    console.log("userFound " + userId)
-    db.query(sql, (err, result) => {
-        console.log(result[0]);
-        if (result.length > 0) {
-            return res.status(200).json({
-                message: "Utilisateur modifié"
-            });
-        } else {
-            return res.status(401).json(() => {
-                err;
-                console.log("Échec de la modification")
-            });
-        }
-    })
-};
-
 exports.editAccount = (req, res, next) => { // Middleware pour la suppression du compte
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
     const userId = decodedToken.userId;
-    const newProfilePicture = req.body.newProfilePicture;
-    console.log(newProfilePicture)
-    let sql = `UPDATE users SET profilePictureUrl = ? WHERE userId = ?;`;
-    sql = mysql.format(sql, [newProfilePicture, userId]);
-    console.log("userFound " + userId)
-    db.query(sql, (err, result) => {
-        console.log(result[0]);
-        if (result.length > 0) {
-            return res.status(200).json({
-                message: "Utilisateur modifié"
-            });
-        } else {
-            return res.status(401).json(() => {
-                err;
-                console.log("Échec de la modification")
-            });
+    const username = req.body.username;
+    const fname = req.body.fname;
+    const lname = req.body.lname;
+    const email = req.body.email;
+    const password = req.body.password;
+    const newPassword = req.body.newPassword;
+    //const profilePicture = `${req.protocol}://${req.get("host")}/images/userProfilePictures/${req.body.newProfilePicture}`
+    //console.log(newProfilePicture)
+    if (email == null || fname == null || lname == null || password == null) {
+        return res.status(400).json({ error: "Champs vides" });
+    } else {
+        let savedHash = `SELECT * FROM users WHERE userId = ?`;
+        savedHash = mysql.format(savedHash, [userId]);
+        console.log("userFound " + userId)
+        db.query(savedHash, (err, pass) => {
+            bcrypt.compare(password, pass[0].password)
+                .then(valid => {
+                    console.log(pass)
+                    if (!valid) {
+                        console.log("User not found")
+                        return res.status(401).json({ error: 'Mot de passe incorrect !' });
+                    } else {
+                        bcrypt
+                            .hash(newPassword, 10) // Salage du mot de passe 10 fois
+                            .then((hash) => {
+                                if (validator.isEmail(req.body.email)) {
+                                    let sql = `UPDATE users SET username = ?, fname = ?, lname = ?, email = ?, password = ?, lastUpdated = CURRENT_TIMESTAMP WHERE userId = ?;`;
+                                    sql = mysql.format(sql, [username, fname, lname, email, hash, userId]);
+                                    console.log(username + " fname " + fname + " lname " + lname+ " email " + email + " hash " + hash + " userid " + userId)
+                                    db.query(sql, (err, result) => {
+                                        console.log(err);
+                                        console.log(result);
+                                        if (result) {
+                                            return res.status(200).json({
+                                                message: "Utilisateur modifié"
+                                            });
+                                        } else {
+                                            return res.status(402).json(() => {
+                                                err;
+                                                console.log("Échec de la modification")
+                                            });
+                                        }
+                                    })
+                                }
+                                else {
+                                    return res.status(400).json({ error: "Format email incorrect" });
+                                }
+                            })
+                    }
+                })
+
         }
-    })
+        )
+    }
 };

@@ -1,9 +1,5 @@
 <template>
   <div class="auth">
-    <img
-      alt="Groupomania logo"
-      src="../assets/images/icon-left-font-monochrome-black.svg"
-    />
     <Login v-show="!isHidden" msg="Connexion" />
     <div class="already-button container" v-show="!isHidden">
       <p>

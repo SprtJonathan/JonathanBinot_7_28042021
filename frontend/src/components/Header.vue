@@ -1,16 +1,35 @@
 <template>
   <header>
-    <div id="nav">
-      <router-link v-if="isUserConnected" to="/">Accueil</router-link> |
-      <router-link v-if="!isUserConnected" to="/Auth"
-        >Authentification</router-link
-      >
+    <div id="nav" class="navbar navbar-dark justify-content-around">
+      <router-link to="/">
+        <img
+          alt="Groupomania logo"
+          src="../assets/images/icon-left-font-monochrome-white.svg"
+          class="logo"
+      /></router-link>
+      <router-link v-if="isUserConnected" to="/">Accueil</router-link>
       |
-      <router-link :to="`/user/${user.userId}`">Profil</router-link>
-    </div>
-    <div id="userStatus" v-if="isUserConnected">
-      <div>{{ user.username }}</div>
-      <button @click="logout">LOGOUT</button>
+      <router-link v-if="!isUserConnected" to="/Auth"
+        >Connexion | Inscription</router-link
+      >
+
+      <b-dropdown size="lg" v-if="isUserConnected" class="user-dropdown">
+        <template #button-content class="user-dropdown--content">
+          Bienvenue {{ user.username }}
+          <img
+            class="profile-picture--image shadow-sm"
+            :src="user.profilePictureUrl"
+            alt="Image de profil"
+          />
+        </template>
+        <b-dropdown-item href="#">
+          <router-link :to="`/user/${user.userId}`">Mon Profil </router-link>
+        </b-dropdown-item>
+        <div class="dropdown-divider"></div>
+        <b-dropdown-item href="#"
+          ><a @click="logout">Déconnexion </a></b-dropdown-item
+        >
+      </b-dropdown>
     </div>
   </header>
 </template>
@@ -27,10 +46,10 @@ export default {
     };
   },
   created() {
-    let userData = JSON.parse(localStorage.getItem("user"));
-    console.log(userData.userId);
+    let userData = this.$store.state.user;
+    console.log(userData.user.userId);
     axios
-      .get(apiUrl + "auth/users/" + userData.userId, {
+      .get(apiUrl + "auth/users/" + userData.user.userId, {
         headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {
@@ -47,9 +66,44 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch("user/logout").then(() => {
-        this.$router.push("@/views/Auth");
+        this.$router.push("/Auth");
       });
     },
   },
 };
 </script>
+
+<style scoped lang="scss">
+@import "@/modules/_variables";
+#nav {
+  display: flex;
+  flex-direction: column;
+  background-color: $primary-color;
+  color: $secondary-color;
+}
+
+.logo {
+  width: 50vw;
+}
+.user-dropdown {
+  width: auto;
+}
+.profile-picture {
+  &--image {
+    width: 15%;
+    border-radius: 50%;
+    margin: auto;
+  }
+}
+@media (min-width: 1024px) {
+  #nav {
+    flex-direction: row;
+  }
+  .logo {
+    width: 10vw;
+  }
+  .user-dropdown {
+    width: 10vw;
+  }
+}
+</style>
