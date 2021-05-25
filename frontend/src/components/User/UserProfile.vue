@@ -3,24 +3,21 @@
     <div class="profile-block--content">
       <h1>Bienvenue {{ user.username }} !</h1>
       <hr />
-      <a class="button is-light" v-if="user.isAdmin == true">
+      <a class="button is-light" v-if="user.roleId == 1">
         <RouterLink to="/users">Tous les utilisateurs</RouterLink>
       </a>
       <hr />
-      <a class="button is-light" v-if="user.isAdmin == true">
-        <RouterLink to="/publicationsAdmin"
-          >Toutes les publications utilisateurs</RouterLink
-        >
+      <a class="button is-light" v-if="user.roleId == 1">
+        <RouterLink to="/publicationsAdmin">Toutes les publications</RouterLink>
       </a>
       <hr />
-      <h3>Informations sur votre compte :</h3>
+      <h3>Informations sur le compte :</h3>
       <div class="profile-block--informations container">
         <UserCard />
       </div>
       <div class="profile-block--informations container">
         <EditUserCard v-show="isProfileFromUser" />
       </div>
-
       <DeleteUser v-show="isProfileFromUser" />
     </div>
   </div>
@@ -29,7 +26,7 @@
 <script>
 import axios from "axios";
 import UserCard from "@/components/User/UserCard.vue";
-import EditUserCard from "@/components/User/EditUserCard.vue"; 
+import EditUserCard from "@/components/User/EditUserCard.vue";
 import DeleteUser from "@/components/User/DeleteUser.vue";
 
 let apiPort = "3000";
@@ -53,7 +50,6 @@ export default {
     console.log(userData.userId);
     axios
       .get(apiUrl + "auth/users/" + userData.userId, {
-        headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {
         this.user = response.data.user;

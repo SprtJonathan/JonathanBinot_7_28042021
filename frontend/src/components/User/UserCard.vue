@@ -20,6 +20,12 @@
         <h5>Nom de famille :</h5>
         <p>{{ user.lname }}</p>
       </div>
+      <article class="account-info card">
+        <p>Compte créé le : {{ user.createdOn }}</p>
+        <p v-show="wasAccountUpdated">
+          Dernière modification le : {{ user.lastUpdated  }}
+        </p>
+      </article>
     </article>
   </div>
 </template>
@@ -36,16 +42,20 @@ export default {
       user: "",
       selectedImage: null,
       routeUserId: this.$route.params.userId,
+      wasAccountUpdated: false,
     };
   },
   created() {
     axios
-      .get(apiUrl + "auth/users/" + this.routeUserId, {
-        headers: { Authorization: "Bearer " + localStorage.token },
-      })
+      .get(apiUrl + "auth/users/visitor/" + this.routeUserId, {})
       .then((response) => {
         this.user = response.data.user;
         console.log(this.routeUserId);
+        if (this.user.createdOn == this.user.lastUpdated) {
+          this.wasAccountUpdated = false;
+        } else {
+          this.wasAccountUpdated = true;
+        }
       })
       .catch((err) => {
         console.log(err);

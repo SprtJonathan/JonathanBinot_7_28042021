@@ -80,6 +80,7 @@ export default {
   flex-direction: column;
   background-color: $primary-color;
   color: $secondary-color;
+  margin-bottom: 50px;
 }
 
 .logo {

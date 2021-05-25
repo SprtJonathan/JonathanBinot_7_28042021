@@ -107,12 +107,6 @@
         {{ formError }}
       </div>
     </section>
-    <article class="account-info card">
-      <p>Compte créé le : {{ user.createdOn }}</p>
-      <p v-show="wasAccountUpdated">
-        Dernière modification le : {{ user.lastUpdated }}
-      </p>
-    </article>
   </div>
 </template>
 
@@ -127,7 +121,6 @@ export default {
     return {
       user: "",
       selectedImage: null,
-      wasAccountUpdated: false,
       password: "",
       newPassword: "",
       formError: "",
@@ -144,11 +137,6 @@ export default {
       .then((response) => {
         this.user = response.data.user;
         console.log(response.data.user);
-        if (this.user.createdOn == this.user.lastUpdated) {
-          this.wasAccountUpdated = false;
-        } else {
-          this.wasAccountUpdated = true;
-        }
       })
       .catch((err) => console.log(err));
   },
