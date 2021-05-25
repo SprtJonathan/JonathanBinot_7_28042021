@@ -52,7 +52,7 @@ app.use("/images", express.static(path.join(__dirname, "images"))); // Permet de
 const postRoutes = require("./routes/post"); // Routes utilisées pour les sauces
 const userRoutes = require("./routes/user"); // Routes utilisées pour les utilisateurs
 
-app.use("/api/post", postRoutes);
+app.use("/api/posts", postRoutes);
 app.use("/api/auth", limiter, userRoutes); // Utilisation du limiteur de requêtes par IP pour la route d'authentification
 
 module.exports = app; // Exportation afin d'importer l'application dans le server.js

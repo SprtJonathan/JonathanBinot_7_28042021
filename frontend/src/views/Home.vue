@@ -1,11 +1,25 @@
 <template>
-  <div class="home"></div>
+  <div class="home">
+    <CreatePost />
+    <ShowPosts />
+  </div>
 </template>
 
 <script>
+import CreatePost from "@/components/Post/CreatePost.vue";
+import ShowPosts from "@/components/Post/ShowPosts.vue";
+
 export default {
+  //v-show="isUserConnected"
+
   name: "Home",
-  components: {},
+  isUserConnected() {
+    return this.$store.getters["user/isUserConnected"];
+  },
+  components: {
+    CreatePost,
+    ShowPosts,
+  },
 };
 </script>
 
