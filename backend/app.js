@@ -53,6 +53,6 @@ const postRoutes = require("./routes/post"); // Routes utilisées pour les sauce
 const userRoutes = require("./routes/user"); // Routes utilisées pour les utilisateurs
 
 app.use("/api/posts", postRoutes);
-app.use("/api/auth", limiter, userRoutes); // Utilisation du limiteur de requêtes par IP pour la route d'authentification
+app.use("/api/auth", /*limiter,*/ userRoutes); // Utilisation du limiteur de requêtes par IP pour la route d'authentification
 
 module.exports = app; // Exportation afin d'importer l'application dans le server.js

@@ -7,9 +7,7 @@
     >
       <div class="content">
         <h2 class="post--title display-4">{{ post.title }}</h2>
-        <div class="post--content card lead">
-          <p>{{ post.content }}</p>
-        </div>
+        <div v-html="post.content" class="post--content card lead"></div>
         <hr />
         <div class="headerPost">
           Publié par <em>{{ post.userId }}</em> le
@@ -81,9 +79,9 @@ export default {
           },
         })
         .then((response) => {
-          console.log("publication", response.data);
-          this.user = response.data[0];
-          console.log(this.post.userId);
+          console.log("publication", response.data[0]);
+          this.user = response.data;
+          console.log(this.user.user.username);
         })
         .catch((error) => {
           console.log(error);

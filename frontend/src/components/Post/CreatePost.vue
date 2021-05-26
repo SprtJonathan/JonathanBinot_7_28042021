@@ -11,16 +11,18 @@
             placeholder="Titre du post"
             required
           />
-          <textarea
-            v-model="post.content"
-            id=""
-            cols="30"
-            rows="10"
-            class="post--content form-control"
+
+          <quill-editor
+            ref="myQuillEditor"
+            class="post--content"
             placeholder="Contenu du post"
+            v-model="post.content"
+            :options="editorOption"
+            @blur="onEditorBlur($event)"
+            @focus="onEditorFocus($event)"
+            @ready="onEditorReady($event)"
             required
-          >
-          </textarea>
+          />
           <input
             type="submit"
             class="sumbit-post btn-primary form-control"
@@ -48,6 +50,9 @@ export default {
       user: "",
       formError: "",
       hasError: false,
+      editorOption: {
+        // Some Quill options...
+      },
     };
   },
   created() {
@@ -94,6 +99,15 @@ export default {
             this.hasError = true;
           });
       }
+    },
+    onEditorBlur(quill) {
+      console.log("editor blur!", quill);
+    },
+    onEditorFocus(quill) {
+      console.log("editor focus!", quill);
+    },
+    onEditorReady(quill) {
+      console.log("editor ready!", quill);
     },
   },
 };

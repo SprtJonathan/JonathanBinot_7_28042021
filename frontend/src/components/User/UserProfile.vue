@@ -50,12 +50,22 @@ export default {
     console.log(userData.userId);
     axios
       .get(apiUrl + "auth/users/" + userData.userId, {
+        headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {
         this.user = response.data.user;
         console.log(this.user);
+
         if (this.routeUserId == this.user.userId) {
           this.isProfileFromUser = true;
+          console.log(
+            this.isProfileFromUser +
+              " est la réponse quant à est-ce que l'ID est le même et " +
+              this.routeUserId +
+              " est l'id du lien et " +
+              this.user.userId +
+              " est l'id utilisateur"
+          );
         } else {
           this.isProfileFromUser = false;
         }
