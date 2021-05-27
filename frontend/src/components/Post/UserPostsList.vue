@@ -9,14 +9,9 @@
         <h2 class="post--title display-4">{{ post.title }}</h2>
         <div v-html="post.content" class="post--content card lead"></div>
         <hr />
-        <div class="post--footer">
-          <RouterLink v-if="$store.state.user.user.userId == post.userId" :to="`/posts/${post.postId}/edit`"
-            >Editer le post</RouterLink
-          >
-          <div class="footer--date">
-            Publié par <em>{{ post.username }}</em> le
-            <em>{{ post.creationDate }}</em>
-          </div>
+        <div class="headerPost">
+          Publié par <em>{{ post.userId }}</em> le
+          <em>{{ post.creationDate }}</em>
         </div>
       </div>
     </div>
@@ -35,15 +30,14 @@ export default {
     return {
       user: "",
       post: {
-        User: [],
+        user: "",
         postId: "",
         userId: "",
         title: "",
         content: "",
       },
       allPosts: [],
-      allUsers: [],
-      isAuthorUser: false,
+      routeUserId: this.$route.params.userId,
     };
   },
   created() {
@@ -64,7 +58,7 @@ export default {
     },
     loadPosts() {
       axios
-        .get(apiUrl + "posts/", {
+        .get(apiUrl + "posts/from/" + this.routeUserId, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -72,6 +66,23 @@ export default {
         .then((response) => {
           console.log("publication", response.data);
           this.allPosts = response.data;
+          this.getAuthor();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getAuthor() {
+      axios
+        .get(apiUrl + "auth/users/" + this.post.userId, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+        .then((response) => {
+          console.log("publication", response.data[0]);
+          this.user = response.data;
+          console.log(this.user.user.username);
         })
         .catch((error) => {
           console.log(error);

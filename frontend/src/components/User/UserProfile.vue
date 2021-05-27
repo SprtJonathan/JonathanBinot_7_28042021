@@ -4,13 +4,14 @@
       <h1>Bienvenue {{ user.username }} !</h1>
       <hr />
       <a class="button is-light" v-if="user.roleId == 1">
-        <RouterLink to="/users">Tous les utilisateurs</RouterLink>
+        <RouterLink to="/users">Liste des utilisateurs</RouterLink>
+        <hr />
       </a>
-      <hr />
+
       <a class="button is-light" v-if="user.roleId == 1">
-        <RouterLink to="/publicationsAdmin">Toutes les publications</RouterLink>
+        <RouterLink :to="`/user/${routeUserId}/posts/`">Publications de l'utilisateur</RouterLink>
+        <hr />
       </a>
-      <hr />
       <h3>Informations sur le compte :</h3>
       <div class="profile-block--informations container">
         <UserCard />
@@ -18,7 +19,7 @@
       <div class="profile-block--informations container">
         <EditUserCard v-show="isProfileFromUser" />
       </div>
-      <DeleteUser v-show="isProfileFromUser" />
+      <DeleteUser v-show="isProfileFromUser || this.user.roleId == 1" />
     </div>
   </div>
 </template>
@@ -35,8 +36,22 @@ let apiUrl = "http://localhost:" + apiPort + "/api/";
 export default {
   data() {
     return {
-      user: "",
-      userPage: "",
+      user: {
+        username: null,
+        fname: null,
+        lname: null,
+        createdOn: null,
+        lastUpdated: null,
+        roleId: null,
+      },
+      userPage: {
+        username: null,
+        fname: null,
+        lname: null,
+        createdOn: null,
+        lastUpdated: null,
+        roleId: null,
+      },
       isProfileFromUser: false,
       routeUserId: this.$route.params.userId,
     };

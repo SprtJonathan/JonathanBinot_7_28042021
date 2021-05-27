@@ -25,6 +25,33 @@ const routes = [
       requiresAuth: true
     }
   },
+  {
+    path: '/user/:userId/posts/',
+    name: 'UserPostsList',
+    component: () => import('../components/Post/UserPostsList.vue'),
+    props: true,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/users',
+    name: 'UsersList',
+    component: () => import('../components/User/UsersList.vue'),
+    props: true,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/post/:postId/edit',
+    name: 'UsersList',
+    component: () => import('../components/Post/EditPost.vue'),
+    props: true,
+    meta: {
+      requiresAuth: true
+    }
+  },
 ]
 
 const router = new VueRouter({

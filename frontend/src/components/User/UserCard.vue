@@ -1,6 +1,9 @@
 <template>
   <div>
     <article class="profile-card card">
+      <div v-show="user.roleId == 1" class="user-role">
+        <h5><mark>Administrateur</mark></h5>
+      </div>
       <div class="profile-picture--block shadow-sm">
         <img
           class="profile-picture--image"
@@ -23,7 +26,7 @@
       <article class="account-info card">
         <p>Compte créé le : {{ user.createdOn }}</p>
         <p v-show="wasAccountUpdated">
-          Dernière modification le : {{ user.lastUpdated  }}
+          Dernière modification le : {{ user.lastUpdated }}
         </p>
       </article>
     </article>
@@ -39,15 +42,22 @@ let apiUrl = "http://localhost:" + apiPort + "/api/";
 export default {
   data() {
     return {
-      user: "",
+      user: {
+        username: null,
+        fname: null,
+        lname: null,
+        createdOn: null,
+        lastUpdated: null,
+        roleId: null,
+      },
       selectedImage: null,
       routeUserId: this.$route.params.userId,
       wasAccountUpdated: false,
     };
   },
-  created() {
+  async created() {
     axios
-      .get(apiUrl + "auth/users/visitor/" + this.routeUserId, {})
+      .get(apiUrl + "auth/users/visitor/" + this.routeUserId)
       .then((response) => {
         this.user = response.data.user;
         console.log(this.routeUserId);
