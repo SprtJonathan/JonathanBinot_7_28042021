@@ -22,18 +22,18 @@ exports.createComment = (req, res, _next) => {
 	let postId = req.body.postId;
 	let comment = req.body.comment;
 	let userId = req.body.userId;
-	let sql = `INSERT INTO comment ( post_id, comment, user_id, date ) VALUES (?,?,?,NOW())`;
+	let sql = `INSERT INTO comments ( postId, comment, userId, writtenOn ) VALUES (?,?,?,NOW())`;
 
 	db.query(sql, [ postId, comment, userId], (err, result) => {
 		if(err) throw(err);
-		res.status(201).json({ message: "comment posted!" });
+		res.status(201).json({ message: "Commentaire posté !" });
 	});
 }
 
 exports.modifyComment = (req, res, _next) => {
 	let id = req.params.id;
 	let	comment = req.body.comment;
-	let sql = `UPDATE comment SET comment=?, WHERE id= ?`;
+	let sql = `UPDATE comments SET comment=?, WHERE commentId= ?`;
 
 	 db.query(sql,[comment, id], (err, result) => {
 		if(err) throw err;
@@ -44,7 +44,7 @@ exports.modifyComment = (req, res, _next) => {
 
 exports.deleteComment = (req, res, _next) => {
 	let id = req.params.id;
-	let sql = `DELETE FROM comment WHERE id= ?`;
+	let sql = `DELETE FROM comments WHERE commentId= ?`;
 
 	 db.query(sql, id, (err, result) => {
 		if(err) throw err;

@@ -27,7 +27,7 @@
           >
             Supprimer le post
           </button>
-          <div class="footer--date">
+          <div class="post--info">
             <span
               >Publié par <em>{{ post.username }}</em> le
               <em>{{ post.creationDate | formatDate }}</em> <br
@@ -37,6 +37,7 @@
               <em>{{ post.modificationDate | formatDate }}</em></span
             >
           </div>
+          <CommentPost />
         </div>
       </div>
     </div>
@@ -45,6 +46,7 @@
 
 <script>
 import axios from "axios";
+import CommentPost from "./CommentPost";
 
 let apiPort = "3000";
 let apiUrl = "http://localhost:" + apiPort + "/api/";
@@ -67,6 +69,9 @@ export default {
       allUsers: [],
       isAuthorUser: false,
     };
+  },
+  components: {
+    CommentPost,
   },
   created() {
     axios
