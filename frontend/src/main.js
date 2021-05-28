@@ -3,6 +3,7 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import App from './App.vue'
 import store from './store'
 import router from './router'
+import moment from 'moment'
 
 import VueQuillEditor from 'vue-quill-editor'
 
@@ -21,6 +22,12 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 
 Vue.config.productionTip = false
+
+Vue.filter('formatDate', function (value) {
+  if (value) {
+    return moment(String(value)).format('DD/MM/YYYY à hh:mm')
+  }
+});
 
 new Vue({
   store,

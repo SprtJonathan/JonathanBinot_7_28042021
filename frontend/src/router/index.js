@@ -45,7 +45,7 @@ const routes = [
   },
   {
     path: '/post/:postId/edit',
-    name: 'UsersList',
+    name: 'EditPost',
     component: () => import('../components/Post/EditPost.vue'),
     props: true,
     meta: {

@@ -10,12 +10,32 @@
         <div v-html="post.content" class="post--content card lead"></div>
         <hr />
         <div class="post--footer">
-          <RouterLink v-if="$store.state.user.user.userId == post.userId" :to="`/posts/${post.postId}/edit`"
+          <RouterLink
+            class="btn btn-secondary button"
+            v-if="$store.state.user.user.userId == post.userId"
+            :to="`/post/${post.postId}/edit`"
             >Editer le post</RouterLink
           >
+          <button
+            type="submit"
+            class="btn btn-danger button"
+            v-if="
+              $store.state.user.user.userId == post.userId ||
+                $store.state.user.user.roleId == 1
+            "
+            @click="deletePost(post.postId)"
+          >
+            Supprimer le post
+          </button>
           <div class="footer--date">
-            Publié par <em>{{ post.username }}</em> le
-            <em>{{ post.creationDate }}</em>
+            <span
+              >Publié par <em>{{ post.username }}</em> le
+              <em>{{ post.creationDate | formatDate }}</em> <br
+            /></span>
+            <span v-if="post.creationDate != post.modificationDate"
+              >Dernière modification le
+              <em>{{ post.modificationDate | formatDate }}</em></span
+            >
           </div>
         </div>
       </div>
@@ -40,6 +60,8 @@ export default {
         userId: "",
         title: "",
         content: "",
+        creationDate: "",
+        modificationDate: "",
       },
       allPosts: [],
       allUsers: [],
@@ -75,6 +97,27 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+        });
+    },
+    deletePost(postId) {
+      let errorString = [];
+      console.log("id du post : " + postId);
+      axios
+        .delete(apiUrl + "posts/" + postId, {
+          headers: { Authorization: "Bearer " + localStorage.token },
+        })
+        .then((result) => {
+          console.log(result);
+          alert("Post supprimé");
+          location.replace(location.origin);
+        })
+        .catch((error) => {
+          let errorMessage = error.toString();
+          errorString.push(errorMessage);
+          console.log(errorMessage);
+          this.formError = errorString.toString();
+          console.log(this.formError);
+          this.hasError = true;
         });
     },
   },

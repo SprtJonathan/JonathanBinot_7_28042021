@@ -1,35 +1,53 @@
 <template>
-  <div class="create-post container card">
-    <h2>Quoi de neuf aujourd'hui?</h2>
-    <div class="post-creation--block">
-      <form @submit.prevent="sumbitPost" class="">
-        <div class="control">
-          <input
-            v-model="post.title"
-            type="text"
-            class="post--title form-control"
-            placeholder="Titre du post"
-            required
-          />
+  <div class="page-edit">
+    <div
+      v-if="post.userId == this.$store.state.user.user.userId"
+      class="create-post container card"
+    >
+      <h2>Editer le post</h2>
+      <div class="post-creation--block">
+        <form @submit.prevent="sumbitPost" class="">
+          <div class="control">
+            <input
+              v-model="post.title"
+              type="text"
+              class="post--title form-control"
+              :placeholder="post.title"
+              required
+            />
 
-          <quill-editor
-            ref="myQuillEditor"
-            class="post--content"
-            placeholder="Contenu du post"
-            v-model="post.content"
-            :options="editorOption"
-            @blur="onEditorBlur($event)"
-            @focus="onEditorFocus($event)"
-            @ready="onEditorReady($event)"
-            required
-          />
-          <input
+            <quill-editor
+              ref="myQuillEditor"
+              class="post--content"
+              placeholder="Contenu du post"
+              v-model="post.content"
+              :options="editorOption"
+              @blur="onEditorBlur($event)"
+              @focus="onEditorFocus($event)"
+              @ready="onEditorReady($event)"
+              required
+            />
+            <input
+              type="submit"
+              class="sumbit-post btn-primary form-control"
+              value="Éditer le post"
+            />
+          </div>
+        </form>
+        <button
             type="submit"
-            class="sumbit-post btn-primary form-control"
-            value="Envoyer"
-          />
-        </div>
-      </form>
+            class="btn btn-danger button form-control"
+            @click="deletePost()"
+          >
+            Supprimer le post
+          </button>
+      </div>
+    </div>
+    <div v-if="post.userId != this.$store.state.user.user.userId">
+      <div class="card container">
+        Erreur, vous n'êtes pas l'auteur du post, veuillez revenir à l'accueil
+        <RouterLink to="/">Revenir à l'accueil</RouterLink>
+      </div>
     </div>
   </div>
 </template>
@@ -44,6 +62,9 @@ export default {
   data() {
     return {
       post: {
+        User: [],
+        postId: "",
+        userId: "",
         title: "",
         content: "",
       },
@@ -53,6 +74,7 @@ export default {
       editorOption: {
         // Some Quill options...
       },
+      routePostId: this.$route.params.postId,
     };
   },
   created() {
@@ -65,10 +87,26 @@ export default {
       .then((response) => {
         this.user = response.data.user;
         console.log(response.data.user);
+        this.loadPost();
       })
       .catch((err) => console.log(err));
   },
   methods: {
+    loadPost() {
+      axios
+        .get(apiUrl + "posts/" + this.routePostId, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+        .then((response) => {
+          console.log("publication", response.data[0]);
+          this.post = response.data[0];
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     sumbitPost() {
       let post = {
         userId: this.user.userId,
@@ -82,12 +120,12 @@ export default {
         errorString.push("Erreur titre ou contenu vide");
       } else {
         axios
-          .post(apiUrl + "posts/", post, {
+          .put(apiUrl + "posts/" + this.routePostId, post, {
             headers: { Authorization: "Bearer " + localStorage.token },
           })
           .then((result) => {
             console.log(result);
-            alert("Post publié");
+            alert("Post édité");
             location.replace(location.origin);
           })
           .catch((error) => {
@@ -100,6 +138,27 @@ export default {
           });
       }
     },
+    deletePost() {
+      let errorString = [];
+      axios
+        .delete(apiUrl + "posts/" + this.routePostId, {
+          headers: { Authorization: "Bearer " + localStorage.token },
+        })
+        .then((result) => {
+          console.log(result);
+          alert("Post supprimé");
+          location.replace(location.origin);
+        })
+        .catch((error) => {
+          let errorMessage = error.toString();
+          errorString.push(errorMessage);
+          console.log(errorMessage);
+          this.formError = errorString.toString();
+          console.log(this.formError);
+          this.hasError = true;
+        });
+    },
+
     onEditorBlur(quill) {
       console.log("editor blur!", quill);
     },

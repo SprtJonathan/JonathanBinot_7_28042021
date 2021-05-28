@@ -24,9 +24,9 @@
         <p>{{ user.lname }}</p>
       </div>
       <article class="account-info card">
-        <p>Compte créé le : {{ user.createdOn }}</p>
+        <p>Compte créé le : {{ user.createdOn | formatDate }}</p>
         <p v-show="wasAccountUpdated">
-          Dernière modification le : {{ user.lastUpdated }}
+          Dernière modification le : {{ user.lastUpdated | formatDate }}
         </p>
       </article>
     </article>
