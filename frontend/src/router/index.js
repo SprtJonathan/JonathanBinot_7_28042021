@@ -52,6 +52,15 @@ const routes = [
       requiresAuth: true
     }
   },
+  {
+    path: '/comment/:commentId/edit',
+    name: 'EditComment',
+    component: () => import('../components/Comment/EditComment.vue'),
+    props: true,
+    meta: {
+      requiresAuth: true
+    }
+  },
 ]
 
 const router = new VueRouter({

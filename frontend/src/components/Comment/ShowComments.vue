@@ -1,43 +1,42 @@
 <template>
   <div class="">
+    <div v-if="allComments.length == 0">Aucun commentaire</div>
     <div
-      class="post container card"
-      v-for="post in allPosts"
-      :key="post.postId"
+      class="comment container card"
+      v-for="comment in allComments"
+      :key="comment.commentId"
     >
       <div class="content">
-        <h2 class="post--title display-4">{{ post.title }}</h2>
-        <div v-html="post.content" class="post--content card lead"></div>
+        <div class="comment--info">
+          <span
+            >Posté par <em>{{ comment.username }}</em> le
+            <em>{{ comment.writtenOn | formatDate }}</em> <br
+          /></span>
+          <span v-if="comment.writtenOn != comment.lastUpdated"
+            >Dernière modification le
+            <em>{{ comment.lastUpdated | formatDate }}</em></span
+          >
+        </div>
+        <div v-html="comment.comment" class="comment--comment card lead"></div>
         <hr />
-        <div class="post--footer">
+        <div class="comment--footer">
           <RouterLink
             class="btn btn-secondary button"
-            v-if="$store.state.user.user.userId == post.userId"
-            :to="`/post/${post.postId}/edit`"
-            >Editer le post</RouterLink
+            v-if="$store.state.user.user.userId == comment.userId"
+            :to="`/comment/${comment.commentId}/edit`"
+            >Editer le commentaire</RouterLink
           >
           <button
             type="submit"
             class="btn btn-danger button"
             v-if="
-              $store.state.user.user.userId == post.userId ||
+              $store.state.user.user.userId == comment.userId ||
                 $store.state.user.user.roleId == 1
             "
-            @click="deletePost(post.postId)"
+            @click="deleteComment(comment.commentId)"
           >
-            Supprimer le post
+            Supprimer le commentaire
           </button>
-          <div class="post--info">
-            <span
-              >Publié par <em>{{ post.username }}</em> le
-              <em>{{ post.creationDate | formatDate }}</em> <br
-            /></span>
-            <span v-if="post.creationDate != post.modificationDate"
-              >Dernière modification le
-              <em>{{ post.modificationDate | formatDate }}</em></span
-            >
-          </div>
-          <CommentPost :post="post" />
         </div>
       </div>
     </div>
@@ -46,33 +45,29 @@
 
 <script>
 import axios from "axios";
-import CommentPost from "./CommentPost";
+//import EditComment from "./EditComment";
 
 let apiPort = "3000";
 let apiUrl = "http://localhost:" + apiPort + "/api/";
 
 export default {
-  name: "ShowPosts",
+  name: "ShowComments",
   data() {
     return {
       user: "",
-      post: {
-        User: [],
-        postId: "",
+      comment: {
         userId: "",
-        title: "",
-        content: "",
-        creationDate: "",
-        modificationDate: "",
+        postId: "",
+        comment: "",
       },
-      allPosts: [],
-      allUsers: [],
+      allComments: [],
       isAuthorUser: false,
     };
   },
   components: {
-    CommentPost,
+    //EditComment,
   },
+  props: ["post"],
   created() {
     axios
       .get(apiUrl + "auth/users", {
@@ -81,36 +76,35 @@ export default {
       .then((response) => {
         this.user = response.data;
         console.log(this.user);
-        this.loadPosts();
+        this.loadComments();
       })
       .catch((err) => console.log(err));
   },
   methods: {
-    loadPosts() {
+    loadComments() {
       axios
-        .get(apiUrl + "posts/", {
+        .get(apiUrl + "comments/" + this.post.postId, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
         })
         .then((response) => {
-          console.log("publication", response.data);
-          this.allPosts = response.data;
+          console.log("Commentaires : ", response.data);
+          this.allComments = response.data;
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    deletePost(postId) {
+    deleteComment(commentId) {
       let errorString = [];
-      console.log("id du post : " + postId);
       axios
-        .delete(apiUrl + "posts/" + postId, {
+        .delete(apiUrl + "comments/" + commentId, {
           headers: { Authorization: "Bearer " + localStorage.token },
         })
         .then((result) => {
           console.log(result);
-          alert("Post supprimé");
+          alert("Commentaire supprimé");
           location.replace(location.origin);
         })
         .catch((error) => {

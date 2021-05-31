@@ -21,6 +21,7 @@
             @blur="onEditorBlur($event)"
             @focus="onEditorFocus($event)"
             @ready="onEditorReady($event)"
+            @change="onMaxChar($event)"
             required
           />
           <input
@@ -69,6 +70,7 @@ export default {
       .catch((err) => console.log(err));
   },
   methods: {
+    
     sumbitPost() {
       let post = {
         userId: this.user.userId,
@@ -108,6 +110,15 @@ export default {
     },
     onEditorReady(quill) {
       console.log("editor ready!", quill);
+    },
+    onMaxChar(quill) {
+      const limit = 100;
+      console.log(quill.text.length);
+      if (quill.text.length > limit) {
+        quill.text = quill.text.slice(0, limit + 1);
+        console.log(quill.text);
+      }
+      return quill
     },
   },
 };

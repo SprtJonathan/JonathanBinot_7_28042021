@@ -190,7 +190,7 @@ exports.getAllUsers = (req, res, next) => {
     db.query(sql, (err, result) => {
         if (err) throw err;
         res.send(result);
-        console.log(result);
+        //console.log(result);
     })
 };
 
@@ -201,7 +201,7 @@ exports.deleteAccount = (req, res, next) => { // Middleware pour la suppression 
     console.log(userId)
     let sql = `DELETE FROM users WHERE userId = ?`;
     sql = mysql.format(sql, [userId]);
-    console.log("userFound " + userId)
+    //console.log("userFound " + userId)
     db.query(sql, (err, result) => {
 
         if (err) throw err;

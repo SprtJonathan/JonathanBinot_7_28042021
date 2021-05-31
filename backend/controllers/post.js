@@ -5,7 +5,7 @@ exports.getAllPosts = (req, res, _next) => {
     db.query(sql, (err, result) => {
         if (err) throw err;
         res.send(result);
-        console.log(result);
+        //console.log(result);
     })
 }
 
@@ -33,9 +33,9 @@ exports.createPost = (req, res, next) => {
     let title = req.body.title;
     let content = req.body.content;
     let userId = req.body.userId;
-    console.log("Post Title " + title)
-    console.log("Post Content " + content)
-    console.log("Post creator " + userId)
+   // console.log("Post Title " + title)
+   // console.log("Post Content " + content)
+   // console.log("Post creator " + userId)
     let sql = `INSERT INTO posts (title, content, userId, creationDate ) VALUES (?,?,?,CURRENT_TIMESTAMP)`;
 
     db.query(sql, [title, content, userId], (err, result) => {
