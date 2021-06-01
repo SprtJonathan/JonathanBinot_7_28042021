@@ -9,7 +9,9 @@
       </a>
 
       <a class="button is-light" v-if="user.roleId == 1">
-        <RouterLink :to="`/user/${routeUserId}/posts/`">Publications de l'utilisateur</RouterLink>
+        <RouterLink :to="`/user/${routeUserId}/posts/`"
+          >Publications de l'utilisateur</RouterLink
+        >
         <hr />
       </a>
       <h3>Informations sur le compte :</h3>
@@ -17,9 +19,15 @@
         <UserCard />
       </div>
       <div class="profile-block--informations container">
-        <EditUserCard v-show="isProfileFromUser" />
+        <EditUserCard v-show="isProfileFromUser || this.user.roleId == 1" />
       </div>
-      <DeleteUser v-show="isProfileFromUser || this.user.roleId == 1" />
+
+      <b-button v-b-modal.delete-account-modal class="btn btn-danger" href="#confirmation-text">Supprimer le compte</b-button>
+
+      <b-modal hide-footer id="delete-account-modal" title="Supression du compte">
+        <p id="confirmation-text">En cliquant sur "supprimer", le compte et toutes les informations relatives au compte seront supprimées. Souhaitez-vous vraiment continuer?</p>
+        <DeleteUser v-show="isProfileFromUser || this.user.roleId == 1" />
+      </b-modal>
     </div>
   </div>
 </template>

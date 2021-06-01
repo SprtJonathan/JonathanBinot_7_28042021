@@ -1,5 +1,5 @@
 <template>
-  <div class="create-post container card">
+  <div class="create-post">
     <h3>Commentaires</h3>
     <WriteComment :post="post" />
     <ShowComments :post="post" />

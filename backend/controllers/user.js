@@ -26,33 +26,16 @@ exports.register = (req, res, next) => { // Middleware pour l'inscription
                     let sql = "INSERT INTO users (username, fname, lname, email, password, profilePictureUrl) VALUES (?, ?, ?, ?, ?, ?)";     // préparation de la requete SQL
                     let inserts = [username, fname, lname, email, hash, profilePicture];                                                       // utilisation des valeurs à insérer
                     sql = mysql.format(sql, inserts);
-                    db.query(sql, (error, user) => {            // Envoi de la requête à la base de données
+                    db.query(sql, (error, result) => {            // Envoi de la requête à la base de données
                         if (!error) {                                               // Si aucune erreur n'est enregistrée
                             res.status(201).json({
                                 message: "L'utilisateur a été créé avec succès !",  // Alors, on renvoie un message de confirmation
-                                user: {
-                                    userId: user.userId,
-                                    username: user.username,
-                                    fname: user.fname,
-                                    lname: user.lname,
-                                    email: user.email,
-                                    profilePictureUrl: user.result[0].profilePictureUrl,
-                                    roleId: user.roleId
-                                },
-                                token: jwt.sign({
-                                    userId: user.userId,
-                                    roleId: user.roleId
-                                },
-                                    process.env.JWT_TOKEN,
-                                    { expiresIn: process.env.JWT_EXPIRATION }
-                                )
                             });
                         } else {
                             console.log(error);
                             return res.status(409).json({ error: "Erreur: Cet utilisateur existe déjà !" })      // Erreur: utilisateur déjà existant
                         }
                     });
-
                 }
                 else {
                     return res.status(400).json({ error: "Format email incorrect" });
@@ -198,16 +181,22 @@ exports.deleteAccount = (req, res, next) => { // Middleware pour la suppression 
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
     const userId = decodedToken.userId;
-    console.log(userId)
-    let sql = `DELETE FROM users WHERE userId = ?`;
-    sql = mysql.format(sql, [userId]);
-    //console.log("userFound " + userId)
-    db.query(sql, (err, result) => {
+    const roleId = decodedToken.roleId;
+    const userProfileId = req.params.id
+    console.log("profil à supprimer : " + userProfileId + "et utilisateur voulant supprimer : " + userId + " admin? " + roleId)
+    if (roleId == 1 || userId == userProfileId) {
 
-        if (err) throw err;
-        res.send(result);
 
-    })
+        let sql = `DELETE FROM users WHERE userId = ?`;
+        sql = mysql.format(sql, [userProfileId]);
+        console.log("userFound " + userId)
+        db.query(sql, (err, result) => {
+    
+            if (err) throw err;
+            res.send(result);
+    
+        })
+    }
 };
 
 exports.editAccount = (req, res, next) => { // Middleware pour la suppression du compte

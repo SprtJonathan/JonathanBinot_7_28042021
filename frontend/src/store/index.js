@@ -7,8 +7,11 @@ Vue.use(Vuex, axios)
 
 export default new Vuex.Store({
   state: {
+    namespaced: true,
+    isHidden: false
   },
   mutations: {
+
   },
   actions: {
   },

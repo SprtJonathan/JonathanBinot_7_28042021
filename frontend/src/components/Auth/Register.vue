@@ -116,9 +116,6 @@ let apiUrl = "http://localhost:" + apiPort + "/api/";
 
 export default {
   name: "Register",
-  props: {
-    msg: String,
-  },
   data() {
     return {
       username: null,
@@ -308,10 +305,8 @@ export default {
             .then((result) => {
               console.log(result);
               alert("Utilisateur enregistré");
-              localStorage.setItem("token", result.data.token);
-              localStorage.setItem("user", JSON.stringify(result.data.user));
-              console.log(localStorage.getItem("token"));
-              location.replace(location.origin);
+              this.isHidden = true;
+              window.location.reload()
             })
             .catch((error) => {
               let errorMessage = error.toString();
@@ -319,7 +314,7 @@ export default {
               console.log(errorMessage);
               this.formError = errorString.toString();
               console.log(this.formError);
-              this.hasError = true;
+              location.replace(location.origin);
             });
         } else {
           alert("Les mots de passe ne correspondent pas");
@@ -332,7 +327,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-@import "../modules/_variables";
+@import "@/modules/_variables";
 h3 {
   margin: 40px 0 0;
 }

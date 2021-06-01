@@ -3,7 +3,7 @@
     <button
       type="submit"
       class="btn btn-danger button"
-      @click="deleteAccount(user)"
+      @click="deleteAccount()"
     >
       <h2 class="">
         <b-icon-exclamation-triangle-fill></b-icon-exclamation-triangle-fill>
@@ -24,15 +24,14 @@ export default {
   data() {
     return {
       user: "",
+      routeUserId: this.$route.params.userId,
     };
   },
   methods: {
-    deleteAccount(user) {
-      user = JSON.parse(localStorage.getItem("user"));
-
+    deleteAccount() {
       console.log("User : " + this.user);
       axios
-        .delete(apiUrl + "auth/users/" + user.userId, {
+        .delete(apiUrl + "auth/users/" + this.routeUserId, {
           headers: { Authorization: "Bearer " + localStorage.token },
         })
         .then((response) => {

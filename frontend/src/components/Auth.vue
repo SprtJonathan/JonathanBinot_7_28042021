@@ -1,6 +1,6 @@
 <template>
   <div class="auth">
-    <Login v-show="!isHidden" msg="Connexion" />
+    <Login v-show="!isHidden" msg="Connexion" :isHidden="isHidden" />
     <div class="already-button container" v-show="!isHidden">
       <p>
         Pas encore inscrit?
@@ -9,7 +9,7 @@
         </button>
       </p>
     </div>
-    <Register v-show="isHidden" msg="Inscription" />
+    <Register v-show="isHidden" msg="Inscription" :isHidden="isHidden" />
     <div class="already-button container" v-show="isHidden">
       <p>
         Déjà inscrit?
@@ -23,8 +23,8 @@
 
 <script>
 // @ is an alias to /src
-import Login from "@/components/Login.vue";
-import Register from "@/components/Register.vue";
+import Login from "@/components/Auth/Login.vue";
+import Register from "@/components/Auth/Register.vue";
 
 export default {
   name: "auth",

@@ -125,20 +125,20 @@ export default {
       newPassword: "",
       formError: "",
       hasError: false,
+      routeUserId: this.$route.params.userId,
     };
   },
   created() {
-    let userData = JSON.parse(localStorage.getItem("user"));
-    console.log(userData.userId);
     axios
-      .get(apiUrl + "auth/users/" + userData.userId, {
-        headers: { Authorization: "Bearer " + localStorage.token },
-      })
+      .get(apiUrl + "auth/users/visitor/" + this.routeUserId)
       .then((response) => {
         this.user = response.data.user;
-        console.log(response.data.user);
+        console.log(this.routeUserId);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        console.log(this.routeUserId);
+      });
   },
   methods: {
     editUser() {

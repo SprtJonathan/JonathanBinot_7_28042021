@@ -36,6 +36,9 @@ export default {
       },
       hasError: false,
       editorOption: {
+        modules: {
+          toolbar: false,
+        },
         // Some Quill options...
       },
     };
@@ -97,3 +100,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.comment--content {
+  background-color: white;
+}
+</style>

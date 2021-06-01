@@ -6,16 +6,18 @@
       :key="post.postId"
     >
       <div class="content">
-        <h2 class="post--title display-4">{{ post.title }}</h2>
-        <div v-html="post.content" class="post--content card lead"></div>
-        <hr />
-        <div class="post--footer">
+        <section class="post-section">
+          <h2 class="post--title display-4">{{ post.title }}</h2>
+          <div v-html="post.content" class="post--content card lead"></div>
+          <hr />
+        </section>
+        <section class="footer-section">
           <RouterLink
             class="btn btn-secondary button"
             v-if="$store.state.user.user.userId == post.userId"
             :to="`/post/${post.postId}/edit`"
-            >Editer le post</RouterLink
-          >
+            ><b-icon icon="pencil-square"></b-icon
+          ></RouterLink>
           <button
             type="submit"
             class="btn btn-danger button"
@@ -25,9 +27,10 @@
             "
             @click="deletePost(post.postId)"
           >
-            Supprimer le post
+            <b-icon icon="trash"></b-icon>
           </button>
           <div class="post--info">
+            <hr />
             <span
               >Publié par <em>{{ post.username }}</em> le
               <em>{{ post.creationDate | formatDate }}</em> <br
@@ -37,8 +40,11 @@
               <em>{{ post.modificationDate | formatDate }}</em></span
             >
           </div>
+          <hr />
+        </section>
+        <section class="comments-section">
           <CommentPost :post="post" />
-        </div>
+        </section>
       </div>
     </div>
   </div>
@@ -136,5 +142,15 @@ export default {
 }
 .post {
   margin-top: 5rem;
+}
+.post-section {
+}
+.footer-section {
+}
+.comments-section {
+  background-color: whitesmoke;
+  border-radius: 25px;
+  padding: 2rem;
+  margin-bottom: 2rem;
 }
 </style>

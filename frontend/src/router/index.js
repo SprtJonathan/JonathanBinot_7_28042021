@@ -12,11 +12,6 @@ const routes = [
     component: Home
   },
   {
-    path: '/auth',
-    name: 'Auth',
-    component: () => import('../views/Auth.vue'),
-  },
-  {
     path: '/user/:userId',
     name: 'user',
     component: () => import('../views/Profile.vue'),

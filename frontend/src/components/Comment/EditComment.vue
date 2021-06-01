@@ -22,7 +22,7 @@
             <input
               type="submit"
               class="sumbit-post btn-primary form-control"
-              value="Éditer le post"
+              value="Éditer le commentaire"
             />
           </div>
         </form>
@@ -111,7 +111,7 @@ export default {
           })
           .then((result) => {
             console.log(result);
-            alert("Post édité");
+            alert("Commentaire édité");
             location.replace(location.origin);
           })
           .catch((error) => {

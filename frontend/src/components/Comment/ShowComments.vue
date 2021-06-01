@@ -1,8 +1,8 @@
 <template>
-  <div class="">
+  <div class="comments">
     <div v-if="allComments.length == 0">Aucun commentaire</div>
     <div
-      class="comment container card"
+      class="comment--content"
       v-for="comment in allComments"
       :key="comment.commentId"
     >
@@ -17,26 +17,26 @@
             <em>{{ comment.lastUpdated | formatDate }}</em></span
           >
         </div>
-        <div v-html="comment.comment" class="comment--comment card lead"></div>
-        <hr />
+        <div v-html="comment.comment" class="comment--comment lead"></div>
         <div class="comment--footer">
           <RouterLink
-            class="btn btn-secondary button"
+            class="comment--btn btn btn-secondary button"
             v-if="$store.state.user.user.userId == comment.userId"
             :to="`/comment/${comment.commentId}/edit`"
-            >Editer le commentaire</RouterLink
-          >
+            ><b-icon icon="pencil-square"></b-icon
+          ></RouterLink>
           <button
             type="submit"
-            class="btn btn-danger button"
+            class="comment--btn btn btn-danger button"
             v-if="
               $store.state.user.user.userId == comment.userId ||
                 $store.state.user.user.roleId == 1
             "
             @click="deleteComment(comment.commentId)"
           >
-            Supprimer le commentaire
+            <b-icon icon="trash"></b-icon>
           </button>
+          <hr />
         </div>
       </div>
     </div>
@@ -121,6 +121,21 @@ export default {
 </script>
 
 <style lang="scss">
+.comment {
+  &--comment {
+    border-radius: 15px;
+    border: 1px black solid;
+  }
+  &--footer {
+    display: block;
+    background-color: grey;
+    height: auto;
+  }
+  &--btn {
+    margin: 0 2rem;
+  }
+}
+
 .titre {
   color: #122442;
   font-size: 2em;
