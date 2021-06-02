@@ -8,9 +8,12 @@
     >
       <div class="content">
         <div class="comment--info">
-          <span
-            >Posté par <em>{{ comment.username }}</em> le
-            <em>{{ comment.writtenOn | formatDate }}</em> <br
+          <span>
+            Posté par
+            <RouterLink :to="`/user/${post.userId}`">
+              <em>{{ comment.username }}</em>
+            </RouterLink>
+            le <em>{{ comment.writtenOn | formatDate }}</em> <br
           /></span>
           <span v-if="comment.writtenOn != comment.lastUpdated"
             >Dernière modification le

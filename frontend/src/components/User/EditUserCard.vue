@@ -68,26 +68,28 @@
           required
         />
 
-        <label for="password">Mot de passe actuel</label>
-        <input
-          type="password"
-          class="form-control"
-          id="old-password"
-          autocomplete="new-password"
-          v-model="password"
-          placeholder="Ancien mot de passe"
-          required
-        />
-        <label for="password">Nouveau mot de passe</label>
-        <input
-          type="password"
-          class="form-control"
-          id="password"
-          autocomplete="new-password"
-          v-model="newPassword"
-          placeholder="Nouveau mot de passe"
-          required
-        />
+        <div class="passwords" v-if="adminConnected != 1">
+          <label for="password">Mot de passe actuel</label>
+          <input
+            type="password"
+            class="form-control"
+            id="old-password"
+            autocomplete="new-password"
+            v-model="password"
+            placeholder="Ancien mot de passe"
+            required
+          />
+          <label for="password">Nouveau mot de passe</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            autocomplete="new-password"
+            v-model="newPassword"
+            placeholder="Nouveau mot de passe"
+            required
+          />
+        </div>
         <button
           type="submit"
           class="btn btn-secondary button"
@@ -119,6 +121,7 @@ let apiUrl = "http://localhost:" + apiPort + "/api/";
 export default {
   data() {
     return {
+      adminConnected: this.$store.state.user.user.roleId,
       user: "",
       selectedImage: null,
       password: "",
@@ -275,21 +278,40 @@ export default {
         this.formError = errorString.toString();
         this.hasError = true;
       } else {
-        // Construction de l'objet contenant les infos utilisateur
-        let userEdited = {
-          username: this.user.username,
-          fname: this.user.fname,
-          lname: this.user.lname,
-          email: this.user.email,
-          password: this.password,
-          newPassword: this.newPassword,
+        let userEdited;
+        if (this.adminConnected == 1) {
+          // Construction de l'objet contenant les infos utilisateur
+          userEdited = {
+            username: this.user.username,
+            fname: this.user.fname,
+            lname: this.user.lname,
+            email: this.user.email,
+          };
           //profilePictureUrl: this.selectedImage,
-        };
+        } else {
+          userEdited = {
+            username: this.user.username,
+            fname: this.user.fname,
+            lname: this.user.lname,
+            email: this.user.email,
+            password: this.password,
+            newPassword: this.newPassword,
+          };
+        }
+        console.log(userEdited);
+
         formBoolean = true; // Si aucune erreur n'est retournée alors on définit la variable comme vraie pour que le formulaire puisse être envoyé
 
         if (formBoolean == true) {
+          let routeUrl;
+          if (this.adminConnected == 1) {
+            routeUrl = "auth/users/admin/";
+          } else {
+            routeUrl = "auth/users/";
+          }
+          console.log(routeUrl);
           axios
-            .put(apiUrl + "auth/users/" + this.user.userId, userEdited, {
+            .put(apiUrl + routeUrl + this.user.userId, userEdited, {
               headers: { Authorization: "Bearer " + localStorage.token },
             })
             .then((result) => {

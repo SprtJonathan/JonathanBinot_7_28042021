@@ -31,14 +31,18 @@
           </button>
           <div class="post--info">
             <hr />
-            <span
-              >Publié par <em>{{ post.username }}</em> le
-              <em>{{ post.creationDate | formatDate }}</em> <br
-            /></span>
-            <span v-if="post.creationDate != post.modificationDate"
-              >Dernière modification le
-              <em>{{ post.modificationDate | formatDate }}</em></span
-            >
+
+            <span>
+              Publié par
+              <RouterLink :to="`/user/${post.userId}`">
+                <em>{{ post.username }}</em>
+              </RouterLink>
+              le <em>{{ post.creationDate | formatDate }}</em> <br />
+            </span>
+            <span v-if="post.creationDate != post.modificationDate">
+              Dernière modification le
+              <em>{{ post.modificationDate | formatDate }}</em>
+            </span>
           </div>
           <hr />
         </section>
@@ -89,7 +93,12 @@ export default {
         console.log(this.user);
         this.loadPosts();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+
+        localStorage.clear();
+        this.$store.dispatch("user/logout").then(() => {});
+      });
   },
   methods: {
     loadPosts() {

@@ -10,7 +10,6 @@
 <script>
 import Header from "@/components/Header.vue";
 export default {
-
   components: { Header },
 
   computed: {
@@ -23,8 +22,10 @@ export default {
 
 <style lang="scss">
 @import "@/modules/_variables";
+html {
+  background-color: whitesmoke;
+}
 body {
-  background-image: url("./assets/images/background/1.jpg");
   backdrop-filter: blur(5px);
 }
 #app {
@@ -33,6 +34,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  background-color: whitesmoke;
 }
 
 #nav {

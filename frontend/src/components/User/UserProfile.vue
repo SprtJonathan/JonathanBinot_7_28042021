@@ -1,19 +1,19 @@
 <template>
   <div class="profile-block container card">
     <div class="profile-block--content">
-      <h1>Bienvenue {{ user.username }} !</h1>
-      <hr />
+      <h1>Profil de {{ userPage.username }} !</h1>
       <a class="button is-light" v-if="user.roleId == 1">
-        <RouterLink to="/users">Liste des utilisateurs</RouterLink>
         <hr />
+        <RouterLink to="/users">Liste des utilisateurs</RouterLink>
       </a>
 
-      <a class="button is-light" v-if="user.roleId == 1">
+      <a class="button is-light">
+        <hr />
         <RouterLink :to="`/user/${routeUserId}/posts/`"
           >Publications de l'utilisateur</RouterLink
         >
-        <hr />
       </a>
+      <hr />
       <h3>Informations sur le compte :</h3>
       <div class="profile-block--informations container">
         <UserCard />
@@ -21,13 +21,13 @@
       <div class="profile-block--informations container">
         <EditUserCard v-show="isProfileFromUser || this.user.roleId == 1" />
       </div>
-
-      <b-button v-b-modal.delete-account-modal class="btn btn-danger" href="#confirmation-text">Supprimer le compte</b-button>
-
-      <b-modal hide-footer id="delete-account-modal" title="Supression du compte">
-        <p id="confirmation-text">En cliquant sur "supprimer", le compte et toutes les informations relatives au compte seront supprimées. Souhaitez-vous vraiment continuer?</p>
-        <DeleteUser v-show="isProfileFromUser || this.user.roleId == 1" />
-      </b-modal>
+      <div class="profile-block--delete container">
+        <DeleteUser
+          :user="user"
+          :userPage="userPage"
+          v-show="isProfileFromUser || this.user.roleId == 1"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -92,6 +92,15 @@ export default {
         } else {
           this.isProfileFromUser = false;
         }
+        console.log(this.routeUserId);
+      })
+      .catch((err) => console.log(err));
+
+    axios
+      .get(apiUrl + "auth/users/visitor/" + this.routeUserId)
+      .then((response) => {
+        this.userPage = response.data.user;
+        console.log(this.userPage);
         console.log(this.routeUserId);
       })
       .catch((err) => console.log(err));

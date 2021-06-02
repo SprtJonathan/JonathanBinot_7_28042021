@@ -20,7 +20,7 @@ exports.getOnePost = (req, res, next) => {
 }
 
 exports.getPostsFromUser = (req, res, next) => {
-    let sql = `SELECT * FROM posts WHERE userId=?`;
+    let sql = `SELECT * FROM posts INNER JOIN users ON posts.userId = users.userId WHERE users.userId=? ORDER BY creationDate DESC`;
     let id = req.params.id;
 
     db.query(sql, id, (err, result) => {
@@ -33,9 +33,9 @@ exports.createPost = (req, res, next) => {
     let title = req.body.title;
     let content = req.body.content;
     let userId = req.body.userId;
-   // console.log("Post Title " + title)
-   // console.log("Post Content " + content)
-   // console.log("Post creator " + userId)
+    // console.log("Post Title " + title)
+    // console.log("Post Content " + content)
+    // console.log("Post creator " + userId)
     let sql = `INSERT INTO posts (title, content, userId, creationDate ) VALUES (?,?,?,CURRENT_TIMESTAMP)`;
 
     db.query(sql, [title, content, userId], (err, result) => {

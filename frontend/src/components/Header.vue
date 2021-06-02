@@ -9,7 +9,7 @@
       /></router-link>
       <router-link v-if="isUserConnected" to="/">Accueil</router-link>
       |
-      <router-link v-if="!isUserConnected" to="/Auth"
+      <router-link v-if="!isUserConnected" to="/"
         >Connexion | Inscription</router-link
       >
 

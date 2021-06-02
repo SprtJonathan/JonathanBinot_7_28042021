@@ -129,16 +129,6 @@ export default {
     };
   },
   methods: {
-    /*register() {
-      let newUser = {
-        username: this.username,
-        fname: this.fname,
-        lname: this.lname,
-        email: this.email,
-        password: this.password,
-      };
-    },*/
-
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown;
     },
@@ -304,17 +294,18 @@ export default {
             .post(apiUrl + "auth/register", newUser)
             .then((result) => {
               console.log(result);
-              alert("Utilisateur enregistré");
+              alert("Utilisateur créé");
               this.isHidden = true;
-              window.location.reload()
+              window.location.reload();
             })
             .catch((error) => {
+              console.log("code " + error.message);
               let errorMessage = error.toString();
               errorString.push(errorMessage);
-              console.log(errorMessage);
+              console.log(error);
+              this.hasError = true;
               this.formError = errorString.toString();
               console.log(this.formError);
-              location.replace(location.origin);
             });
         } else {
           alert("Les mots de passe ne correspondent pas");

@@ -185,21 +185,19 @@ exports.deleteAccount = (req, res, next) => { // Middleware pour la suppression 
     const userProfileId = req.params.id
     console.log("profil à supprimer : " + userProfileId + "et utilisateur voulant supprimer : " + userId + " admin? " + roleId)
     if (roleId == 1 || userId == userProfileId) {
-
-
         let sql = `DELETE FROM users WHERE userId = ?`;
         sql = mysql.format(sql, [userProfileId]);
-        console.log("userFound " + userId)
+        console.log("userFound " + userProfileId)
         db.query(sql, (err, result) => {
-    
+
             if (err) throw err;
             res.send(result);
-    
+
         })
     }
 };
 
-exports.editAccount = (req, res, next) => { // Middleware pour la suppression du compte
+exports.editAccount = (req, res, next) => { // Middleware pour la modification du compte
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
     const userId = decodedToken.userId;
@@ -256,5 +254,49 @@ exports.editAccount = (req, res, next) => { // Middleware pour la suppression du
 
         }
         )
+    }
+};
+
+exports.editAccountAdmin = (req, res, next) => { // Middleware pour la modification du compte
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
+    const roleId = decodedToken.roleId;
+    const userId = decodedToken.userId
+    const userToEdit = req.params.id;
+    const username = req.body.username;
+    const fname = req.body.fname;
+    const lname = req.body.lname;
+    const email = req.body.email;
+    //const profilePicture = `${req.protocol}://${req.get("host")}/images/userProfilePictures/${req.body.newProfilePicture}`
+    //console.log(newProfilePicture)
+    console.log("profil à éditer : " + userToEdit + "et utilisateur voulant éditer : " + userId + " admin? " + roleId)
+    if (roleId == 1 || userToEdit == userId) {
+        if (email == null || fname == null || lname == null) {
+            return res.status(400).json({ error: "Champs vides" });
+        } else {
+            if (validator.isEmail(req.body.email)) {
+                let sql = `UPDATE users SET username = ?, fname = ?, lname = ?, email = ?, lastUpdated = CURRENT_TIMESTAMP WHERE userId = ?;`;
+                sql = mysql.format(sql, [username, fname, lname, email, userToEdit]);
+                console.log(username + " fname " + fname + " lname " + lname + " email " + email + " userid " + userToEdit)
+                db.query(sql, (err, result) => {
+                    console.log(err);
+                    console.log(result);
+                    if (result) {
+                        return res.status(200).json({
+                            message: "Utilisateur modifié"
+                        });
+                    } else {
+                        return res.status(402).json(() => {
+                            err;
+                            console.log("Échec de la modification")
+                        });
+                    }
+                })
+            }
+            else {
+                return res.status(400).json({ error: "Format email incorrect" });
+            }
+        }
+
     }
 };
