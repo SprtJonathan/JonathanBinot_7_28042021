@@ -2,6 +2,7 @@
   <div class="home">
     <Auth v-show="!isUserConnected" />
     <CreatePost v-show="isUserConnected" />
+    <hr>
     <ShowPosts v-show="isUserConnected" />
   </div>
 </template>

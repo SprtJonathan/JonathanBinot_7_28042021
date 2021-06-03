@@ -25,7 +25,7 @@
       >
         <h2 class="">
           <b-icon-exclamation-triangle-fill></b-icon-exclamation-triangle-fill>
-          Supprimer le compte {{ user.username }}
+          Supprimer le compte {{ userPage.username }}
           <b-icon-exclamation-triangle-fill></b-icon-exclamation-triangle-fill>
         </h2>
       </button>
@@ -47,7 +47,7 @@ export default {
       userIsOwner: false,
     };
   },
-  props: ["user", "routeUser"],
+  props: ["user", "userPage"],
   methods: {
     checkIdentity() {
       if (this.routeUserId == this.user.userId) {

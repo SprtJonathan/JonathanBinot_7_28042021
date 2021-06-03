@@ -1,10 +1,10 @@
 <template>
   <div class="page-edit">
     <div
-      v-if="post.userId == this.$store.state.user.user.userId"
+      v-if="post.userId == this.$store.state.user.user.userId || this.$store.state.user.user.roleId == 1"
       class="create-post container card"
     >
-      <h2>Editer le post</h2>
+      <h2>Editer le post <h2 v-if="this.$store.state.user.user.roleId == 1 && this.$store.state.user.user.userId != post.userId">de {{post.username}}</h2></h2>
       <div class="post-creation--block">
         <form @submit.prevent="sumbitPost" class="">
           <div class="control">
@@ -35,15 +35,15 @@
           </div>
         </form>
         <button
-            type="submit"
-            class="btn btn-danger button form-control"
-            @click="deletePost()"
-          >
-            Supprimer le post
-          </button>
+          type="submit"
+          class="btn btn-danger button form-control"
+          @click="deletePost()"
+        >
+          Supprimer le post
+        </button>
       </div>
     </div>
-    <div v-if="post.userId != this.$store.state.user.user.userId">
+    <div v-if="post.userId != this.$store.state.user.user.userId && this.$store.state.user.user.roleId != 1">
       <div class="card container">
         Erreur, vous n'êtes pas l'auteur du post, veuillez revenir à l'accueil
         <RouterLink to="/">Revenir à l'accueil</RouterLink>
@@ -61,13 +61,7 @@ export default {
   name: "CreatePost",
   data() {
     return {
-      post: {
-        User: [],
-        postId: "",
-        userId: "",
-        title: "",
-        content: "",
-      },
+      post: "",
       user: "",
       formError: "",
       hasError: false,
@@ -85,8 +79,7 @@ export default {
         headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {
-        this.user = response.data.user;
-        console.log(response.data.user);
+        this.user = response.data;
         this.loadPost();
       })
       .catch((err) => console.log(err));

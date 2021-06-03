@@ -1,6 +1,6 @@
 <template>
   <div class="create-post container card">
-    <h2>Quoi de neuf aujourd'hui?</h2>
+    <h2 class="create-post--title">Quoi de neuf aujourd'hui?</h2>
     <div class="post-creation--block">
       <form @submit.prevent="sumbitPost" class="">
         <div class="control">
@@ -40,6 +40,20 @@ import axios from "axios";
 let apiPort = "3000";
 let apiUrl = "http://localhost:" + apiPort + "/api/";
 
+let toolbarOptions = {
+  handlers: {
+    // handlers object will be merged with default handlers object
+    link: function(value) {
+      if (value) {
+        var href = prompt("Enter the URL");
+        this.quill.format("link", href);
+      } else {
+        this.quill.format("link", false);
+      }
+    },
+  },
+};
+
 export default {
   name: "CreatePost",
   data() {
@@ -52,7 +66,10 @@ export default {
       formError: "",
       hasError: false,
       editorOption: {
-        // Some Quill options...
+        modules: {
+          toolbar: toolbarOptions,
+        },
+        theme: "bubble",
       },
     };
   },
@@ -64,13 +81,12 @@ export default {
         headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {
-        this.user = response.data.user;
-        console.log(response.data.user);
+        this.user = response.data;
+        console.log(response.data);
       })
       .catch((err) => console.log(err));
   },
   methods: {
-    
     sumbitPost() {
       let post = {
         userId: this.user.userId,
@@ -118,7 +134,7 @@ export default {
         quill.text = quill.text.slice(0, limit + 1);
         console.log(quill.text);
       }
-      return quill
+      return quill;
     },
   },
 };
@@ -126,4 +142,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/modules/_variables";
+.create-post {
+  padding: 1rem;
+}
 </style>

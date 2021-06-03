@@ -10,7 +10,7 @@ exports.getAllPosts = (req, res, _next) => {
 }
 
 exports.getOnePost = (req, res, next) => {
-    let sql = `SELECT * FROM posts WHERE postId=?; `;
+    let sql = `SELECT * FROM posts INNER JOIN users ON posts.userId = users.userId WHERE postId=?; `;
     let id = req.params.id;
 
     db.query(sql, id, (err, result) => {

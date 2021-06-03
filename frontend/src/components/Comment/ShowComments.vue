@@ -8,29 +8,39 @@
     >
       <div class="content">
         <div class="comment--info">
-          <span>
-            Posté par
-            <RouterLink :to="`/user/${post.userId}`">
-              <em>{{ comment.username }}</em>
-            </RouterLink>
-            le <em>{{ comment.writtenOn | formatDate }}</em> <br
-          /></span>
-          <span v-if="comment.writtenOn != comment.lastUpdated"
-            >Dernière modification le
-            <em>{{ comment.lastUpdated | formatDate }}</em></span
+          <div class="comment--info--creation">
+            <p>
+              Posté par
+              <RouterLink :to="`/user/${post.userId}`">
+                <em>{{ comment.username }}</em>
+              </RouterLink>
+              le <em>{{ comment.writtenOn | formatDate }}</em> <br />
+            </p>
+          </div>
+          <div
+            class="comment--info--update"
+            v-if="comment.writtenOn != comment.lastUpdated"
           >
+            <p>
+              Dernière modification le
+              <em>{{ comment.lastUpdated | formatDate }}</em>
+            </p>
+          </div>
         </div>
         <div v-html="comment.comment" class="comment--comment lead"></div>
         <div class="comment--footer">
           <RouterLink
-            class="comment--btn btn btn-secondary button"
-            v-if="$store.state.user.user.userId == comment.userId"
+            class="comment--btn btn"
+            v-if="
+              $store.state.user.user.userId == comment.userId ||
+                $store.state.user.user.roleId == 1
+            "
             :to="`/comment/${comment.commentId}/edit`"
             ><b-icon icon="pencil-square"></b-icon
           ></RouterLink>
           <button
             type="submit"
-            class="comment--btn btn btn-danger button"
+            class="comment--btn btn"
             v-if="
               $store.state.user.user.userId == comment.userId ||
                 $store.state.user.user.roleId == 1
@@ -124,18 +134,47 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/modules/_variables";
 .comment {
+  &--content {
+    margin: 1rem;
+    background-color: white;
+  }
   &--comment {
-    border-radius: 15px;
-    border: 1px black solid;
+    border: 0.5px $secondary-color solid;
+    padding: 1rem;
+  }
+  &--info {
+    display: flex;
+    flex-direction: row;
+    color: $primary-color;
+    font-size: 0.7em;
+    border: 0.5px $primary-color solid;
+    border-radius: .5rem .5rem 0rem 0rem;
+    border-bottom: 0px transparent;
+    &--creation {
+      padding: 0.5rem;
+    }
+    &--update {
+      padding: 0.5rem;
+    }
   }
   &--footer {
-    display: block;
-    background-color: grey;
-    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    background-color: rgb(199, 199, 199);
+    height: 2rem;
   }
   &--btn {
     margin: 0 2rem;
+    align-items: center;
+    justify-items: center;
+    align-content: center;
+    justify-content: center;
+    height: 2rem;
+    width: 2rem;
+    background-color: white;
   }
 }
 

@@ -44,14 +44,7 @@ let apiUrl = "http://localhost:" + apiPort + "/api/";
 export default {
   data() {
     return {
-      user: {
-        username: null,
-        fname: null,
-        lname: null,
-        createdOn: null,
-        lastUpdated: null,
-        roleId: null,
-      },
+      user: "",
       userPage: {
         username: null,
         fname: null,
@@ -76,8 +69,7 @@ export default {
         headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {
-        this.user = response.data.user;
-        console.log(this.user);
+        this.user = response.data;
 
         if (this.routeUserId == this.user.userId) {
           this.isProfileFromUser = true;
@@ -99,9 +91,7 @@ export default {
     axios
       .get(apiUrl + "auth/users/visitor/" + this.routeUserId)
       .then((response) => {
-        this.userPage = response.data.user;
-        console.log(this.userPage);
-        console.log(this.routeUserId);
+        this.userPage = response.data;
       })
       .catch((err) => console.log(err));
   },
@@ -144,7 +134,7 @@ h3 {
   display: flex;
   flex-direction: column;
   background-color: $block-background-semitransparent;
-  padding: 2%;
+  padding: 1rem;
   border-radius: 25px;
   margin: auto;
   margin-top: 2%;

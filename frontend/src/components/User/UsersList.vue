@@ -43,8 +43,7 @@ export default {
       })
       .then((response) => {
         this.allUsers = response.data;
-        console.log(this.user);
-        this.loadPosts();
+        console.log(this.allUsers);
       })
       .catch((err) => console.log(err));
   },

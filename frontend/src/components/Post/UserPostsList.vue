@@ -94,7 +94,6 @@ export default {
       })
       .catch((err) => {
         console.log(err);
-
         localStorage.clear();
         this.$store.dispatch("user/logout").then(() => {});
       });

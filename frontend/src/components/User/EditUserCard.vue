@@ -135,13 +135,9 @@ export default {
     axios
       .get(apiUrl + "auth/users/visitor/" + this.routeUserId)
       .then((response) => {
-        this.user = response.data.user;
-        console.log(this.routeUserId);
+        this.user = response.data;
       })
-      .catch((err) => {
-        console.log(err);
-        console.log(this.routeUserId);
-      });
+      .catch((err) => console.log(err));
   },
   methods: {
     editUser() {
@@ -347,7 +343,6 @@ export default {
 .form-block {
   display: flex;
   margin: auto;
-  width: 80%;
   border-radius: 25px;
   padding: 2rem;
 }

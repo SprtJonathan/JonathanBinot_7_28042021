@@ -1,10 +1,23 @@
 <template>
   <div class="page-edit">
     <div
-      v-if="comment.userId == this.$store.state.user.user.userId"
+      v-if="
+        comment.userId == this.$store.state.user.user.userId ||
+          this.$store.state.user.user.roleId == 1
+      "
       class="create-post container card"
     >
-      <h2>Editer le commentaire</h2>
+      <h2>
+        Editer le commentaire
+        <h2
+          v-if="
+            this.$store.state.user.user.roleId == 1 &&
+              this.$store.state.user.user.userId != comment.userId
+          "
+        >
+          de {{ comment.username }}
+        </h2>
+      </h2>
       <div class="post-creation--block">
         <form @submit.prevent="sumbitComment" class="">
           <div class="control">
@@ -35,7 +48,12 @@
         </button>
       </div>
     </div>
-    <div v-if="comment.userId != this.$store.state.user.user.userId">
+    <div
+      v-if="
+        comment.userId != this.$store.state.user.user.userId &&
+          this.$store.state.user.user.roleId != 1
+      "
+    >
       <div class="card container">
         Erreur, vous n'êtes pas l'auteur du commentaire, veuillez revenir à
         l'accueil
@@ -72,8 +90,7 @@ export default {
         headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {
-        this.user = response.data.user;
-        console.log(response.data.user);
+        this.user = response.data;
         this.loadComment();
       })
       .catch((err) => console.log(err));

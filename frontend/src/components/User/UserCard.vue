@@ -59,8 +59,7 @@ export default {
     axios
       .get(apiUrl + "auth/users/visitor/" + this.routeUserId)
       .then((response) => {
-        this.user = response.data.user;
-        console.log(this.routeUserId);
+        this.user = response.data;
         if (this.user.createdOn == this.user.lastUpdated) {
           this.wasAccountUpdated = false;
         } else {
@@ -81,7 +80,6 @@ export default {
 .profile-card {
   display: flex;
   margin: auto;
-  width: 70%;
   border-radius: 25px;
   padding: 2rem;
 }

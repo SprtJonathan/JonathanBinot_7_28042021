@@ -1,6 +1,6 @@
 <template>
   <header>
-    <div id="nav" class="navbar navbar-dark justify-content-around">
+    <nav id="nav" class="navbar navbar-dark justify-content-around">
       <router-link to="/">
         <img
           alt="Groupomania logo"
@@ -8,12 +8,11 @@
           class="logo"
       /></router-link>
       <router-link v-if="isUserConnected" to="/">Accueil</router-link>
-      |
       <router-link v-if="!isUserConnected" to="/"
         >Connexion | Inscription</router-link
       >
 
-      <b-dropdown size="lg" v-if="isUserConnected" class="user-dropdown">
+      <b-dropdown size="sm" v-if="isUserConnected" class="user-dropdown">
         <template #button-content class="user-dropdown--content">
           Bienvenue {{ user.username }}
           <img
@@ -30,7 +29,7 @@
           ><a @click="logout">Déconnexion </a></b-dropdown-item
         >
       </b-dropdown>
-    </div>
+    </nav>
   </header>
 </template>
 
@@ -45,16 +44,13 @@ export default {
       user: "",
     };
   },
-  created() {
-    let userData = this.$store.state.user;
-    console.log(userData.user.userId);
-    axios
-      .get(apiUrl + "auth/users/" + userData.user.userId, {
+  async created() {
+    await axios
+      .get(apiUrl + "auth/users/" + this.$store.state.user.user.userId, {
         headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {
-        this.user = response.data.user;
-        console.log(response.data.user);
+        this.user = response.data;
       })
       .catch((err) => console.log(err));
   },
@@ -75,7 +71,7 @@ export default {
 
 <style scoped lang="scss">
 @import "@/modules/_variables";
-#nav {
+nav {
   display: flex;
   flex-direction: column;
   background-color: $primary-color;

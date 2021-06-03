@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt"); // Package permettant de chiffrer les mots de passes
 const jwt = require("jsonwebtoken"); // JSON Web Token : Jeton d'authentification utilisé afin de ne pas redemander la connexion à chaque requête
 const mysql = require('mysql'); // Package permettant de se connecter à la base de données mysql
+const helper = require("../helpers/user.js") // Helper permettant de ne pas répéter la fonction de recherche d'un utilisateur
 
 const validator = require('validator'); // Le validateur permet de vérifier que le format d'email entré est correct
 
@@ -96,76 +97,18 @@ exports.login = (req, res, next) => { // Middleware pour la connexion
 
 };
 
-exports.getOneUser = (req, res, next) => {
-    const urlUserId = req.params.id;
-    console.log(urlUserId)
+exports.getOneUser = (req, res, next) => { // Middleware permettant la récupération des infos d'un utilisateur d'après son ID
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
     const userId = decodedToken.userId;
-    let sql = `SELECT * FROM users WHERE userId = ?`;
-    sql = mysql.format(sql, [userId])
-    //console.log("Token : " + token);
-    //console.log(decodedToken);
-    console.log("User ID : " + userId)
-    db.query(sql, (err, result) => {
-        //console.log(result[0]);
-        if (result.length > 0) {
-            return res.status(200).json({
-                user: {
-                    userId: result[0].userId,
-                    username: result[0].username,
-                    fname: result[0].fname,
-                    lname: result[0].lname,
-                    email: result[0].email,
-                    profilePictureUrl: result[0].profilePictureUrl,
-                    roleId: result[0].roleId,
-                    createdOn: result[0].createdOn,
-                    lastUpdated: result[0].lastUpdated
-                }
-            });
-        } else {
-            return res.status(401).json(() => {
-                err;
-                console.log("Utilisateur introuvable")
-            });
-        }
-
-    })
+    console.log("Token : " + token)
+    helper.data.findUser(req, res, next, userId)
 };
 
-exports.getOneUserNotConnected = (req, res, next) => {
+exports.getOneUserNotConnected = (req, res, next) => { // Middleware permettant la récupération des infos d'un utilisateur d'après son ID sans avoir besoin de s'authentifier
     const urlUserId = req.params.id;
     console.log(urlUserId)
-
-    let sql = `SELECT * FROM users WHERE userId = ?`;
-    sql = mysql.format(sql, [urlUserId])
-    //console.log("Token : " + token);
-    //console.log(decodedToken);
-    console.log("User ID : " + urlUserId)
-    db.query(sql, (err, result) => {
-        //console.log(result[0]);
-        if (result.length > 0) {
-            return res.status(200).json({
-                user: {
-                    userId: result[0].userId,
-                    username: result[0].username,
-                    fname: result[0].fname,
-                    lname: result[0].lname,
-                    email: result[0].email,
-                    profilePictureUrl: result[0].profilePictureUrl,
-                    roleId: result[0].roleId,
-                    createdOn: result[0].createdOn,
-                    lastUpdated: result[0].lastUpdated
-                }
-            });
-        } else {
-            return res.status(401).json(() => {
-                err;
-                console.log("Utilisateur introuvable")
-            });
-        }
-
-    })
+    helper.data.findUser(req, res, next, urlUserId)
 };
 
 exports.getAllUsers = (req, res, next) => {

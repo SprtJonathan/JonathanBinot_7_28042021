@@ -13,14 +13,14 @@
         </section>
         <section class="footer-section">
           <RouterLink
-            class="btn btn-secondary button"
-            v-if="$store.state.user.user.userId == post.userId"
+            class="footer-section--btn btn"
+            v-if="$store.state.user.user.userId == post.userId || $store.state.user.user.roleId == 1"
             :to="`/post/${post.postId}/edit`"
             ><b-icon icon="pencil-square"></b-icon
           ></RouterLink>
           <button
             type="submit"
-            class="btn btn-danger button"
+            class="footer-section--btn btn "
             v-if="
               $store.state.user.user.userId == post.userId ||
                 $store.state.user.user.roleId == 1
@@ -46,7 +46,7 @@
           </div>
           <hr />
         </section>
-        <section class="comments-section">
+        <section class="comments-section shadow-sm">
           <CommentPost :post="post" />
         </section>
       </div>
@@ -83,8 +83,8 @@ export default {
   components: {
     CommentPost,
   },
-  created() {
-    axios
+  async created() {
+    await axios
       .get(apiUrl + "auth/users", {
         headers: { Authorization: "Bearer " + localStorage.token },
       })
@@ -95,7 +95,6 @@ export default {
       })
       .catch((err) => {
         console.log(err);
-
         localStorage.clear();
         this.$store.dispatch("user/logout").then(() => {});
       });
@@ -151,10 +150,21 @@ export default {
 }
 .post {
   margin-top: 5rem;
+  padding: 1rem;
 }
 .post-section {
 }
 .footer-section {
+  &--btn {
+    margin: 0 2rem;
+    align-items: center;
+    justify-items: center;
+    align-content: center;
+    justify-content: center;
+    height: 2rem;
+    width: 2rem;
+    background-color: white;
+  }
 }
 .comments-section {
   background-color: whitesmoke;
