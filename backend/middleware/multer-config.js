@@ -5,19 +5,23 @@ const MIME_TYPES = {
   "image/jpeg": "jpg",
   "image/png": "png",
   "image/webp": "webp",
+  "image/svg": "svg",
+  "image/gif": "gif",
 }; // Extensions de fichiers reconnues par multer
 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, "images");
+    callback(null, "images/userProfilePictures/uploads");
+    console.log("using 2")
   },
   filename: (req, file, callback) => {
     const name = file.originalname.split(" ").join("_"); // Récupération du fichier et renommage en supprimant les espaces
+    console.log("test " + file.originalname)
     const extension = MIME_TYPES[file.mimetype]; // ajout de l'extension selon le type de fichier reçu
     callback(null, name + Date.now() + "." + extension);
   },
 });
 
-const limits = {fileSize: 20000000} // Limite de taille pour l'envoi des fichiers
+const limits = { fileSize: 409600 } // Limite de taille pour l'envoi des fichiers
 
-module.exports = multer({ storage: storage, limits: limits }).single("image"); // Exportation
+module.exports = multer({ storage: storage, limiter: limits }).single("image"); // Exportation

@@ -1,7 +1,7 @@
 const db = require("../config/config"); // Importation de la configuration de la connexion à la BDD
 
 exports.getAllPosts = (req, res, _next) => {
-    let sql = `SELECT posts.postId, posts.userId, posts.title, posts.content, posts.creationDate, posts.modificationDate, users.username FROM posts INNER JOIN users ON posts.userId = users.userId ORDER BY creationDate DESC`
+    let sql = `SELECT posts.postId, posts.userId, posts.title, posts.content, posts.creationDate, posts.modificationDate, users.username, users.roleId FROM posts INNER JOIN users ON posts.userId = users.userId ORDER BY creationDate DESC`
     db.query(sql, (err, result) => {
         if (err) throw err;
         res.send(result);

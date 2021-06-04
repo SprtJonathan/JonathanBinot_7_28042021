@@ -8,6 +8,7 @@ const validator = require('validator'); // Le validateur permet de vérifier que
 const fs = require("fs"); // Import de fs qui permet d'accéder au file-system (pour l'enregistrement d'images)
 
 const db = require("../config/config"); // Importation de la configuration de la connexion à la BDD
+const { profile } = require("console");
 
 exports.register = (req, res, next) => { // Middleware pour l'inscription
     const username = req.body.username;
@@ -125,7 +126,7 @@ exports.deleteAccount = (req, res, next) => { // Middleware pour la suppression 
     const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
     const userId = decodedToken.userId;
     const roleId = decodedToken.roleId;
-    const userProfileId = req.params.id
+    const userProfileId = req.params.id;
     console.log("profil à supprimer : " + userProfileId + "et utilisateur voulant supprimer : " + userId + " admin? " + roleId)
     if (roleId == 1 || userId == userProfileId) {
         let sql = `DELETE FROM users WHERE userId = ?`;
@@ -139,6 +140,27 @@ exports.deleteAccount = (req, res, next) => { // Middleware pour la suppression 
         })
     }
 };
+
+exports.editProfilePicture = (req, res, next) => {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
+    const roleId = decodedToken.roleId;
+    const userId = decodedToken.userId
+    const userToEdit = req.params.id;
+    const profilePicture = `${req.protocol}://${req.get("host")}/images/userProfilePictures/uploads/${req.file.filename}`;
+    if (roleId == 1 || userToEdit == userId) {
+        let sql = `UPDATE users SET profilePictureUrl = ?, lastUpdated = CURRENT_TIMESTAMP WHERE userId = ?;`;
+        sql = mysql.format(sql, [profilePicture, userToEdit]);
+        console.log(profilePicture)
+        console.log("profil à éditer : " + userToEdit + "et utilisateur voulant éditer : " + userId + " image? " + profilePicture)
+        db.query(sql, (err, result) => {
+
+            if (err) throw err;
+            res.send(result);
+
+        })
+    }
+}
 
 exports.editAccount = (req, res, next) => { // Middleware pour la modification du compte
     const token = req.headers.authorization.split(" ")[1];

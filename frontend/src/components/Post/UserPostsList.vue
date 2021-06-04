@@ -3,55 +3,65 @@
     <div v-show="!hasPublished">
       <h2>Cet utilisateur n'a encore rien publié</h2>
     </div>
-    <div
-      class="post container card"
-      :v-show="hasPublished"
-      v-for="post in allPosts"
-      :key="post.postId"
-    >
-      <div class="content">
-        <section class="post-section">
-          <h2 class="post--title display-4">{{ post.title }}</h2>
-          <div v-html="post.content" class="post--content card lead"></div>
-          <hr />
-        </section>
-        <section class="footer-section">
-          <RouterLink
-            class="btn btn-secondary button"
-            v-if="$store.state.user.user.userId == post.userId"
-            :to="`/post/${post.postId}/edit`"
-            ><b-icon icon="pencil-square"></b-icon
-          ></RouterLink>
-          <button
-            type="submit"
-            class="btn btn-danger button"
-            v-if="
-              $store.state.user.user.userId == post.userId ||
-                $store.state.user.user.roleId == 1
-            "
-            @click="deletePost(post.postId)"
-          >
-            <b-icon icon="trash"></b-icon>
-          </button>
-          <div class="post--info">
+    <div class="">
+      <div
+        class="post container card"
+        v-for="post in allPosts"
+        :key="post.postId"
+      >
+        <div class="content">
+          <section class="post-section">
+            <h2 class="post--title display-4">{{ post.title }}</h2>
+            <div v-html="post.content" class="post--content card lead"></div>
             <hr />
-            <span
-              >Publié par
-              <RouterLink :to="`/user/${post.userId}`">
-                <em>{{ post.username }}</em>
-              </RouterLink>
-              le <em>{{ post.creationDate | formatDate }}</em> <br
-            /></span>
-            <span v-if="post.creationDate != post.modificationDate"
-              >Dernière modification le
-              <em>{{ post.modificationDate | formatDate }}</em></span
+          </section>
+          <section class="footer-section">
+            <RouterLink
+              class="footer-section--btn btn"
+              v-if="
+                $store.state.user.user.userId == post.userId ||
+                  $store.state.user.user.roleId == 1
+              "
+              :to="`/post/${post.postId}/edit`"
+              ><b-icon icon="pencil-square"></b-icon
+            ></RouterLink>
+            <button
+              type="submit"
+              class="footer-section--btn btn "
+              v-if="
+                $store.state.user.user.userId == post.userId ||
+                  $store.state.user.user.roleId == 1
+              "
+              @click="deletePost(post.postId)"
             >
-          </div>
-          <hr />
-        </section>
-        <section class="comments-section">
-          <CommentPost :post="post" />
-        </section>
+              <b-icon icon="trash"></b-icon>
+            </button>
+            <div class="post--info">
+              <hr />
+
+              <span>
+                Publié par
+                <RouterLink :to="`/user/${post.userId}`">
+                  <span v-show="post.roleId != 1" class="regular">{{
+                    post.username
+                  }}</span>
+                  <span v-show="post.roleId == 1" class="admin">{{
+                    post.username
+                  }}</span>
+                </RouterLink>
+                le <em>{{ post.creationDate | formatDate }}</em> <br />
+              </span>
+              <span v-if="post.creationDate != post.modificationDate">
+                Dernière modification le
+                <em>{{ post.modificationDate | formatDate }}</em>
+              </span>
+            </div>
+            <hr />
+          </section>
+          <section class="comments-section shadow-sm">
+            <CommentPost :post="post" />
+          </section>
+        </div>
       </div>
     </div>
   </div>
@@ -141,7 +151,8 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@import "@/modules/_variables";
 .titre {
   color: #122442;
   font-size: 2em;
@@ -151,5 +162,32 @@ export default {
 }
 .post {
   margin-top: 5rem;
+  padding: 1rem;
+  &--content {
+    padding: 1rem;
+  }
+}
+.footer-section {
+  &--btn {
+    margin: 0 2rem;
+    align-items: center;
+    justify-items: center;
+    align-content: center;
+    justify-content: center;
+    height: 2rem;
+    width: 2rem;
+    background-color: white;
+  }
+}
+.comments-section {
+  background-color: whitesmoke;
+  border-radius: 25px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.admin {
+  color: $secondary-color;
+  text-decoration: none;
 }
 </style>

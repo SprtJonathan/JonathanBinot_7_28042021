@@ -16,10 +16,26 @@
             type="file"
             ref="file"
             accept="image/*"
-            @change="uploadPicture()"
+            @change="addImage"
             id="upload-photo"
             class="upload-photo"
           />
+          <!-- Boite de dialogue affichant un potentiel message d'erreur -->
+          <b-modal
+            hide-footer
+            hide-header
+            id="delete-account-modal"
+            v-model="errorDialog"
+            max-width="300"
+          >
+            <b-card>
+              <b-card-text class="subheading">{{ errorText }}</b-card-text>
+              <b-card-actions>
+                <b-spacer></b-spacer>
+                <b-btn @click="errorDialog = false" flat>Je change!</b-btn>
+              </b-card-actions>
+            </b-card>
+          </b-modal>
         </div>
         <label for="username">Nom d'utilisateur</label>
         <div id="username-block" class="username-block">
@@ -123,12 +139,15 @@ export default {
     return {
       adminConnected: this.$store.state.user.user.roleId,
       user: "",
-      selectedImage: null,
+      file: "",
       password: "",
       newPassword: "",
       formError: "",
       hasError: false,
       routeUserId: this.$route.params.userId,
+      errorDialog: null,
+      errorText: "",
+      maxSize: 4096,
     };
   },
   created() {
@@ -140,6 +159,42 @@ export default {
       .catch((err) => console.log(err));
   },
   methods: {
+    addImage() {
+      const file = this.$refs.file.files[0];
+      this.file = file;
+      this.modifyPicture()
+    },
+    modifyPicture() {
+      const formData = new FormData();
+      formData.append("image", this.file);
+
+      console.log(formData);
+
+      /*let config = {
+        header: {
+          "Content-Type": "image/*",
+        },
+      };*/
+
+      axios
+        .put(
+          apiUrl + "auth/users/profilepicture/" + this.user.userId,
+          formData,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.token,
+              "Content-Type": "image",
+            },
+          }
+        )
+        .then((response) => {
+          console.log("image upload response > ", response);
+          location.reload()
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     editUser() {
       /* Vérifications */
       this.formError = "";
@@ -313,7 +368,7 @@ export default {
             .then((result) => {
               console.log(result);
               alert("Utilisateur modifié");
-              location.replace(location.origin);
+              location.reload();
             })
             .catch((error) => {
               let errorMessage = error.toString();

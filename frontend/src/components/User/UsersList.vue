@@ -1,14 +1,23 @@
 <template>
   <div>
-    <h2 class="card container display-4">Utilisateur inscrits</h2>
-    <div class="card container">
+    <h2 class="">Utilisateur inscrits</h2>
+    <div class="container">
       <div
         class="user container card"
         v-for="user in allUsers"
         :key="user.userId"
       >
         <div class="content">
-          <h2 class="user--title">{{user.fname}} "{{ user.username }}" {{user.lname}}</h2>
+          <div class="profile-picture--block shadow-sm">
+            <img
+              class="profile-picture--image"
+              :src="user.profilePictureUrl"
+              alt="Image de profil"
+            />
+          </div>
+          <h2 class="user--title">
+            {{ user.fname }} "{{ user.username }}" {{ user.lname }}
+          </h2>
           <router-link :to="`/user/${user.userId}`"
             >Accéder au profil</router-link
           >
@@ -50,15 +59,45 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@import "../../modules/_variables";
+.user {
+  margin: 1rem;
+}
 .titre {
   color: #122442;
   font-size: 2em;
-  @media screen and (max-width: 1000px) {
-    font-size: 1em;
+}
+.profile-picture {
+  &--block {
+    position: relative;
+    width: 40%;
+    margin: 1.5rem auto;
+    border-radius: 50%;
+  }
+  &--image {
+    width: 100%;
+    border-radius: 50%;
   }
 }
 .post {
   margin-top: 5rem;
+}
+@media (min-width: 1000px) {
+  .titre {
+    font-size: 1em;
+  }
+  .profile-picture {
+    &--block {
+      position: relative;
+      width: 10%;
+      margin: 1.5rem auto;
+      border-radius: 50%;
+    }
+    &--image {
+      width: 100%;
+      border-radius: 50%;
+    }
+  }
 }
 </style>

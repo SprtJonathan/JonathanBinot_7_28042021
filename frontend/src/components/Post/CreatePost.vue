@@ -145,4 +145,14 @@ export default {
 .create-post {
   padding: 1rem;
 }
+.post {
+  &--title {
+    width: 50%;
+    margin: auto;
+  }
+  &--content {
+    margin: 1rem;
+    border: 1px solid $primary-color;
+  }
+}
 </style>

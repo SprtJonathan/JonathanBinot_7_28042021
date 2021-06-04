@@ -7,6 +7,9 @@
       "
       class="create-post container card"
     >
+      <button class="back-button btn shadow-sm" @click="$router.go(-1)">
+        <b-icon class="back-button--icon" icon="arrow-left"></b-icon>
+      </button>
       <h2>
         Editer le commentaire
         <h2
@@ -18,8 +21,8 @@
           de {{ comment.username }}
         </h2>
       </h2>
-      <div class="post-creation--block">
-        <form @submit.prevent="sumbitComment" class="">
+      <div class="post--creation--block">
+        <form id="edit-form" @submit.prevent="sumbitComment" class="">
           <div class="control">
             <quill-editor
               ref="myQuillEditor"
@@ -32,20 +35,36 @@
               @ready="onEditorReady($event)"
               required
             />
-            <input
-              type="submit"
-              class="sumbit-post btn-primary form-control"
-              value="Éditer le commentaire"
-            />
           </div>
         </form>
-        <button
-          type="submit"
-          class="btn btn-danger button form-control"
-          @click="deleteComment()"
-        >
-          Supprimer le commentaire
-        </button>
+        <div class="button-block">
+          <button
+            type="submit"
+            form="edit-form"
+            class="sumbit-post btn btn-primary post--button rounded-pill"
+            value="Éditer le commentaire"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-save"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"
+              />
+            </svg>
+          </button>
+          <button
+            type="submit"
+            class="btn btn-danger post--button rounded-pill"
+            @click="deleteComment()"
+          >
+            <b-icon icon="trash"></b-icon>
+          </button>
+        </div>
       </div>
     </div>
     <div
@@ -68,6 +87,20 @@ import axios from "axios";
 let apiPort = "3000";
 let apiUrl = "http://localhost:" + apiPort + "/api/";
 
+let toolbarOptions = {
+  handlers: {
+    // handlers object will be merged with default handlers object
+    link: function(value) {
+      if (value) {
+        var href = prompt("Enter the URL");
+        this.quill.format("link", href);
+      } else {
+        this.quill.format("link", false);
+      }
+    },
+  },
+};
+
 export default {
   name: "CreatePost",
   data() {
@@ -77,7 +110,10 @@ export default {
       formError: "",
       hasError: false,
       editorOption: {
-        // Some Quill options...
+        modules: {
+          toolbar: toolbarOptions,
+        },
+        theme: "bubble",
       },
       routeCommentId: this.$route.params.commentId,
     };
@@ -177,4 +213,27 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/modules/_variables";
+.create-post {
+  padding: 1rem;
+}
+.back-button {
+  position: absolute;
+  background-color: white;
+  border-radius: 50%;
+  height: fit-content;
+  width: fit-content;
+  &--icon {
+    height: 1rem;
+    width: 1rem;
+  }
+}
+.post {
+  &--content {
+    margin: 1rem;
+    border: 1px solid $primary-color;
+  }
+  &--button {
+    margin: 1rem;
+  }
+}
 </style>

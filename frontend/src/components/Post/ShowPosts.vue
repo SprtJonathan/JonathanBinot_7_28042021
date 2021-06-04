@@ -14,7 +14,10 @@
         <section class="footer-section">
           <RouterLink
             class="footer-section--btn btn"
-            v-if="$store.state.user.user.userId == post.userId || $store.state.user.user.roleId == 1"
+            v-if="
+              $store.state.user.user.userId == post.userId ||
+                $store.state.user.user.roleId == 1
+            "
             :to="`/post/${post.postId}/edit`"
             ><b-icon icon="pencil-square"></b-icon
           ></RouterLink>
@@ -35,7 +38,12 @@
             <span>
               Publié par
               <RouterLink :to="`/user/${post.userId}`">
-                <em>{{ post.username }}</em>
+                <span v-show="post.roleId != 1" class="regular">{{
+                  post.username
+                }}</span>
+                <span v-show="post.roleId == 1" class="admin">{{
+                  post.username
+                }}</span>
               </RouterLink>
               le <em>{{ post.creationDate | formatDate }}</em> <br />
             </span>
@@ -66,15 +74,7 @@ export default {
   data() {
     return {
       user: "",
-      post: {
-        User: [],
-        postId: "",
-        userId: "",
-        title: "",
-        content: "",
-        creationDate: "",
-        modificationDate: "",
-      },
+      post: "",
       allPosts: [],
       allUsers: [],
       isAuthorUser: false,
@@ -140,7 +140,8 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@import "@/modules/_variables";
 .titre {
   color: #122442;
   font-size: 2em;
@@ -151,8 +152,9 @@ export default {
 .post {
   margin-top: 5rem;
   padding: 1rem;
-}
-.post-section {
+  &--content {
+    padding: 1rem;
+  }
 }
 .footer-section {
   &--btn {
@@ -171,5 +173,9 @@ export default {
   border-radius: 25px;
   padding: 2rem;
   margin-bottom: 2rem;
+}
+.admin {
+  color: $secondary-color;
+  text-decoration: none;
 }
 </style>
