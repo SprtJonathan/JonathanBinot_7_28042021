@@ -4,7 +4,7 @@
       <div class="control">
         <quill-editor
           ref="commentEditor"
-          class="comment--content"
+          class="comment--write"
           placeholder="Commentaire"
           v-model="comment.comment"
           :options="editorOption"
@@ -115,8 +115,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.comment--content {
-  background-color: white;
-}
-</style>
+<style lang="scss" scoped></style>

@@ -1,7 +1,8 @@
 <template>
-  <div class="create-post">
-    <h3>Commentaires</h3>
+  <div class="create-comment">
+    <h2>Commentaires</h2>
     <WriteComment :post="post" />
+    <hr />
     <ShowComments :post="post" />
   </div>
 </template>
@@ -47,5 +48,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/modules/_variables";
+@import "@/modules/main";
 </style>

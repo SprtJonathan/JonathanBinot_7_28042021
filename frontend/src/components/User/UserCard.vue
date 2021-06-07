@@ -1,6 +1,7 @@
 <template>
   <div>
     <article class="profile-card card">
+      <h2>Informations utilisateur</h2>
       <div v-show="user.roleId == 1" class="user-role">
         <h5><mark>Administrateur</mark></h5>
       </div>
@@ -11,15 +12,15 @@
           alt="Image de profil"
         />
       </div>
-      <div class="current-username">
+      <div class="current--username">
         <h5>Nom d'utilisateur</h5>
-        <p class="current-username--text">{{ user.username }}</p>
+        <p class="current--username--text">{{ user.username }}</p>
       </div>
-      <div class="current-fname">
+      <div class="current--fname">
         <h5>Prénom :</h5>
         <p>{{ user.fname }}</p>
       </div>
-      <div class="current-lname">
+      <div class="current--lname">
         <h5>Nom de famille :</h5>
         <p>{{ user.lname }}</p>
       </div>
@@ -76,45 +77,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../modules/_variables";
-.profile-card {
-  display: flex;
-  margin: auto;
-  border-radius: 25px;
-  padding: 2rem;
-}
-.profile-picture {
-  &--block {
-    position: relative;
-    width: 30%;
-    margin: 1.5rem auto;
-    border-radius: 50%;
-  }
-  &--image {
-    width: 100%;
-    border-radius: 50%;
-  }
-
-  &--upload {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    opacity: 0;
-    z-index: 15;
-    border-radius: 50%;
-    width: 100%;
-    height: 100%;
-    padding: 2rem;
-    color: $secondary-color;
-    backdrop-filter: blur(2px);
-    transition: 500ms ease;
-    &:hover {
-      cursor: pointer;
-      opacity: 1;
-      transition: 500ms ease;
-    }
-  }
-}
+@import "@/modules/main";
 </style>

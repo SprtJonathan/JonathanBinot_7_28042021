@@ -1,0 +1,40 @@
+@keyframes loading-screen-anim {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    z-index: -1;
+  }
+}
+
+@keyframes spinner-rotation {
+    0% {
+      transform: rotate(20deg);
+    }
+    90% {
+      transform: rotate(350deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+@keyframes checkbox-rotatein {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

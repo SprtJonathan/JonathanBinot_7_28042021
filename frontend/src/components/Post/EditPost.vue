@@ -27,7 +27,7 @@
             <input
               v-model="post.title"
               type="text"
-              class="post--title form-control"
+              class="create-post--title form-control"
               :placeholder="post.title"
               required
             />
@@ -220,32 +220,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/modules/_variables";
-.create-post {
-  padding: 1rem;
-}
-.back-button {
-  position: absolute;
-  background-color: white;
-  border-radius: 50%;
-  height: fit-content;
-  width: fit-content;
-  &--icon {
-    height: 1rem;
-    width: 1rem;
-  }
-}
-.post {
-  &--title {
-    width: 50%;
-    margin: auto;
-  }
-  &--content {
-    margin: 1rem;
-    border: 1px solid $primary-color;
-  }
-  &--button {
-    margin: 1rem;
-  }
-}
+@import "@/modules/main";
 </style>

@@ -1,6 +1,6 @@
 <template>
   <section>
-    <article id="form-block" class="form-block container card">
+    <article id="form-block" class="form-block-auth container card">
       <h2>Inscription</h2>
       <label for="username">Nom d'utilisateur</label>
       <div id="username-block" class="username-block">
@@ -318,7 +318,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-@import "@/modules/_variables";
+@import "@/modules/main";
 h3 {
   margin: 40px 0 0;
 }

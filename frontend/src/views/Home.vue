@@ -2,7 +2,7 @@
   <div class="home">
     <Auth v-show="!isUserConnected" />
     <CreatePost v-show="isUserConnected" />
-    <hr>
+    <hr />
     <ShowPosts v-show="isUserConnected" />
   </div>
 </template>
@@ -28,8 +28,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "../modules/_variables";
-.home {
-  margin: 1em;
-}
+@import "@/modules/main";
 </style>

@@ -1,20 +1,20 @@
 <template>
   <div class="create-post container card">
-    <h2 class="create-post--title">Quoi de neuf aujourd'hui?</h2>
+    <h2 class="post--title test">Quoi de neuf aujourd'hui?</h2>
     <div class="post-creation--block">
       <form @submit.prevent="sumbitPost" class="">
         <div class="control">
           <input
             v-model="post.title"
             type="text"
-            class="post--title form-control"
+            class="create-post--title form-control"
             placeholder="Titre du post"
             required
           />
 
           <quill-editor
             ref="myQuillEditor"
-            class="post--content"
+            class="create-post--content"
             placeholder="Contenu du post"
             v-model="post.content"
             :options="editorOption"
@@ -141,18 +141,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/modules/_variables";
-.create-post {
-  padding: 1rem;
-}
-.post {
-  &--title {
-    width: 50%;
-    margin: auto;
-  }
-  &--content {
-    margin: 1rem;
-    border: 1px solid $primary-color;
-  }
-}
+@import "@/modules/main";
 </style>

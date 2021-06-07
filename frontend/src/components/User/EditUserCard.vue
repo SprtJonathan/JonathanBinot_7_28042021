@@ -1,130 +1,124 @@
 <template>
   <div>
-    <section>
-      <article id="form-block" class="form-block container card">
-        <h2>Informations utilisateur</h2>
-        <div class="profile-picture--block shadow-sm">
-          <img
-            class="profile-picture--image"
-            :src="user.profilePictureUrl"
-            alt="Image de profil"
-          />
-          <label for="upload-photo"
-            ><b-icon icon="upload" class="profile-picture--upload"></b-icon
-          ></label>
-          <input
-            type="file"
-            ref="file"
-            accept="image/*"
-            @change="addImage"
-            id="upload-photo"
-            class="upload-photo"
-          />
-          <!-- Boite de dialogue affichant un potentiel message d'erreur -->
-          <b-modal
-            hide-footer
-            hide-header
-            id="delete-account-modal"
-            v-model="errorDialog"
-            max-width="300"
-          >
-            <b-card>
-              <b-card-text class="subheading">{{ errorText }}</b-card-text>
-              <b-card-actions>
-                <b-spacer></b-spacer>
-                <b-btn @click="errorDialog = false" flat>Je change!</b-btn>
-              </b-card-actions>
-            </b-card>
-          </b-modal>
-        </div>
-        <label for="username">Nom d'utilisateur</label>
-        <div id="username-block" class="username-block">
-          <input
-            class="form-control"
-            id="username"
-            type="text"
-            autocomplete="username"
-            v-model="user.username"
-            :placeholder="user.username"
-            required
-          />
-        </div>
-
-        <label for="fname">Prénom</label>
-        <input
-          class="form-control"
-          id="fname"
-          type="text"
-          autocomplete="given-name"
-          v-model="user.fname"
-          :placeholder="user.fname"
-          required
+    <article id="form-block" class="profile-card card">
+      <h2>Informations sur le compte</h2>
+      <div class="profile-picture--block shadow-sm">
+        <img
+          class="profile-picture--image"
+          :src="user.profilePictureUrl"
+          alt="Image de profil"
         />
-
-        <label for="lname">Nom de famille</label>
+        <label for="upload-photo"
+          ><b-icon icon="upload" class="profile-picture--upload"></b-icon
+        ></label>
         <input
-          class="form-control"
-          id="lname"
-          type="text"
-          autocomplete="family-name"
-          v-model="user.lname"
-          :placeholder="user.lname"
-          required
+          type="file"
+          ref="file"
+          accept="image/*"
+          @change="addImage"
+          id="upload-photo"
+          class="upload-photo"
         />
-
-        <label for="email">Adresse email</label>
-        <input
-          type="email"
-          v-model="user.email"
-          class="form-control"
-          id="email"
-          autocomplete="email"
-          aria-describedby="emailHelp"
-          :placeholder="user.email"
-          required
-        />
-
-        <div class="passwords" v-if="adminConnected != 1">
-          <label for="password">Mot de passe actuel</label>
-          <input
-            type="password"
-            class="form-control"
-            id="old-password"
-            autocomplete="new-password"
-            v-model="password"
-            placeholder="Ancien mot de passe"
-            required
-          />
-          <label for="password">Nouveau mot de passe</label>
-          <input
-            type="password"
-            class="form-control"
-            id="password"
-            autocomplete="new-password"
-            v-model="newPassword"
-            placeholder="Nouveau mot de passe"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          class="btn btn-secondary button"
-          @click="editUser"
+        <!-- Boite de dialogue affichant un potentiel message d'erreur -->
+        <b-modal
+          hide-footer
+          hide-header
+          id="delete-account-modal"
+          v-model="errorDialog"
+          max-width="300"
         >
-          Modifier les informations
-        </button>
-      </article>
-      <div
-        v-show="hasError"
-        id="errorAlert"
-        title="BootstrapVue"
-        class="container alert-danger"
-        static
-        no-auto-hide
-      >
-        {{ formError }}
+          <b-card>
+            <b-card-text class="subheading">{{ errorText }}</b-card-text>
+            <b-card-actions>
+              <b-spacer></b-spacer>
+              <b-btn @click="errorDialog = false" flat>Je change!</b-btn>
+            </b-card-actions>
+          </b-card>
+        </b-modal>
       </div>
-    </section>
+      <label for="username">Nom d'utilisateur</label>
+      <div id="username-block" class="username-block">
+        <input
+          class="form-control"
+          id="username"
+          type="text"
+          autocomplete="username"
+          v-model="user.username"
+          :placeholder="user.username"
+          required
+        />
+      </div>
+
+      <label for="fname">Prénom</label>
+      <input
+        class="form-control"
+        id="fname"
+        type="text"
+        autocomplete="given-name"
+        v-model="user.fname"
+        :placeholder="user.fname"
+        required
+      />
+
+      <label for="lname">Nom de famille</label>
+      <input
+        class="form-control"
+        id="lname"
+        type="text"
+        autocomplete="family-name"
+        v-model="user.lname"
+        :placeholder="user.lname"
+        required
+      />
+
+      <label for="email">Adresse email</label>
+      <input
+        type="email"
+        v-model="user.email"
+        class="form-control"
+        id="email"
+        autocomplete="email"
+        aria-describedby="emailHelp"
+        :placeholder="user.email"
+        required
+      />
+
+      <div class="passwords" v-if="adminConnected != 1">
+        <label for="password">Mot de passe actuel</label>
+        <input
+          type="password"
+          class="form-control"
+          id="old-password"
+          autocomplete="new-password"
+          v-model="password"
+          placeholder="Ancien mot de passe"
+          required
+        />
+        <label for="password">Nouveau mot de passe</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          autocomplete="new-password"
+          v-model="newPassword"
+          placeholder="Nouveau mot de passe"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-secondary button" @click="editUser">
+        Modifier les informations
+      </button>
+    </article>
+    <div
+      v-show="hasError"
+      id="errorAlert"
+      title="BootstrapVue"
+      class="container alert-danger"
+      static
+      no-auto-hide
+    >
+      {{ formError }}
+    </div>
   </div>
 </template>
 
@@ -162,7 +156,7 @@ export default {
     addImage() {
       const file = this.$refs.file.files[0];
       this.file = file;
-      this.modifyPicture()
+      this.modifyPicture();
     },
     modifyPicture() {
       const formData = new FormData();
@@ -189,7 +183,7 @@ export default {
         )
         .then((response) => {
           console.log("image upload response > ", response);
-          location.reload()
+          location.reload();
         })
         .catch((error) => {
           console.log(error);
@@ -389,50 +383,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../modules/_variables";
-.upload-photo {
-  opacity: 0;
-  position: absolute;
-  z-index: -1;
-}
-.form-block {
-  display: flex;
-  margin: auto;
-  border-radius: 25px;
-  padding: 2rem;
-}
-.profile-picture {
-  &--block {
-    position: relative;
-    width: 40%;
-    margin: 1.5rem auto;
-    border-radius: 50%;
-  }
-  &--image {
-    width: 100%;
-    border-radius: 50%;
-  }
-
-  &--upload {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    opacity: 0;
-    z-index: 15;
-    border-radius: 50%;
-    width: 100%;
-    height: 100%;
-    padding: 2rem;
-    color: $secondary-color;
-    backdrop-filter: blur(2px);
-    transition: 500ms ease;
-    &:hover {
-      cursor: pointer;
-      opacity: 1;
-      transition: 500ms ease;
-    }
-  }
-}
+@import "@/modules/main";
 </style>

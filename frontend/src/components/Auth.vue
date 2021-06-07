@@ -4,7 +4,7 @@
     <div class="already-button container" v-show="!isHidden">
       <p>
         Pas encore inscrit?
-        <button class="link" href="" @click="isHidden = true">
+        <button class="already-button--button" href="" @click="isHidden = true">
           S'inscrire
         </button>
       </p>
@@ -13,7 +13,7 @@
     <div class="already-button container" v-show="isHidden">
       <p>
         Déjà inscrit?
-        <button class="link" href="" @click="isHidden = false">
+        <button class="already-button--button" href="" @click="isHidden = false">
           Se connecter
         </button>
       </p>
@@ -46,33 +46,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "../modules/_variables";
-img {
-  width: 320px;
-}
-button {
-  text-decoration: wavy;
-  background: $secondary-color;
-  border: 0;
-  border-radius: 50px;
-  padding: 0.25rem 0.5rem;
-  color: $primary-color;
-  transition: 0.3s;
-  &:hover {
-    background: $primary-color;
-    color: $secondary-color;
-    transition: 0.3s;
-  }
-}
-.already-button {
-  background-color: $primary-color;
-  padding: 0.5rem;
-  position: relative;
-  z-index: 14;
-  border-radius: 0px 0px 15px 15px;
-  p {
-    margin: auto;
-    color: white;
-  }
-}
+@import "@/modules/main";
 </style>

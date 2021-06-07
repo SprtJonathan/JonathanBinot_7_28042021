@@ -1,6 +1,6 @@
 <template>
   <section>
-    <article id="form-block" class="form-block container card">
+    <article id="form-block" class="form-block-auth container card">
       <h2>Connexion</h2>
       <div class="form-group">
         <label for="credentials">Adresse email ou nom d'utilisateur</label>
@@ -80,34 +80,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-@import "@/modules/_variables";
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: $primary-color;
-}
-
-.form-block {
-  background-color: $block-background-semitransparent;
-  padding: 2%;
-  border-radius: 25px 25px 0px 0px;
-  margin: auto;
-  margin-top: 2%;
-}
-section {
-  position: relative;
-  z-index: 15;
-}
-.button {
-  margin-top: 0.5rem;
-}
+@import "@/modules/main";
 </style>

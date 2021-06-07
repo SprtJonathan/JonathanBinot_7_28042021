@@ -1,0 +1,35 @@
+$block-background-semitransparent: rgba(220, 220, 220, 0.5);
+$primary-color: rgb(9, 31, 67);
+$secondary-color: rgb(209, 81, 90);
+
+$terciary-color: #ffe550;
+$text-color: #2c3e50;
+
+$primary-font: "Khand", sans-serif;
+$secondary-font: "Roboto Condensed", sans-serif;
+$terciary-font: "Rubik", sans-serif;
+
+$font-size-regular-mobile: 1rem;
+$font-size-regular-desktop: 2rem;
+
+$primary-blurry-backrgound: url("/public/img/LowPolyBackground-dark-Blurry.png");
+
+$bg--light: #f2f2f2;
+$bg--dark: linear-gradient(-127deg, #333333, #080f1b);
+$bg--dark--alt: linear-gradient(-127deg, #333333, #080f1b);
+
+$text--light: #222222;
+$text--dark: #f2f2f2;
+
+/* Animation variables */
+$standard-transition: 250ms ease;
+
+$prog-bar-dur: 100ms;
+$prog-bar-delay: 150ms;
+$loading-screen-delay: $prog-bar-dur + $prog-bar-delay * 2;
+
+$header-margin: 100px;
+
+/* Z-index values */
+$menu-zindex: 10;
+$loading-zindex: 50;

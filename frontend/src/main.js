@@ -1,9 +1,10 @@
 import Vue from 'vue'
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import App from './App.vue'
 import store from './store'
 import router from './router'
 import moment from 'moment'
+
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 import VueQuillEditor from 'vue-quill-editor'
 

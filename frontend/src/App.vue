@@ -21,32 +21,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/modules/_variables";
-html {
-  background-color: whitesmoke;
-}
-body {
-  backdrop-filter: blur(5px);
-}
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  background-color: whitesmoke;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: $secondary-color;
-
-    &.router-link-exact-active {
-      color: $secondary-color;
-    }
-  }
-}
+@import "@/modules/main";
 </style>

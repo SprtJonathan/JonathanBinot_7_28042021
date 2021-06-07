@@ -27,7 +27,7 @@
             ></RouterLink>
             <button
               type="submit"
-              class="footer-section--btn btn "
+              class="footer-section--btn btn"
               v-if="
                 $store.state.user.user.userId == post.userId ||
                   $store.state.user.user.roleId == 1
@@ -58,7 +58,7 @@
             </div>
             <hr />
           </section>
-          <section class="comments-section shadow-sm">
+          <section class="comment--section shadow-sm">
             <CommentPost :post="post" />
           </section>
         </div>
@@ -152,7 +152,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/modules/_variables";
+@import "@/modules/main";
 .titre {
   color: #122442;
   font-size: 2em;

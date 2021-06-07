@@ -12,11 +12,22 @@
         >Connexion | Inscription</router-link
       >
 
+      <div class="theme-switch-wrapper">
+        <button class="already-button--button" @click="toggleTheme" aria-label="Toggle themes">
+          <span class="dark-mode-button" v-if="this.theme == 'darkMode'"
+            ><b-icon icon="sun"></b-icon
+          ></span>
+          <span class="dark-mode-button" v-else
+            ><b-icon icon="moon"></b-icon
+          ></span>
+        </button>
+      </div>
+
       <b-dropdown size="sm" v-if="isUserConnected" class="user-dropdown">
         <template #button-content class="user-dropdown--content">
           Bienvenue {{ user.username }}
           <img
-            class="profile-picture--image shadow-sm"
+            class="profile-picture-menu--image shadow-sm"
             :src="user.profilePictureUrl"
             alt="Image de profil"
           />
@@ -42,6 +53,7 @@ export default {
   data() {
     return {
       user: "",
+      theme: "",
     };
   },
   async created() {
@@ -59,7 +71,16 @@ export default {
       return this.$store.getters["user/isUserConnected"];
     },
   },
+  mounted() {
+    let localTheme = localStorage.getItem("theme"); //gets stored theme value if any
+    document.documentElement.setAttribute("data-theme", localTheme); // updates the data-theme attribute
+  },
   methods: {
+    toggleTheme() {
+      this.theme = this.theme == "darkMode" ? "" : "darkMode"; //toggles theme value
+      document.documentElement.setAttribute("data-theme", this.theme); // sets the data-theme attribute
+      localStorage.setItem("theme", this.theme); // stores theme value on local storage
+    },
     logout() {
       this.$store.dispatch("user/logout").then(() => {
         this.$router.push("/");
@@ -70,37 +91,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "@/modules/_variables";
-nav {
-  display: flex;
-  flex-direction: column;
-  background-color: $primary-color;
-  color: $secondary-color;
-  margin-bottom: 50px;
-}
-
-.logo {
-  width: 50vw;
-}
-.user-dropdown {
-  width: auto;
-}
-.profile-picture {
-  &--image {
-    width: 15%;
-    border-radius: 50%;
-    margin: auto;
-  }
-}
-@media (min-width: 1024px) {
-  #nav {
-    flex-direction: row;
-  }
-  .logo {
-    width: 10vw;
-  }
-  .user-dropdown {
-    width: 10vw;
-  }
-}
+@import "@/modules/main";
 </style>

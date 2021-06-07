@@ -1,0 +1,158 @@
+:root {
+  --background-color: #f2f2f2;
+  --background-color2: whitesmoke;
+  --background-color3: white;
+  --background-color4: whitesmoke;
+  --text-color: #122442;
+  --marked-color: $text-color;
+  --background-image: linear-gradient(-127deg, #333333, #080f1b);
+  --color-links: #0099ff;
+}
+
+[data-theme="darkMode"] {
+  --background-color: rgb(10, 10, 10);
+  --background-color2: rgb(54, 54, 54);
+  --background-color3: rgb(34, 34, 34);
+  --text-color: #f2f2f2;
+  --marked-color: #f2f2f2;
+  --background-image: linear-gradient(-127deg, #0b1424, #080f1b);
+  --color-links: #ffe550;
+}
+
+html {
+  background-color: var(--background-color);
+}
+body {
+  backdrop-filter: blur(5px);
+}
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  background-color: var(--background-color);
+}
+
+hr {
+  color: var(--text-color);
+}
+
+.home {
+  margin: 1em;
+}
+
+#nav {
+  padding: 30px;
+
+  a {
+    font-weight: bold;
+    color: $secondary-color;
+
+    &.router-link-exact-active {
+      color: $secondary-color;
+    }
+  }
+}
+
+html {
+  height: auto;
+  min-height: 100vh;
+  background-size: cover;
+  color: var(--text-color);
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+p{
+  text-align: center;
+}
+
+h1 {
+  font-family: $primary-font;
+  font-size: 24px;
+  font-weight: 500;
+  text-align: center;
+  color: var(--text-color);
+}
+
+h2 {
+  font-family: $secondary-font;
+  font-size: 20px;
+  font-weight: 400;
+  text-align: center;
+  color: var(--text-color);
+}
+
+h3 {
+  font-family: $terciary-font;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.text {
+  color: var(--text-color);
+}
+
+a.link {
+  color: var(--color-links);
+  text-decoration: none;
+}
+
+button {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+}
+
+.collapsible {
+  &--button {
+    background-image: var(--background-image);
+    color: white;
+    padding: 0px 2rem;
+    margin: 1rem;
+    border-radius: 1rem;
+    h2 {
+      text-align: center;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  h1 {
+    font-size: 30px;
+  }
+
+  h2 {
+    font-size: 28px;
+  }
+  .collapsible {
+    &--button {
+      h2 {
+        text-align: left;
+        font-size: 20px;
+      }
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  h1 {
+    font-size: 35px;
+  }
+
+  h2 {
+    font-size: 32px;
+  }
+}

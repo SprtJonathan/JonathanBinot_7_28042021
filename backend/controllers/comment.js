@@ -9,7 +9,7 @@ exports.getAllComments = (req, res, _next) => {
 }
 
 exports.getOnePostComments = (req, res, _next) => {
-	let sql = `SELECT comments.commentId, comments.postId, comments.comment, comments.userId, comments.writtenOn, comments.lastUpdated, users.username FROM comments INNER JOIN users ON comments.userId = users.userId WHERE postId=?`;
+	let sql = `SELECT comments.commentId, comments.postId, comments.comment, comments.userId, comments.writtenOn, comments.lastUpdated, users.username, users.roleId FROM comments INNER JOIN users ON comments.userId = users.userId WHERE postId=?`;
 	let postId = req.params.id;
 
 	db.query(sql, postId, (err, result) => {

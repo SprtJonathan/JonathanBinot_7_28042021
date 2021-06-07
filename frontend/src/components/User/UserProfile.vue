@@ -4,24 +4,24 @@
       <h1>Profil de {{ userPage.username }} !</h1>
       <a class="button is-light" v-if="user.roleId == 1">
         <hr />
-        <RouterLink to="/users">Liste des utilisateurs</RouterLink>
+        <RouterLink class="ext-links" to="/users"
+          >Liste des utilisateurs</RouterLink
+        >
       </a>
 
       <a class="button is-light">
         <hr />
-        <RouterLink :to="`/user/${routeUserId}/posts/`"
+        <RouterLink class="ext-links" :to="`/user/${routeUserId}/posts/`"
           >Publications de l'utilisateur</RouterLink
         >
       </a>
       <hr />
-      <h3>Informations sur le compte :</h3>
-      <div class="profile-block--informations container">
+
+      <div class="profile-block--informations">
         <UserCard />
-      </div>
-      <div class="profile-block--informations container">
         <EditUserCard v-show="isProfileFromUser || this.user.roleId == 1" />
       </div>
-      <div class="profile-block--delete container">
+      <div class="profile-block--delete">
         <DeleteUser
           :user="user"
           :userPage="userPage"
@@ -106,68 +106,5 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-@import "../../modules/_variables";
-
-.field {
-  display: flex;
-  justify-content: center;
-}
-h3 {
-  font-size: 1em;
-  color: #d1515a;
-}
-.user {
-  font-size: 1.1em;
-  color: #122442;
-  font-weight: bold;
-}
-.btnD {
-  background-color: #122442;
-  color: #ffff;
-  margin-top: 10px;
-  width: 120px;
-  height: 50px;
-  font-size: 1.1em;
-}
-
-.profile-block {
-  display: flex;
-  flex-direction: column;
-  background-color: $block-background-semitransparent;
-  padding: 1rem;
-  border-radius: 25px;
-  margin: auto;
-  margin-top: 2%;
-  &--content {
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-  }
-  &--informations {
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-  }
-}
-
-.account-info {
-  display: flex;
-  margin: auto;
-  width: 90%;
-  border-radius: 25px;
-}
-
-@media (min-width: 1280px) {
-  .profile-block {
-    &--content {
-      margin: auto;
-    }
-    margin: auto;
-    &--informations {
-      margin: auto;
-      display: flex;
-      flex-direction: row;
-    }
-  }
-}
+@import "@/modules/main";
 </style>

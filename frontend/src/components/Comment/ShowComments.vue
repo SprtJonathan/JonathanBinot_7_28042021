@@ -1,6 +1,8 @@
 <template>
   <div class="comments">
-    <div v-if="allComments.length == 0">Aucun commentaire</div>
+    <div v-if="allComments.length == 0">
+      <p class="text-center text">Aucun commentaire</p>
+    </div>
     <div
       class="comment--content"
       v-for="comment in allComments"
@@ -12,7 +14,12 @@
             <p>
               Posté par
               <RouterLink :to="`/user/${post.userId}`">
-                <em>{{ comment.username }}</em>
+                <span v-show="comment.roleId != 1" class="regular">{{
+                  comment.username
+                }}</span>
+                <span v-show="comment.roleId == 1" class="admin">{{
+                  comment.username
+                }}</span>
               </RouterLink>
               le <em>{{ comment.writtenOn | formatDate }}</em> <br />
             </p>
@@ -30,7 +37,7 @@
         <div v-html="comment.comment" class="comment--comment lead"></div>
         <div class="comment--footer">
           <RouterLink
-            class="comment--btn btn"
+            class="comment--btn--button"
             v-if="
               $store.state.user.user.userId == comment.userId ||
                 $store.state.user.user.roleId == 1
@@ -40,7 +47,7 @@
           ></RouterLink>
           <button
             type="submit"
-            class="comment--btn btn"
+            class="comment--btn--button"
             v-if="
               $store.state.user.user.userId == comment.userId ||
                 $store.state.user.user.roleId == 1
@@ -134,58 +141,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/modules/_variables";
-.comment {
-  &--content {
-    margin: 1rem;
-    background-color: white;
-  }
-  &--comment {
-    border: 0.5px $secondary-color solid;
-    padding: 1rem;
-  }
-  &--info {
-    display: flex;
-    flex-direction: row;
-    color: $primary-color;
-    font-size: 0.7em;
-    border: 0.5px $primary-color solid;
-    border-radius: .5rem .5rem 0rem 0rem;
-    border-bottom: 0px transparent;
-    &--creation {
-      padding: 0.5rem;
-    }
-    &--update {
-      padding: 0.5rem;
-    }
-  }
-  &--footer {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    background-color: rgb(199, 199, 199);
-    height: 2rem;
-  }
-  &--btn {
-    margin: 0 2rem;
-    align-items: center;
-    justify-items: center;
-    align-content: center;
-    justify-content: center;
-    height: 2rem;
-    width: 2rem;
-    background-color: white;
-  }
-}
-
-.titre {
-  color: #122442;
-  font-size: 2em;
-  @media screen and (max-width: 1000px) {
-    font-size: 1em;
-  }
-}
-.post {
-  margin-top: 5rem;
-}
+@import "@/modules/main";
 </style>
