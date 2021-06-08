@@ -100,21 +100,22 @@ export default {
         errorString.push("Erreur titre ou contenu vide");
       } else {
         axios
-          .post(apiUrl + "posts/", post, {
+          .post(apiUrl + "posts/", /*post,*/ {
             headers: { Authorization: "Bearer " + localStorage.token },
           })
           .then((result) => {
             console.log(result);
-            alert("Post publié");
-            location.replace(location.origin);
+            this.$toast.success("Post publié", {
+              timeout: 2000,
+            });
+            setTimeout(function() {
+              location.reload();
+            }, 2000);
           })
           .catch((error) => {
-            let errorMessage = error.toString();
-            errorString.push(errorMessage);
-            console.log(errorMessage);
-            this.formError = errorString.toString();
-            console.log(this.formError);
-            this.hasError = true;
+            this.$toast.error("Une erreur est survenue: " + error, {
+              timeout: 2000,
+            });
           });
       }
     },

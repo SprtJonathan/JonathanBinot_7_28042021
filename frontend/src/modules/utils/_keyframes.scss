@@ -10,16 +10,16 @@
 }
 
 @keyframes spinner-rotation {
-    0% {
-      transform: rotate(20deg);
-    }
-    90% {
-      transform: rotate(350deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
+  0% {
+    transform: rotate(20deg);
   }
+  90% {
+    transform: rotate(350deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
 @keyframes checkbox-rotatein {
   0% {
@@ -36,5 +36,16 @@
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 100;
+    transform: translateY(0);
   }
 }

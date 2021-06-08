@@ -164,8 +164,12 @@ export default {
           })
           .then((result) => {
             console.log(result);
-            alert("Commentaire édité");
-            location.replace(location.origin);
+            this.$toast.warning("Commentaire modifié", {
+              timeout: 2000,
+            });
+            setTimeout(function() {
+              location.replace(location.origin);
+            }, 2000);
           })
           .catch((error) => {
             let errorMessage = error.toString();
@@ -185,8 +189,12 @@ export default {
         })
         .then((result) => {
           console.log(result);
-          alert("Commentaire supprimé");
-          location.replace(location.origin);
+          this.$toast("Commentaire supprimé", {
+            timeout: 2000,
+          });
+          setTimeout(function() {
+            location.replace(location.origin);
+          }, 2000);
         })
         .catch((error) => {
           let errorMessage = error.toString();

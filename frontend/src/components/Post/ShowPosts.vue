@@ -55,7 +55,7 @@
           <hr />
         </section>
         <section class="comment--section shadow-sm">
-          <CommentPost :post="post" />
+          <CommentPost :post="post" :allPosts="allPosts" />
         </section>
       </div>
     </div>
@@ -124,8 +124,10 @@ export default {
         })
         .then((result) => {
           console.log(result);
-          alert("Post supprimé");
-          location.replace(location.origin);
+          this.$toast("Post supprimé", {
+            timeout: 2000,
+          });
+          this.loadPosts();
         })
         .catch((error) => {
           let errorMessage = error.toString();
@@ -135,6 +137,15 @@ export default {
           console.log(this.formError);
           this.hasError = true;
         });
+    },
+    forceRerender() {
+      // remove the my-component component from the DOM
+      this.renderComponent = false;
+
+      this.$nextTick(() => {
+        // add my-component component in DOM
+        this.renderComponent = true;
+      });
     },
   },
 };

@@ -1,9 +1,17 @@
 <template>
   <div class="create-comment">
-    <h2>Commentaires</h2>
-    <WriteComment :post="post" />
-    <hr />
-    <ShowComments :post="post" />
+    <button
+      class="btn button-collapse btn-pill"
+      :v-for="post in allPosts"
+      v-b-toggle="'comments' + post.postId"
+    >
+      <h2>Commentaires</h2>
+    </button>
+    <b-collapse class="collapsible" :v-for="post in allPosts" :id="'comments' + post.postId">
+      <WriteComment :post="post" />
+      <hr />
+      <ShowComments :post="post" />
+    </b-collapse>
   </div>
 </template>
 
@@ -26,7 +34,7 @@ export default {
       },
     };
   },
-  props: ["post"],
+  props: ["post", "allPosts"],
   components: {
     WriteComment,
     ShowComments,

@@ -14,7 +14,7 @@
         <input
           type="file"
           ref="file"
-          accept="image/*"
+          accept="image/x-png,image/gif,image/jpeg"
           @change="addImage"
           id="upload-photo"
           class="upload-photo"
@@ -141,7 +141,7 @@ export default {
       routeUserId: this.$route.params.userId,
       errorDialog: null,
       errorText: "",
-      maxSize: 4096,
+      maxSize: 2000000,
     };
   },
   created() {
@@ -159,35 +159,42 @@ export default {
       this.modifyPicture();
     },
     modifyPicture() {
-      const formData = new FormData();
-      formData.append("image", this.file);
+      if (this.file.size > this.maxSize) {
+        alert(
+          "Attention : fichier trop lourd, veuillez changer votre sélection." +
+            " Taille du fichier: " +
+            this.file.size
+        );
+      } else {
+        const formData = new FormData();
+        formData.append("image", this.file);
+        console.log(formData);
 
-      console.log(formData);
-
-      /*let config = {
+        /*let config = {
         header: {
           "Content-Type": "image/*",
         },
       };*/
 
-      axios
-        .put(
-          apiUrl + "auth/users/profilepicture/" + this.user.userId,
-          formData,
-          {
-            headers: {
-              Authorization: "Bearer " + localStorage.token,
-              "Content-Type": "image",
-            },
-          }
-        )
-        .then((response) => {
-          console.log("image upload response > ", response);
-          location.reload();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        axios
+          .put(
+            apiUrl + "auth/users/profilepicture/" + this.user.userId,
+            formData,
+            {
+              headers: {
+                Authorization: "Bearer " + localStorage.token,
+                "Content-Type": "image",
+              },
+            }
+          )
+          .then((response) => {
+            console.log("image upload response > ", response);
+            location.reload();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
     editUser() {
       /* Vérifications */
@@ -361,8 +368,12 @@ export default {
             })
             .then((result) => {
               console.log(result);
-              alert("Utilisateur modifié");
-              location.reload();
+              this.$toast.warning("Utilisateur modifié", {
+                timeout: 2000,
+              });
+              setTimeout(function() {
+                location.reload();
+              }, 2000);
             })
             .catch((error) => {
               let errorMessage = error.toString();

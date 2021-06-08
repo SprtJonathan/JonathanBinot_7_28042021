@@ -88,8 +88,12 @@ export default {
           })
           .then((result) => {
             console.log(result);
-            alert("Commentaire posté");
-            location.replace(location.origin);
+            this.$toast.success("Commentaire posté", {
+              timeout: 2000,
+            });
+            setTimeout(function() {
+              location.reload();
+            }, 2000);
           })
           .catch((error) => {
             let errorMessage = error.toString();

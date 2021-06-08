@@ -124,8 +124,10 @@ export default {
         })
         .then((result) => {
           console.log(result);
-          alert("Commentaire supprimé");
-          location.replace(location.origin);
+          this.$toast("Commentaire supprimé", {
+            timeout: 2000,
+          });
+          this.loadComments();
         })
         .catch((error) => {
           let errorMessage = error.toString();

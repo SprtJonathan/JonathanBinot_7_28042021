@@ -3,7 +3,7 @@
     <Auth v-show="!isUserConnected" />
     <CreatePost v-show="isUserConnected" />
     <hr />
-    <ShowPosts v-show="isUserConnected" />
+    <ShowPosts v-on:test="this.$forceUpdate();" v-show="isUserConnected" />
   </div>
 </template>
 

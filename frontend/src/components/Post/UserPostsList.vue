@@ -10,7 +10,7 @@
         :key="post.postId"
       >
         <div class="content">
-          <section class="post-section">
+          <section class="post--section">
             <h2 class="post--title display-4">{{ post.title }}</h2>
             <div v-html="post.content" class="post--content card lead"></div>
             <hr />
@@ -59,7 +59,7 @@
             <hr />
           </section>
           <section class="comment--section shadow-sm">
-            <CommentPost :post="post" />
+            <CommentPost :post="post" :allPosts="allPosts"/>
           </section>
         </div>
       </div>
@@ -153,41 +153,4 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/modules/main";
-.titre {
-  color: #122442;
-  font-size: 2em;
-  @media screen and (max-width: 1000px) {
-    font-size: 1em;
-  }
-}
-.post {
-  margin-top: 5rem;
-  padding: 1rem;
-  &--content {
-    padding: 1rem;
-  }
-}
-.footer-section {
-  &--btn {
-    margin: 0 2rem;
-    align-items: center;
-    justify-items: center;
-    align-content: center;
-    justify-content: center;
-    height: 2rem;
-    width: 2rem;
-    background-color: white;
-  }
-}
-.comments-section {
-  background-color: whitesmoke;
-  border-radius: 25px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-}
-
-.admin {
-  color: $secondary-color;
-  text-decoration: none;
-}
 </style>
