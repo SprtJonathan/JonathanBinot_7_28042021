@@ -69,7 +69,13 @@ export default {
             console.log(localStorage.getItem("token"));
             location.replace(location.origin);
           })
-          .catch((error) => console.log(error));
+          .catch((error) => {
+            let errorMessage = error.response.data.error;
+            console.log(errorMessage);
+            this.$toast.error(errorMessage, {
+              timeout: 2000,
+            });
+          });
       } else {
         console.log("Erreur est survenue !");
       }

@@ -21,11 +21,20 @@
 
 html {
   background-color: var(--background-color);
+  overflow-x: hidden;
+  width: 100vw;
 }
+
 body {
   backdrop-filter: blur(5px);
+  overflow-x: hidden;
+  width: 100vw;
+  background-color: var(--background-color);
 }
+
 #app {
+  width: 100vw;
+  overflow-x: hidden;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

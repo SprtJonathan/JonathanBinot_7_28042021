@@ -6,7 +6,7 @@
   animation: slide-up 1s both;
   &--content {
     padding: 1rem;
-    overflow-x: auto;
+    overflow-x: hidden;
     background-color: var(--background-color);
     color: var(--text-color);
   }
@@ -16,6 +16,10 @@
   &--info {
     color: var(--text-color);
   }
+}
+
+iframe {
+  width: 100%;
 }
 
 .regular {

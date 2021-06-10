@@ -1,23 +1,20 @@
 <template>
-  <div>
+  <div class="">
     <b-button v-b-modal.delete-account-modal class="btn btn-danger button"
       >Supprimer le compte</b-button
     >
 
-    <b-modal hide-footer id="delete-account-modal" title="Supression du compte">
+    <b-modal
+      class="modal position-fixed"
+      hide-footer
+      id="delete-account-modal"
+      title="Supression du compte"
+    >
       <p id="confirmation-text">
         En cliquant sur "supprimer", le compte et toutes les informations
         relatives au compte seront supprimées. Souhaitez-vous vraiment
         continuer?
       </p>
-
-      <button
-        type="submit"
-        class="btn btn-danger button"
-        @click="checkIdentity()"
-      >
-        test
-      </button>
       <button
         type="submit"
         class="btn btn-danger button"
@@ -49,22 +46,7 @@ export default {
   },
   props: ["user", "userPage"],
   methods: {
-    checkIdentity() {
-      if (this.routeUserId == this.user.userId) {
-        this.userIsOwner = true;
-        console.log("user is owner");
-      } else {
-        this.userIsOwner = false;
-      }
-      if (this.user.roleId == 1) {
-        this.userIsAdmin = true;
-        console.log("user is admin");
-      } else {
-        this.userIsAdmin = false;
-      }
-    },
     deleteAccount() {
-      this.checkIdentity(); // On vérifie que l'utilisateur soit ou l'admin ou le propriétaire de la page, ou les deux
       console.log("User : " + this.routeUserId);
       axios
         .delete(apiUrl + "auth/users/" + this.routeUserId, {
@@ -90,3 +72,7 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+@import "@/modules/main";
+</style>

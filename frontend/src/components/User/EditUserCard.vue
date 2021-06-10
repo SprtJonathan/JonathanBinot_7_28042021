@@ -20,21 +20,6 @@
           class="upload-photo"
         />
         <!-- Boite de dialogue affichant un potentiel message d'erreur -->
-        <b-modal
-          hide-footer
-          hide-header
-          id="delete-account-modal"
-          v-model="errorDialog"
-          max-width="300"
-        >
-          <b-card>
-            <b-card-text class="subheading">{{ errorText }}</b-card-text>
-            <b-card-actions>
-              <b-spacer></b-spacer>
-              <b-btn @click="errorDialog = false" flat>Je change!</b-btn>
-            </b-card-actions>
-          </b-card>
-        </b-modal>
       </div>
       <label for="username">Nom d'utilisateur</label>
       <div id="username-block" class="username-block">
@@ -83,7 +68,14 @@
         required
       />
 
-      <div class="passwords" v-if="adminConnected != 1">
+      <div
+        class="passwords"
+        v-if="
+          adminConnected != 1 ||
+            (this.$store.state.user.user.userId == routeUserId &&
+              adminConnected == 1)
+        "
+      >
         <label for="password">Mot de passe actuel</label>
         <input
           type="password"
@@ -331,7 +323,10 @@ export default {
         this.hasError = true;
       } else {
         let userEdited;
-        if (this.adminConnected == 1) {
+        if (
+          this.routeUserId != this.$store.state.user.user.userId &&
+          this.adminConnected == 1
+        ) {
           // Construction de l'objet contenant les infos utilisateur
           userEdited = {
             username: this.user.username,
@@ -339,8 +334,7 @@ export default {
             lname: this.user.lname,
             email: this.user.email,
           };
-          //profilePictureUrl: this.selectedImage,
-        } else {
+        } else if (this.routeUserId == this.$store.state.user.user.userId) {
           userEdited = {
             username: this.user.username,
             fname: this.user.fname,
@@ -356,12 +350,15 @@ export default {
 
         if (formBoolean == true) {
           let routeUrl;
-          if (this.adminConnected == 1) {
+          if (
+            this.adminConnected == 1 &&
+            this.routeUserId != this.$store.state.user.user.userId
+          ) {
             routeUrl = "auth/users/admin/";
           } else {
             routeUrl = "auth/users/";
           }
-          console.log(routeUrl);
+          console.log(userEdited);
           axios
             .put(apiUrl + routeUrl + this.user.userId, userEdited, {
               headers: { Authorization: "Bearer " + localStorage.token },
@@ -382,10 +379,14 @@ export default {
               this.formError = errorString.toString();
               console.log(this.formError);
               this.hasError = true;
-              alert("Mot de passe erroné");
+              this.$toast.error("Erreur : Mot de passe erroné", {
+                timeout: 2000,
+              });
             });
         } else {
-          alert("Mot de passe erroné");
+          this.$toast.error("Erreur : Mot de passe erroné", {
+            timeout: 2000,
+          });
         }
       }
     },

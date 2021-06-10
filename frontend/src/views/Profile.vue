@@ -20,6 +20,3 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-@import "@/modules/main";
-</style>

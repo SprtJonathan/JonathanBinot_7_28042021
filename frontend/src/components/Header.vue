@@ -1,6 +1,10 @@
 <template>
   <header>
-    <nav id="nav" class="navbar navbar-dark justify-content-around">
+    <b-navbar
+      type="dark"
+      id="nav"
+      class="navbar navbar-dark justify-content-around"
+    >
       <router-link to="/">
         <img
           alt="Groupomania logo"
@@ -13,7 +17,11 @@
       >
 
       <div class="theme-switch-wrapper">
-        <button class="already-button--button" @click="toggleTheme" aria-label="Toggle themes">
+        <button
+          class="already-button--button"
+          @click="toggleTheme"
+          aria-label="Toggle themes"
+        >
           <span class="dark-mode-button" v-if="this.theme == 'darkMode'"
             ><b-icon icon="sun"></b-icon
           ></span>
@@ -40,7 +48,7 @@
           ><a @click="logout">Déconnexion </a></b-dropdown-item
         >
       </b-dropdown>
-    </nav>
+    </b-navbar>
   </header>
 </template>
 
@@ -90,6 +98,6 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import "@/modules/main";
 </style>

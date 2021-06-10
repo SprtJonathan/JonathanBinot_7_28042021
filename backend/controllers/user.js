@@ -44,7 +44,7 @@ exports.register = (req, res, next) => { // Middleware pour l'inscription
                 }
             })
 
-            .catch((error) => res.status(500).json({ message: error })); // Si une erreur est retournée, elle provient du serveur, alors on renvoie un code 500
+            .catch((error) => res.status(500).json({ error: "Une erreur s'est produite, veuillez réessayer ultérieurement" })); // Si une erreur est retournée, elle provient du serveur, alors on renvoie un code 500
     }
 };
 
@@ -64,8 +64,8 @@ exports.login = (req, res, next) => { // Middleware pour la connexion
             bcrypt.compare(password, result[0].password)
                 .then(valid => {
                     if (!valid) {
-                        console.log("User not found")
-                        return res.status(401).json({ error: 'Mot de passe incorrect !' });
+                        console.log("Utilisateur introuvable")
+                        return res.send(401, { error: "hi, there was an error" });
                     } else {
                         console.log('User connected');
                         res.status(200).json({

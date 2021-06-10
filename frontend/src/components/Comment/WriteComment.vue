@@ -77,10 +77,11 @@ export default {
         comment: this.comment.comment,
       };
       console.log(comment);
-      let errorString = [];
       if (!this.comment.comment) {
         console.log("Erreur commentaire vide");
-        errorString.push("Erreur commentaire vide");
+        this.$toast.error("Erreur : Commentaire vide", {
+          timeout: 2000,
+        });
       } else {
         axios
           .post(apiUrl + "comments/", comment, {
@@ -96,12 +97,13 @@ export default {
             }, 2000);
           })
           .catch((error) => {
-            let errorMessage = error.toString();
-            errorString.push(errorMessage);
+            let errorMessage = error.response.data.error;
             console.log(errorMessage);
-            this.formError = errorString.toString();
-            console.log(this.formError);
             this.hasError = true;
+            //this.formError = errorString.toString();
+            this.$toast.error(errorMessage, {
+              timeout: 2000,
+            });
           });
       }
     },

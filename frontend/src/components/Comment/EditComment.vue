@@ -156,7 +156,9 @@ export default {
       let errorString = [];
       if (!this.comment.comment) {
         console.log("Erreur commentaire vide");
-        errorString.push("Erreur commentaire vide");
+        this.$toast.error("Erreur : Commentaire vide", {
+          timeout: 2000,
+        });
       } else {
         axios
           .put(apiUrl + "comments/" + this.routeCommentId, comment, {

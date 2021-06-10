@@ -45,7 +45,7 @@ let toolbarOptions = {
     // handlers object will be merged with default handlers object
     link: function(value) {
       if (value) {
-        var href = prompt("Enter the URL");
+        var href = prompt("Insérez l'URL");
         this.quill.format("link", href);
       } else {
         this.quill.format("link", false);
@@ -94,13 +94,14 @@ export default {
         content: this.post.content,
       };
       console.log(post);
-      let errorString = [];
       if (!this.post.title || !this.post.content) {
         console.log("Erreur titre ou contenu vide");
-        errorString.push("Erreur titre ou contenu vide");
+        this.$toast.error("Erreur : Titre ou contenu du post vide", {
+          timeout: 2000,
+        });
       } else {
         axios
-          .post(apiUrl + "posts/", /*post,*/ {
+          .post(apiUrl + "posts/", post, {
             headers: { Authorization: "Bearer " + localStorage.token },
           })
           .then((result) => {
@@ -113,7 +114,11 @@ export default {
             }, 2000);
           })
           .catch((error) => {
-            this.$toast.error("Une erreur est survenue: " + error, {
+            let errorMessage = error.response.data.error;
+            console.log(errorMessage);
+            this.hasError = true;
+            //this.formError = errorString.toString();
+            this.$toast.error(errorMessage, {
               timeout: 2000,
             });
           });

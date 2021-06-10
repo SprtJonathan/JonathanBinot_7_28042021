@@ -60,43 +60,4 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/modules/main";
-.user {
-  margin: 1rem;
-}
-.titre {
-  color: #122442;
-  font-size: 2em;
-}
-.profile-picture {
-  &--block {
-    position: relative;
-    width: 40%;
-    margin: 1.5rem auto;
-    border-radius: 50%;
-  }
-  &--image {
-    width: 100%;
-    border-radius: 50%;
-  }
-}
-.post {
-  margin-top: 5rem;
-}
-@media (min-width: 1000px) {
-  .titre {
-    font-size: 1em;
-  }
-  .profile-picture {
-    &--block {
-      position: relative;
-      width: 10%;
-      margin: 1.5rem auto;
-      border-radius: 50%;
-    }
-    &--image {
-      width: 100%;
-      border-radius: 50%;
-    }
-  }
-}
 </style>

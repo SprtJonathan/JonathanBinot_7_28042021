@@ -274,8 +274,11 @@ export default {
 
       if (errorCount != 0) {
         formBoolean = false; // Si des erreurs sont retournées alors on définit la variable comme fausse pour que le formulaire ne puisse pas être envoyé
-        console.log(errorString);
-        this.formError = errorString.toString();
+        console.log(errorString.toString());
+        this.$toast.error(errorString.toString(), {
+          timeout: 2000,
+        });
+        //this.formError = errorString.toString();
         this.hasError = true;
       } else {
         // Construction de l'objet contenant les infos utilisateur
@@ -294,21 +297,27 @@ export default {
             .post(apiUrl + "auth/register", newUser)
             .then((result) => {
               console.log(result);
-              alert("Utilisateur créé");
               this.isHidden = true;
-              window.location.reload();
+              this.$toast.error("Utilisateur créé", {
+                timeout: 2000,
+              });
+              setTimeout(function() {
+                location.reload();
+              }, 1000);
             })
             .catch((error) => {
-              console.log("code " + error.message);
-              let errorMessage = error.toString();
-              errorString.push(errorMessage);
-              console.log(error);
+              let errorMessage = error.response.data.error;
+              console.log(errorMessage);
               this.hasError = true;
-              this.formError = errorString.toString();
-              console.log(this.formError);
+              //this.formError = errorString.toString();
+              this.$toast.error(errorMessage, {
+                timeout: 2000,
+              });
             });
         } else {
-          alert("Les mots de passe ne correspondent pas");
+          this.$toast.error("Les mots de passe ne correspondent pas", {
+            timeout: 2000,
+          });
         }
       }
     },
