@@ -46,6 +46,14 @@ iframe {
   }
 }
 
+.comments-number {
+  background-color: $primary-color;
+  color: white;
+  padding: 0.25rem 0.65rem;
+  border-radius: 50%;
+  font-size: 18px;
+}
+
 .titre {
   color: #122442;
   font-size: 2em;

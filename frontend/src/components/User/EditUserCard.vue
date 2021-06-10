@@ -373,13 +373,10 @@ export default {
               }, 2000);
             })
             .catch((error) => {
-              let errorMessage = error.toString();
-              errorString.push(errorMessage);
+              let errorMessage = error.response.data.error;
               console.log(errorMessage);
-              this.formError = errorString.toString();
-              console.log(this.formError);
               this.hasError = true;
-              this.$toast.error("Erreur : Mot de passe erroné", {
+              this.$toast.error(errorMessage, {
                 timeout: 2000,
               });
             });

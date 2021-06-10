@@ -65,7 +65,7 @@ exports.login = (req, res, next) => { // Middleware pour la connexion
                 .then(valid => {
                     if (!valid) {
                         console.log("Utilisateur introuvable")
-                        return res.send(401, { error: "hi, there was an error" });
+                        return res.send(401, { error: "Nom d\'utilisateur ou mot de passe incorrect" });
                     } else {
                         console.log('User connected');
                         res.status(200).json({
@@ -151,13 +151,16 @@ exports.editProfilePicture = (req, res, next) => {
     if (roleId == 1 || userToEdit == userId) {
         let sql = `UPDATE users SET profilePictureUrl = ?, lastUpdated = CURRENT_TIMESTAMP WHERE userId = ?;`;
         sql = mysql.format(sql, [profilePicture, userToEdit]);
-        console.log(profilePicture)
-        console.log("profil à éditer : " + userToEdit + "et utilisateur voulant éditer : " + userId + " image? " + profilePicture)
-        db.query(sql, (err, result) => {
+        //console.log(profilePicture)
+        //console.log("profil à éditer : " + userToEdit + "et utilisateur voulant éditer : " + userId + " image? " + profilePicture)
+        db.query(sql, (error, result) => {
+            if (error) {
+                console.log("erreur" + error)
+                return res.status(409).json({ error: "Erreur: Cet utilisateur existe déjà !" });
 
-            if (err) throw err;
-            res.send(result);
-
+            } else {
+                res.send(result);
+            }
         })
     }
 }
@@ -186,7 +189,7 @@ exports.editAccount = (req, res, next) => { // Middleware pour la modification d
                     console.log(pass)
                     if (!valid) {
                         console.log("User not found")
-                        return res.status(401).json({ error: 'Mot de passe incorrect !' });
+                        return res.status(400).json({ error: 'Mot de passe incorrect !' });
                     } else {
                         bcrypt
                             .hash(newPassword, 10) // Salage du mot de passe 10 fois
@@ -203,9 +206,8 @@ exports.editAccount = (req, res, next) => { // Middleware pour la modification d
                                                 message: "Utilisateur modifié"
                                             });
                                         } else {
-                                            return res.status(402).json(() => {
-                                                err;
-                                                console.log("Échec de la modification")
+                                            return res.status(409).json({
+                                                error: "Échec de la modification"
                                             });
                                         }
                                     })
@@ -251,9 +253,8 @@ exports.editAccountAdmin = (req, res, next) => { // Middleware pour la modificat
                             message: "Utilisateur modifié"
                         });
                     } else {
-                        return res.status(402).json(() => {
-                            err;
-                            console.log("Échec de la modification")
+                        return res.status(409).json({
+                            error: "Échec de la modification"
                         });
                     }
                 })

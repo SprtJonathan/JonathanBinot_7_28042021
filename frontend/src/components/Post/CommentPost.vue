@@ -5,12 +5,18 @@
       :v-for="post in allPosts"
       v-b-toggle="'comments' + post.postId"
     >
-      <h2>Commentaires</h2>
+      <h2 @commentsNumber="updateCommentsNumber">
+        Commentaires <span class="comments-number">{{ numberOfComments }}</span>
+      </h2>
     </button>
-    <b-collapse class="collapsible" :v-for="post in allPosts" :id="'comments' + post.postId">
+    <b-collapse
+      class="collapsible"
+      :v-for="post in allPosts"
+      :id="'comments' + post.postId"
+    >
       <WriteComment :post="post" />
       <hr />
-      <ShowComments :post="post" />
+      <ShowComments :post="post" @commentsNumber="updateCommentsNumber" />
     </b-collapse>
   </div>
 </template>
@@ -32,6 +38,7 @@ export default {
       editorOption: {
         // Some Quill options...
       },
+      numberOfComments: "",
     };
   },
   props: ["post", "allPosts"],
@@ -50,7 +57,19 @@ export default {
         this.user = response.data.user;
         console.log(response.data.user);
       })
-      .catch((err) => console.log(err));
+      .catch((error) => {
+        let errorMessage = error.response.data.error;
+        console.log(errorMessage);
+        this.$toast.error(errorMessage, {
+          timeout: 2000,
+        });
+      });
+  },
+  methods: {
+    updateCommentsNumber(value) {
+      console.log("Onmbre doné : " + value);
+      this.numberOfComments = value;
+    },
   },
 };
 </script>

@@ -184,7 +184,6 @@ export default {
       }
     },
     deleteComment() {
-      let errorString = [];
       axios
         .delete(apiUrl + "comments/" + this.routeCommentId, {
           headers: { Authorization: "Bearer " + localStorage.token },
@@ -199,12 +198,11 @@ export default {
           }, 2000);
         })
         .catch((error) => {
-          let errorMessage = error.toString();
-          errorString.push(errorMessage);
+          let errorMessage = error.response.data.error;
           console.log(errorMessage);
-          this.formError = errorString.toString();
-          console.log(this.formError);
-          this.hasError = true;
+          this.$toast.error(errorMessage, {
+            timeout: 2000,
+          });
         });
     },
 

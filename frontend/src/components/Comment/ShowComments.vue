@@ -82,6 +82,7 @@ export default {
       },
       allComments: [],
       isAuthorUser: false,
+      commentsNumber: "",
     };
   },
   components: {
@@ -109,8 +110,11 @@ export default {
           },
         })
         .then((response) => {
-          console.log("Commentaires : ", response.data);
+          //console.log("Commentaires : ", response.data);
           this.allComments = response.data;
+          this.commentsNumber = this.allComments.length;
+          console.log("Le nombre : " + this.commentsNumber)
+          this.$emit("commentsNumber", this.commentsNumber);
         })
         .catch((error) => {
           console.log(error);

@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="modal--delete">
     <b-button v-b-modal.delete-account-modal class="btn btn-danger button"
       >Supprimer le compte</b-button
     >
