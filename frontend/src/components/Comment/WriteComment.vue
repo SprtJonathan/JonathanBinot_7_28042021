@@ -22,8 +22,6 @@
 
 <script>
 import axios from "axios";
-let apiPort = "3000";
-let apiUrl = "http://localhost:" + apiPort + "/api/";
 
 let toolbarOptions = {
   handlers: {
@@ -60,7 +58,7 @@ export default {
   props: ["post"],
   created() {
     axios
-      .get(apiUrl + "auth/users", {
+      .get(this.$store.state.apiUrl + "auth/users", {
         headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {
@@ -84,7 +82,7 @@ export default {
         });
       } else {
         axios
-          .post(apiUrl + "comments/", comment, {
+          .post(this.$store.state.apiUrl + "comments/", comment, {
             headers: { Authorization: "Bearer " + localStorage.token },
           })
           .then((result) => {

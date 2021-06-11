@@ -37,9 +37,6 @@
 <script>
 import axios from "axios";
 
-let apiPort = "3000";
-let apiUrl = "http://localhost:" + apiPort + "/api/";
-
 export default {
   data() {
     return {
@@ -58,7 +55,7 @@ export default {
   },
   async created() {
     axios
-      .get(apiUrl + "auth/users/visitor/" + this.routeUserId)
+      .get(this.$store.state.apiUrl + "auth/users/visitor/" + this.routeUserId)
       .then((response) => {
         this.user = response.data;
         if (this.user.createdOn == this.user.lastUpdated) {

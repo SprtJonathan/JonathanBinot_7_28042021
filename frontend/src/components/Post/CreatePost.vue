@@ -37,8 +37,6 @@
 
 <script>
 import axios from "axios";
-let apiPort = "3000";
-let apiUrl = "http://localhost:" + apiPort + "/api/";
 
 let toolbarOptions = {
   handlers: {
@@ -77,7 +75,7 @@ export default {
     let userData = this.$store.state.user;
     console.log(userData.user.userId);
     axios
-      .get(apiUrl + "auth/users/" + userData.user.userId, {
+      .get(this.$store.state.apiUrl + "auth/users/" + userData.user.userId, {
         headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {
@@ -101,7 +99,7 @@ export default {
         });
       } else {
         axios
-          .post(apiUrl + "posts/", post, {
+          .post(this.$store.state.apiUrl + "posts/", post, {
             headers: { Authorization: "Bearer " + localStorage.token },
           })
           .then((result) => {

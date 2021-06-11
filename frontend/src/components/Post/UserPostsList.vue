@@ -71,9 +71,6 @@
 import axios from "axios";
 import CommentPost from "./CommentPost";
 
-let apiPort = "3000";
-let apiUrl = "http://localhost:" + apiPort + "/api/";
-
 export default {
   name: "ShowPosts",
   data() {
@@ -96,7 +93,7 @@ export default {
   },
   created() {
     axios
-      .get(apiUrl + "auth/users/visitor/" + this.routeUserId)
+      .get(this.$store.state.apiUrl + "auth/users/visitor/" + this.routeUserId)
       .then((response) => {
         this.user = response.data;
         console.log(this.user);
@@ -111,7 +108,7 @@ export default {
   methods: {
     loadPosts() {
       axios
-        .get(apiUrl + "posts/from/" + this.routeUserId, {
+        .get(this.$store.state.apiUrl + "posts/from/" + this.routeUserId, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -130,7 +127,7 @@ export default {
       let errorString = [];
       console.log("id du post : " + postId);
       axios
-        .delete(apiUrl + "posts/" + postId, {
+        .delete(this.$store.state.apiUrl + "posts/" + postId, {
           headers: { Authorization: "Bearer " + localStorage.token },
         })
         .then((result) => {

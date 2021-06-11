@@ -111,8 +111,6 @@
 <script>
 import axios from "axios";
 import randomWords from "@/assets/text/randomWords.json";
-let apiPort = "3000";
-let apiUrl = "http://localhost:" + apiPort + "/api/";
 
 export default {
   name: "Register",
@@ -294,7 +292,7 @@ export default {
 
         if (this.password == this.passwordConfirmation && formBoolean == true) {
           axios
-            .post(apiUrl + "auth/register", newUser)
+            .post(this.$store.state.apiUrl + "auth/register", newUser)
             .then((result) => {
               console.log(result);
               this.isHidden = true;
@@ -310,9 +308,15 @@ export default {
               console.log(errorMessage);
               this.hasError = true;
               //this.formError = errorString.toString();
-              this.$toast.error(errorMessage, {
-                timeout: 2000,
-              });
+              if (!errorMessage) {
+                this.$toast.error("Une erreur s'est produite, veuillez réessayer ultérieurement", {
+                  timeout: 2000,
+                });
+              } else {
+                this.$toast.error(errorMessage, {
+                  timeout: 2000,
+                });
+              }
             });
         } else {
           this.$toast.error("Les mots de passe ne correspondent pas", {

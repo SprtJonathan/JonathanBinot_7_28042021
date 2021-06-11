@@ -117,9 +117,6 @@
 <script>
 import axios from "axios";
 
-let apiPort = "3000";
-let apiUrl = "http://localhost:" + apiPort + "/api/";
-
 export default {
   data() {
     return {
@@ -138,7 +135,7 @@ export default {
   },
   created() {
     axios
-      .get(apiUrl + "auth/users/visitor/" + this.routeUserId)
+      .get(this.$store.state.apiUrl + "auth/users/visitor/" + this.routeUserId)
       .then((response) => {
         this.user = response.data;
       })
@@ -170,7 +167,9 @@ export default {
 
         axios
           .put(
-            apiUrl + "auth/users/profilepicture/" + this.user.userId,
+            this.$store.state.apiUrl +
+              "auth/users/profilepicture/" +
+              this.user.userId,
             formData,
             {
               headers: {
@@ -360,9 +359,13 @@ export default {
           }
           console.log(userEdited);
           axios
-            .put(apiUrl + routeUrl + this.user.userId, userEdited, {
-              headers: { Authorization: "Bearer " + localStorage.token },
-            })
+            .put(
+              this.$store.state.apiUrl + routeUrl + this.user.userId,
+              userEdited,
+              {
+                headers: { Authorization: "Bearer " + localStorage.token },
+              }
+            )
             .then((result) => {
               console.log(result);
               this.$toast.warning("Utilisateur modifié", {

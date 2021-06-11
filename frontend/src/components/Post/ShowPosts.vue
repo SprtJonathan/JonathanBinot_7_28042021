@@ -66,9 +66,6 @@
 import axios from "axios";
 import CommentPost from "./CommentPost";
 
-let apiPort = "3000";
-let apiUrl = "http://localhost:" + apiPort + "/api/";
-
 export default {
   name: "ShowPosts",
   data() {
@@ -85,7 +82,7 @@ export default {
   },
   async created() {
     await axios
-      .get(apiUrl + "auth/users", {
+      .get(this.$store.state.apiUrl + "auth/users", {
         headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {
@@ -102,7 +99,7 @@ export default {
   methods: {
     loadPosts() {
       axios
-        .get(apiUrl + "posts/", {
+        .get(this.$store.state.apiUrl + "posts/", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -118,7 +115,7 @@ export default {
     deletePost(postId) {
       console.log("id du post : " + postId);
       axios
-        .delete(apiUrl + "posts/" + postId, {
+        .delete(this.$store.state.apiUrl + "posts/" + postId, {
           headers: { Authorization: "Bearer " + localStorage.token },
         })
         .then((result) => {

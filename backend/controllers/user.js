@@ -58,6 +58,7 @@ exports.login = (req, res, next) => { // Middleware pour la connexion
     sql = mysql.format(sql, [credentials]);
 
     db.query(sql, (err, result) => {
+        if (err) throw (err);
         if (result.length > 0) {
             bcrypt.compare(password, result[0].password)
                 .then(valid => {

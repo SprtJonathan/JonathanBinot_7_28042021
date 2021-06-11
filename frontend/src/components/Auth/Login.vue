@@ -36,10 +36,6 @@
 
 <script>
 import axios from "axios";
-let apiPort = "3000";
-let apiUrl = "http://localhost:" + apiPort + "/api/";
-
-import { mapState } from "vuex";
 
 export default {
   name: "Login",
@@ -51,9 +47,6 @@ export default {
       },
     };
   },
-  computed: {
-    ...mapState(["user"]),
-  },
   components: {},
   methods: {
     login() {
@@ -62,7 +55,7 @@ export default {
         this.userCredentials.password !== null
       ) {
         axios
-          .post(apiUrl + "auth/login", this.userCredentials)
+          .post(this.$store.state.apiUrl + "auth/login", this.userCredentials)
           .then((response) => {
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("user", JSON.stringify(response.data.user));
@@ -71,13 +64,24 @@ export default {
           })
           .catch((error) => {
             let errorMessage = error.response.data.error;
-            console.log(errorMessage);
-            this.$toast.error(errorMessage, {
-              timeout: 2000,
-            });
+            console.log("erreur: " + error + " test " + error.response.data.error);
+            if (errorMessage == undefined) {
+              this.$toast.error(
+                "Une erreur s'est produite, veuillez réessayer ultérieurement",
+                {
+                  timeout: 2000,
+                }
+              );
+            } else {
+              this.$toast.error(errorMessage, {
+                timeout: 2000,
+              });
+            }
           });
       } else {
-        console.log("Erreur est survenue !");
+        this.$toast.error("Erreur: Les champs sont vides", {
+          timeout: 2000,
+        });
       }
     },
   },

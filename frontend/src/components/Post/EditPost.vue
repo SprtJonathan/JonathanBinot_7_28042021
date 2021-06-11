@@ -91,8 +91,6 @@
 
 <script>
 import axios from "axios";
-let apiPort = "3000";
-let apiUrl = "http://localhost:" + apiPort + "/api/";
 
 let toolbarOptions = {
   handlers: {
@@ -129,7 +127,7 @@ export default {
     let userData = this.$store.state.user;
     console.log(userData.user.userId);
     axios
-      .get(apiUrl + "auth/users/" + userData.user.userId, {
+      .get(this.$store.state.apiUrl + "auth/users/" + userData.user.userId, {
         headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {
@@ -141,7 +139,7 @@ export default {
   methods: {
     loadPost() {
       axios
-        .get(apiUrl + "posts/" + this.routePostId, {
+        .get(this.$store.state.apiUrl + "posts/" + this.routePostId, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -167,7 +165,7 @@ export default {
         errorString.push("Erreur titre ou contenu vide");
       } else {
         axios
-          .put(apiUrl + "posts/" + this.routePostId, post, {
+          .put(this.$store.state.apiUrl + "posts/" + this.routePostId, post, {
             headers: { Authorization: "Bearer " + localStorage.token },
           })
           .then((result) => {
@@ -190,7 +188,7 @@ export default {
     },
     deletePost() {
       axios
-        .delete(apiUrl + "posts/" + this.routePostId, {
+        .delete(this.$store.state.apiUrl + "posts/" + this.routePostId, {
           headers: { Authorization: "Bearer " + localStorage.token },
         })
         .then((result) => {

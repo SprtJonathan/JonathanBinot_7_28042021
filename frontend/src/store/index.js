@@ -8,7 +8,8 @@ Vue.use(Vuex, axios)
 export default new Vuex.Store({
   state: {
     namespaced: true,
-    isHidden: false
+    isHidden: false,
+    apiUrl: `http://localhost:3000/api/`
   },
   mutations: {
 

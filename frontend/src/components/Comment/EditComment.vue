@@ -84,8 +84,6 @@
 
 <script>
 import axios from "axios";
-let apiPort = "3000";
-let apiUrl = "http://localhost:" + apiPort + "/api/";
 
 let toolbarOptions = {
   handlers: {
@@ -122,7 +120,7 @@ export default {
     let userData = this.$store.state.user;
     console.log(userData.user.userId);
     axios
-      .get(apiUrl + "auth/users/" + userData.user.userId, {
+      .get(this.$store.state.apiUrl + "auth/users/" + userData.user.userId, {
         headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {
@@ -135,7 +133,7 @@ export default {
   methods: {
     loadComment() {
       axios
-        .get(apiUrl + "comments/comment/" + this.routeCommentId, {
+        .get(this.$store.state.apiUrl + "comments/comment/" + this.routeCommentId, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -161,7 +159,7 @@ export default {
         });
       } else {
         axios
-          .put(apiUrl + "comments/" + this.routeCommentId, comment, {
+          .put(this.$store.state.apiUrl + "comments/" + this.routeCommentId, comment, {
             headers: { Authorization: "Bearer " + localStorage.token },
           })
           .then((result) => {
@@ -185,7 +183,7 @@ export default {
     },
     deleteComment() {
       axios
-        .delete(apiUrl + "comments/" + this.routeCommentId, {
+        .delete(this.$store.state.apiUrl + "comments/" + this.routeCommentId, {
           headers: { Authorization: "Bearer " + localStorage.token },
         })
         .then((result) => {

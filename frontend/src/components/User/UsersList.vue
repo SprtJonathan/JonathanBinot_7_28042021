@@ -33,9 +33,6 @@
 <script>
 import axios from "axios";
 
-let apiPort = "3000";
-let apiUrl = "http://localhost:" + apiPort + "/api/";
-
 export default {
   name: "ShowPosts",
   data() {
@@ -46,7 +43,7 @@ export default {
   },
   created() {
     axios
-      .get(apiUrl + "auth/users", {
+      .get(this.$store.state.apiUrl + "auth/users", {
         headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {

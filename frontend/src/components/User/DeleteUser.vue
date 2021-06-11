@@ -33,9 +33,6 @@
 <script>
 import axios from "axios";
 
-let apiPort = "3000";
-let apiUrl = "http://localhost:" + apiPort + "/api/";
-
 export default {
   data() {
     return {
@@ -49,7 +46,7 @@ export default {
     deleteAccount() {
       console.log("User : " + this.routeUserId);
       axios
-        .delete(apiUrl + "auth/users/" + this.routeUserId, {
+        .delete(this.$store.state.apiUrl + "auth/users/" + this.routeUserId, {
           headers: { Authorization: "Bearer " + localStorage.token },
         })
         .then((response) => {

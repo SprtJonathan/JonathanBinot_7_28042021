@@ -12,11 +12,9 @@ const MIME_TYPES = {
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     callback(null, "images/userProfilePictures/uploads");
-    console.log("using 2")
   },
   filename: (req, file, callback) => {
     const name = file.originalname.split(" ").join("_"); // Récupération du fichier et renommage en supprimant les espaces
-    console.log("test " + file.originalname)
     const extension = MIME_TYPES[file.mimetype]; // ajout de l'extension selon le type de fichier reçu
     callback(null, name + Date.now() + "." + extension);
   },

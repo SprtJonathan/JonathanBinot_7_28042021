@@ -67,9 +67,6 @@
 import axios from "axios";
 //import EditComment from "./EditComment";
 
-let apiPort = "3000";
-let apiUrl = "http://localhost:" + apiPort + "/api/";
-
 export default {
   name: "ShowComments",
   data() {
@@ -91,7 +88,7 @@ export default {
   props: ["post"],
   created() {
     axios
-      .get(apiUrl + "auth/users", {
+      .get(this.$store.state.apiUrl + "auth/users", {
         headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {
@@ -104,7 +101,7 @@ export default {
   methods: {
     loadComments() {
       axios
-        .get(apiUrl + "comments/" + this.post.postId, {
+        .get(this.$store.state.apiUrl + "comments/" + this.post.postId, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -123,7 +120,7 @@ export default {
     deleteComment(commentId) {
       let errorString = [];
       axios
-        .delete(apiUrl + "comments/" + commentId, {
+        .delete(this.$store.state.apiUrl + "comments/" + commentId, {
           headers: { Authorization: "Bearer " + localStorage.token },
         })
         .then((result) => {

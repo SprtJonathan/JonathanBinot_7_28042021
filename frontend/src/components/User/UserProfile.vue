@@ -38,9 +38,6 @@ import UserCard from "@/components/User/UserCard.vue";
 import EditUserCard from "@/components/User/EditUserCard.vue";
 import DeleteUser from "@/components/User/DeleteUser.vue";
 
-let apiPort = "3000";
-let apiUrl = "http://localhost:" + apiPort + "/api/";
-
 export default {
   data() {
     return {
@@ -65,7 +62,7 @@ export default {
     let userData = JSON.parse(localStorage.getItem("user"));
     console.log(userData.userId);
     axios
-      .get(apiUrl + "auth/users/" + userData.userId, {
+      .get(this.$store.state.apiUrl + "auth/users/" + userData.userId, {
         headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {
@@ -89,7 +86,7 @@ export default {
       .catch((err) => console.log(err));
 
     axios
-      .get(apiUrl + "auth/users/visitor/" + this.routeUserId)
+      .get(this.$store.state.apiUrl + "auth/users/visitor/" + this.routeUserId)
       .then((response) => {
         this.userPage = response.data;
       })
