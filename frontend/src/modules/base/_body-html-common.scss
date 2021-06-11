@@ -150,6 +150,11 @@ button {
   }
 }
 
+.ql-editor::placeholder {
+  color: white;
+}
+
+
 @media (min-width: 768px) {
   h1 {
     font-size: 30px;

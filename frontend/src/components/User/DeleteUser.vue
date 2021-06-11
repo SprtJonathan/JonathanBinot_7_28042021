@@ -56,15 +56,22 @@ export default {
           console.log(response);
           if (this.userIsAdmin && !this.userIsOwner) {
             // Si l'utilisateur est admin mais pas propriétaire de la page, alors on le redirige vers la homepage du site après la suppression
-            this.$router.push("/");
-          } else if (
-            (this.userIsOwner && this.userIsAdmin) ||
-            (this.userIsOwner && !this.userIsAdmin)
-          ) {
+
+            this.$toast.info("Utilisateur sélectionné supprimé", {
+              timeout: 2000,
+            });
+            setTimeout(function() {
+              this.$router.push("/");
+            }, 1000);
+          } else {
             // Si l'utilisateur est admin et propriétaire de la page ou pas admin mais propriétaire de la page, alors on le redirige vers la page de connexion après avoir supprimé le localStorage et les informations de connexion
-            localStorage.clear();
-            this.$store.dispatch("user/logout");
-            this.$router.push("/");
+            this.$toast("Utilisateur supprimé", {
+              timeout: 2000,
+            });
+            setTimeout(function() {
+              localStorage.clear();
+              location.replace("/");
+            }, 1000);
           }
         })
         .catch((err) => console.log(err));

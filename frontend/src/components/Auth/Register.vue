@@ -298,7 +298,7 @@ export default {
             .then((result) => {
               console.log(result);
               this.isHidden = true;
-              this.$toast.error("Utilisateur créé", {
+              this.$toast.success("Utilisateur créé", {
                 timeout: 2000,
               });
               setTimeout(function() {

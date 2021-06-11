@@ -8,8 +8,6 @@ const validator = require('validator'); // Le validateur permet de vérifier que
 const fs = require("fs"); // Import de fs qui permet d'accéder au file-system (pour l'enregistrement d'images)
 
 const db = require("../config/config"); // Importation de la configuration de la connexion à la BDD
-const { profile } = require("console");
-
 exports.register = (req, res, next) => { // Middleware pour l'inscription
     const username = req.body.username;
     const fname = req.body.fname;
@@ -65,7 +63,7 @@ exports.login = (req, res, next) => { // Middleware pour la connexion
                 .then(valid => {
                     if (!valid) {
                         console.log("Utilisateur introuvable")
-                        return res.send(401, { error: "Nom d\'utilisateur ou mot de passe incorrect" });
+                        return res.status(401).json({ error: "Nom d\'utilisateur ou mot de passe incorrect" });
                     } else {
                         console.log('User connected');
                         res.status(200).json({
@@ -127,19 +125,41 @@ exports.deleteAccount = (req, res, next) => { // Middleware pour la suppression 
     const userId = decodedToken.userId;
     const roleId = decodedToken.roleId;
     const userProfileId = req.params.id;
-    console.log("profil à supprimer : " + userProfileId + "et utilisateur voulant supprimer : " + userId + " admin? " + roleId)
     if (roleId == 1 || userId == userProfileId) {
-        let sql = `DELETE FROM users WHERE userId = ?`;
-        sql = mysql.format(sql, [userProfileId]);
-        console.log("userFound " + userProfileId)
-        db.query(sql, (err, result) => {
+        let selectUser = `SELECT profilePictureUrl FROM users WHERE userId = ?`;
+        selectUser = mysql.format(selectUser, [userProfileId]);
+        db.query(selectUser, (error, result) => {
+            if (error) throw (error);
+            const profilePicture = result[0].profilePictureUrl;
+            console.log("profil à supprimer : " + userProfileId + "et utilisateur voulant supprimer : " + userId + " admin? " + roleId)
+            if (profilePicture != `${req.protocol}://${req.get("host")}/images/userProfilePictures/default.png`) {
+                const filename = result[0].profilePictureUrl.split("/images/userProfilePictures/uploads/")[1];
+                console.log("Nom du fichier: " + filename);
+                fs.unlink(`images/userProfilePictures/uploads/${filename}`, () => {
+                    let sql = `DELETE FROM users WHERE userId = ?`;
+                    sql = mysql.format(sql, [userProfileId]);
+                    console.log("userFound " + userProfileId)
+                    db.query(sql, (err, result) => {
 
-            if (err) throw err;
-            res.send(result);
+                        if (err) throw err;
+                        res.send(result);
 
+                    })
+                });
+            } else {
+                console.log("User has default image")
+                let sql = `DELETE FROM users WHERE userId = ?`;
+                sql = mysql.format(sql, [userProfileId]);
+                console.log("userFound " + userProfileId)
+                db.query(sql, (err, result) => {
+
+                    if (err) throw err;
+                    res.send(result);
+                })
+            };
         })
     }
-};
+}
 
 exports.editProfilePicture = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
@@ -148,20 +168,49 @@ exports.editProfilePicture = (req, res, next) => {
     const userId = decodedToken.userId
     const userToEdit = req.params.id;
     const profilePicture = `${req.protocol}://${req.get("host")}/images/userProfilePictures/uploads/${req.file.filename}`;
-    if (roleId == 1 || userToEdit == userId) {
-        let sql = `UPDATE users SET profilePictureUrl = ?, lastUpdated = CURRENT_TIMESTAMP WHERE userId = ?;`;
-        sql = mysql.format(sql, [profilePicture, userToEdit]);
-        //console.log(profilePicture)
-        //console.log("profil à éditer : " + userToEdit + "et utilisateur voulant éditer : " + userId + " image? " + profilePicture)
-        db.query(sql, (error, result) => {
-            if (error) {
-                console.log("erreur" + error)
-                return res.status(409).json({ error: "Erreur: Cet utilisateur existe déjà !" });
 
-            } else {
-                res.send(result);
-            }
-        })
+    if (roleId == 1 || userToEdit == userId) {
+        if (profilePicture != `${req.protocol}://${req.get("host")}/images/userProfilePictures/default.png`) {
+            let selectUser = `SELECT profilePictureUrl FROM users WHERE userId = ?`;
+            selectUser = mysql.format(selectUser, [userToEdit]);
+            db.query(selectUser, (error, result) => {
+                if (error) throw (error);
+                console.log(result[0].profilePictureUrl)
+                const filename = result[0].profilePictureUrl.split("/images/userProfilePictures/uploads/")[1];
+                console.log("Nom du fichier: " + filename);
+                fs.unlink(`images/userProfilePictures/uploads/${filename}`, () => {
+                    let sql = `UPDATE users SET profilePictureUrl = ?, lastUpdated = CURRENT_TIMESTAMP WHERE userId = ?;`;
+                    sql = mysql.format(sql, [profilePicture, userToEdit]);
+                    //console.log(profilePicture)
+                    //console.log("profil à éditer : " + userToEdit + "et utilisateur voulant éditer : " + userId + " image? " + profilePicture)
+                    db.query(sql, (error, result) => {
+                        if (error) {
+                            console.log("erreur" + error)
+                            return res.status(409).json({ error: "Erreur: Cet utilisateur existe déjà !" });
+
+                        } else {
+                            res.send(result);
+                        }
+                    })
+                });
+            })
+
+        } else {
+            console.log("User has default image")
+            let sql = `UPDATE users SET profilePictureUrl = ?, lastUpdated = CURRENT_TIMESTAMP WHERE userId = ?;`;
+            sql = mysql.format(sql, [profilePicture, userToEdit]);
+            //console.log(profilePicture)
+            //console.log("profil à éditer : " + userToEdit + "et utilisateur voulant éditer : " + userId + " image? " + profilePicture)
+            db.query(sql, (error, result) => {
+                if (error) {
+                    console.log("erreur" + error)
+                    return res.status(409).json({ error: "Erreur: Cet utilisateur existe déjà !" });
+
+                } else {
+                    res.send(result);
+                }
+            })
+        }
     }
 }
 
