@@ -2,26 +2,10 @@
   <div class="modal--delete">
     <div class="profile-card card">
       <h2>Gestion du compte</h2>
-      <b-button v-b-modal.delete-account-modal class="btn btn-danger button"
-        >Supprimer le compte</b-button
-      >
-    </div>
-
-    <b-modal
-      class="modal position-fixed"
-      hide-footer
-      id="delete-account-modal"
-      title="Supression du compte"
-    >
-      <p id="confirmation-text">
-        En cliquant sur "supprimer", le compte et toutes les informations
-        relatives au compte seront supprimées. Souhaitez-vous vraiment
-        continuer?
-      </p>
       <button
-        type="submit"
-        class="btn btn-danger button"
-        @click="deleteAccount()"
+        class="btn btn-danger button delete-button"
+        @click="showConfirmation = !showConfirmation"
+        v-show="showConfirmation == false"
       >
         <span>
           <b-icon-exclamation-triangle-fill></b-icon-exclamation-triangle-fill>
@@ -29,7 +13,34 @@
           <b-icon-exclamation-triangle-fill></b-icon-exclamation-triangle-fill>
         </span>
       </button>
-    </b-modal>
+      <div
+        class="card confirmation"
+        title="Supression du compte"
+        v-show="showConfirmation == true"
+      >
+        <p id="confirmation-text">
+          En cliquant sur "Oui, supprimer", le compte et toutes les informations
+          relatives au compte seront supprimées. Souhaitez-vous vraiment
+          continuer?
+        </p>
+        <div class="delete-button-div">
+          <button
+            type="submit"
+            class="btn btn-danger button"
+            @click="deleteAccount()"
+          >
+            Oui, supprimer
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary button"
+            @click="showConfirmation = !showConfirmation"
+          >
+            Non, retour
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -42,6 +53,7 @@ export default {
       routeUserId: this.$route.params.userId,
       userIsAdmin: false,
       userIsOwner: false,
+      showConfirmation: false,
     };
   },
   props: ["user", "userPage"],

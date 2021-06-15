@@ -180,13 +180,29 @@ export default {
           )
           .then((response) => {
             console.log("image upload response > ", response);
-            location.reload();
+            this.$toast.warning("Photo de profil modifiée", {
+              timeout: 2000,
+            });
+            setTimeout(function() {
+              location.reload();
+            }, 1000);
           })
           .catch((error) => {
-            console.log(error);
+            this.$toast.error(error, {
+              timeout: 2000,
+            });
           });
       }
     },
+
+    errorMessages(testedInput, errorMsg) {
+      if (testedInput == true) {
+        this.$toast.error(errorMsg, {
+          timeout: 8000,
+        });
+      }
+    },
+
     editUser() {
       /* Vérifications */
       this.formError = "";
@@ -299,94 +315,104 @@ export default {
       console.log(lnameError);
       console.log(emailError);
 
-      function errorMessages(testedInput, errorMsg) {
-        if (testedInput == true) {
-          errorString.push(errorMsg);
-        }
-      }
-      errorMessages(
+      this.errorMessages(
         usernameError,
         "Nom d'utilisateur incorrect " + badValueChar
       );
-      errorMessages(fnameError, "Format du prénom incorrect " + badValueChar);
-      errorMessages(
+      this.errorMessages(
+        fnameError,
+        "Format du prénom incorrect " + badValueChar
+      );
+      this.errorMessages(
         lnameError,
         "Format du nom de famille incorrect " + badValueChar
       );
-      errorMessages(emailError, "Format d'email incorrect " + badValueChar);
+      this.errorMessages(
+        emailError,
+        "Format d'email incorrect " + badValueChar
+      );
 
-      if (errorCount != 0) {
-        formBoolean = false; // Si des erreurs sont retournées alors on définit la variable comme fausse pour que le formulaire ne puisse pas être envoyé
-        console.log(errorString);
-        this.formError = errorString.toString();
-        this.hasError = true;
+      if (!this.newPassword) {
+        this.$toast.error(
+          "Veuillez entrer un nouveau mot de passe ou votre mot de passe actuel",
+          {
+            timeout: 4000,
+          }
+        );
       } else {
-        let userEdited;
-        if (
-          this.routeUserId != this.$store.state.user.user.userId &&
-          this.adminConnected == 1
-        ) {
-          // Construction de l'objet contenant les infos utilisateur
-          userEdited = {
-            username: this.user.username,
-            fname: this.user.fname,
-            lname: this.user.lname,
-            email: this.user.email,
-          };
-        } else if (this.routeUserId == this.$store.state.user.user.userId) {
-          userEdited = {
-            username: this.user.username,
-            fname: this.user.fname,
-            lname: this.user.lname,
-            email: this.user.email,
-            password: this.password,
-            newPassword: this.newPassword,
-          };
-        }
-        console.log(userEdited);
-
-        formBoolean = true; // Si aucune erreur n'est retournée alors on définit la variable comme vraie pour que le formulaire puisse être envoyé
-
-        if (formBoolean == true) {
-          let routeUrl;
+        if (errorCount != 0) {
+          formBoolean = false; // Si des erreurs sont retournées alors on définit la variable comme fausse pour que le formulaire ne puisse pas être envoyé
+          console.log(errorString);
+          this.formError = errorString.toString();
+          this.hasError = true;
+        } else {
+          let userEdited;
           if (
-            this.adminConnected == 1 &&
-            this.routeUserId != this.$store.state.user.user.userId
+            this.routeUserId != this.$store.state.user.user.userId &&
+            this.adminConnected == 1
           ) {
-            routeUrl = "auth/users/admin/";
-          } else {
-            routeUrl = "auth/users/";
+            // Construction de l'objet contenant les infos utilisateur
+            userEdited = {
+              username: this.user.username,
+              fname: this.user.fname,
+              lname: this.user.lname,
+              email: this.user.email,
+            };
+          } else if (this.routeUserId == this.$store.state.user.user.userId) {
+            userEdited = {
+              username: this.user.username,
+              fname: this.user.fname,
+              lname: this.user.lname,
+              email: this.user.email,
+              password: this.password,
+              newPassword: this.newPassword,
+            };
           }
           console.log(userEdited);
-          axios
-            .put(
-              this.$store.state.apiUrl + routeUrl + this.user.userId,
-              userEdited,
-              {
-                headers: { Authorization: "Bearer " + localStorage.token },
-              }
-            )
-            .then((result) => {
-              console.log(result);
-              this.$toast.warning("Utilisateur modifié", {
-                timeout: 2000,
+
+          formBoolean = true; // Si aucune erreur n'est retournée alors on définit la variable comme vraie pour que le formulaire puisse être envoyé
+
+          if (formBoolean == true) {
+            let routeUrl;
+            if (
+              this.adminConnected == 1 &&
+              this.routeUserId != this.$store.state.user.user.userId
+            ) {
+              routeUrl = "auth/users/admin/";
+            } else {
+              routeUrl = "auth/users/";
+            }
+            console.log(userEdited);
+            axios
+              .put(
+                this.$store.state.apiUrl + routeUrl + this.user.userId,
+                userEdited,
+                {
+                  headers: { Authorization: "Bearer " + localStorage.token },
+                }
+              )
+              .then((result) => {
+                console.log(result);
+                this.$toast.warning("Utilisateur modifié", {
+                  timeout: 2000,
+                });
+                setTimeout(function() {
+                  location.reload();
+                }, 2000);
+              })
+              .catch((error) => {
+                let errorMessage = error.response.data.error;
+                console.log(errorMessage);
+                this.hasError = true;
+                this.$toast.error(errorMessage, {
+                  timeout: 2000,
+                });
               });
-              setTimeout(function() {
-                location.reload();
-              }, 2000);
-            })
-            .catch((error) => {
-              let errorMessage = error.response.data.error;
-              console.log(errorMessage);
-              this.hasError = true;
-              this.$toast.error(errorMessage, {
-                timeout: 2000,
-              });
+          } else {
+            this.$toast.error("Erreur : Mot de passe erroné", {
+              timeout: 2000,
             });
-        } else {
-          this.$toast.error("Erreur : Mot de passe erroné", {
-            timeout: 2000,
-          });
+          }
         }
       }
     },

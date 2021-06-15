@@ -8,7 +8,7 @@ const passwordValidation = require('../middleware/password-validation')
 
 router.post("/register", passwordValidation, userCtrl.register); // Route pour l'inscription d'un utilisateur / On vérifie que le mot de passe corresponde
 router.post("/login", userCtrl.login); // Route pour la connexion d'un utilisateur
-router.put("/users/:id", auth, userCtrl.editAccount); // Route pour l'édition d'un utilisateur
+router.put("/users/:id", auth, passwordValidation, userCtrl.editAccount); // Route pour l'édition d'un utilisateur
 router.put("/users/profilepicture/:id", auth, multer, userCtrl.editProfilePicture); // Route pour l'édition d'un utilisateur
 router.put("/users/admin/:id", auth, userCtrl.editAccountAdmin); // Route pour l'édition d'un utilisateur
 router.delete("/users/:id", auth, userCtrl.deleteAccount); // Route pour la suppression d'un utilisateur

@@ -13,14 +13,25 @@
             required
           />
 
-          <quill-editor
-            ref="myQuillEditor"
-            class="create-post--content"
-            placeholder="Contenu du post"
-            :options="editorOption"
-            @change="onMaxChar($event)"
-            required
-          />
+          <div class="create-post--content">
+            <button class="btn-warning form-control" @click="embedReddit">
+              Partager un post Reddit
+            </button>
+            <div class="selected-url" :v-show="url != ''">
+              <p v-if="(url != '')">URL sélectionné</p>{{ url }}
+            </div>
+            <quill-editor
+              ref="myQuillEditor"
+              class="create-post--editor"
+              placeholder="Contenu du post"
+              v-model="post.content"
+              :options="editorOption"
+              @change="onMaxChar($event)"
+              required
+            >
+            </quill-editor>
+          </div>
+
           <input
             type="submit"
             class="sumbit-post btn-primary form-control"
@@ -35,15 +46,6 @@
 <script>
 import axios from "axios";
 
-let toolbarOptions = [
-  ["bold", "italic", "underline", "strike"], // toggled buttons
-  [{ script: "sub" }, { script: "super" }], // superscript/subscript
-  ["link"],
-  [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-
-  ["clean"], // remove formatting button
-];
-
 export default {
   name: "CreatePost",
   data() {
@@ -52,12 +54,14 @@ export default {
         title: "",
         content: "",
       },
+      link: "",
+      url: "",
       user: "",
       formError: "",
       hasError: false,
       editorOption: {
         modules: {
-          toolbar: toolbarOptions,
+          toolbar: this.$store.state.toolbarOptions,
         },
         theme: "bubble",
         placeholder: "Insérez du texte...",
@@ -82,7 +86,7 @@ export default {
       let post = {
         userId: this.user.userId,
         title: this.post.title,
-        content: this.post.content,
+        content: this.post.content + this.link,
       };
       console.log(this.post.content);
       if (!this.post.title || !this.post.content) {
@@ -111,21 +115,39 @@ export default {
               timeout: 2000,
             });
           });
+        console.log("test concluant " + post.content);
       }
     },
     onMaxChar(quill) {
       const limit = 10208;
-      this.post.content = quill.html;
-      this.post.content = this.post.content
-        .replace(/&lt;/g, "<")
-        .replace(/&gt;/g, ">");
-      console.log(this.post.content);
       console.log(quill.text.length);
+      console.log(this.post.content);
       if (quill.text.length > limit) {
         this.post.content = this.post.content.substring(0, limit + 32);
-        console.log(this.post.content);
+        //console.log(this.post.content);
       }
       return quill;
+    },
+    embedReddit() {
+      event.preventDefault();
+      this.url = window.prompt("Insérer l'URL d'un post reddit");
+      let redditSubString = "www.reddit.com/";
+      console.log(this.url.includes(redditSubString));
+      if (this.url.includes(redditSubString)) {
+        this.url = this.url.replace(redditSubString, "www.redditmedia.com/");
+        this.url = this.url + "?ref_source=embed&amp;ref=share&amp;embed=true";
+        console.log(this.url);
+        this.link =
+          `<iframe class="ql-video" id="reddit-embed" src=` +
+          this.url +
+          ` sandbox="allow-scripts allow-same-origin allow-popups"></iframe>`;
+      } else {
+        this.url = "";
+        this.$toast.error("Erreur: le lien entré n'est pas un lien reddit", {
+          timeout: 2000,
+        });
+      }
+      console.log(this.link);
     },
   },
 };

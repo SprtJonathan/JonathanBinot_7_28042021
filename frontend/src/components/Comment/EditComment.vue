@@ -83,20 +83,6 @@
 <script>
 import axios from "axios";
 
-let toolbarOptions = {
-  handlers: {
-    // handlers object will be merged with default handlers object
-    link: function(value) {
-      if (value) {
-        var href = prompt("Enter the URL");
-        this.quill.format("link", href);
-      } else {
-        this.quill.format("link", false);
-      }
-    },
-  },
-};
-
 export default {
   name: "CreatePost",
   data() {
@@ -107,7 +93,7 @@ export default {
       hasError: false,
       editorOption: {
         modules: {
-          toolbar: toolbarOptions,
+          toolbar: this.$store.state.toolbarOptions,
         },
         theme: "bubble",
       },
@@ -131,11 +117,14 @@ export default {
   methods: {
     loadComment() {
       axios
-        .get(this.$store.state.apiUrl + "comments/comment/" + this.routeCommentId, {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        })
+        .get(
+          this.$store.state.apiUrl + "comments/comment/" + this.routeCommentId,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        )
         .then((response) => {
           console.log("commentaire : ", response.data[0]);
           this.comment = response.data[0];
@@ -157,9 +146,13 @@ export default {
         });
       } else {
         axios
-          .put(this.$store.state.apiUrl + "comments/" + this.routeCommentId, comment, {
-            headers: { Authorization: "Bearer " + localStorage.token },
-          })
+          .put(
+            this.$store.state.apiUrl + "comments/" + this.routeCommentId,
+            comment,
+            {
+              headers: { Authorization: "Bearer " + localStorage.token },
+            }
+          )
           .then((result) => {
             console.log(result);
             this.$toast.warning("Commentaire modifié", {
@@ -204,12 +197,6 @@ export default {
 
     onMaxChar(quill) {
       const limit = 10208;
-      this.comment.comment = quill.html;
-      this.comment.comment = this.comment.comment
-        .replace(/&lt;/g, "<")
-        .replace(/&gt;/g, ">");
-      console.log(this.v);
-      console.log(quill.text.length);
       if (quill.text.length > limit) {
         this.comment.comment = this.comment.comment.substring(0, limit + 32);
         console.log(this.comment.comment);

@@ -23,6 +23,17 @@
   --color-links: #ffe550;
 }
 
+#app {
+  width: 100vw;
+  overflow-x: hidden;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  background-color: var(--background-color);
+}
+
 html {
   background-color: var(--background-color);
   overflow-x: hidden;
@@ -33,17 +44,6 @@ body {
   backdrop-filter: blur(5px);
   overflow-x: hidden;
   width: 100vw;
-  background-color: var(--background-color);
-}
-
-#app {
-  width: 100vw;
-  overflow-x: hidden;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
   background-color: var(--background-color);
 }
 
@@ -81,7 +81,6 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
 }
-
 
 h1 {
   font-family: $primary-font;

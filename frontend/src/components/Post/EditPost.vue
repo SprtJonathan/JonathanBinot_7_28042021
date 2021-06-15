@@ -90,20 +90,6 @@
 <script>
 import axios from "axios";
 
-let toolbarOptions = {
-  handlers: {
-    // handlers object will be merged with default handlers object
-    link: function(value) {
-      if (value) {
-        var href = prompt("Enter the URL");
-        this.quill.format("link", href);
-      } else {
-        this.quill.format("link", false);
-      }
-    },
-  },
-};
-
 export default {
   name: "CreatePost",
   data() {
@@ -114,7 +100,7 @@ export default {
       hasError: false,
       editorOption: {
         modules: {
-          toolbar: toolbarOptions,
+          toolbar: this.$store.state.toolbarOptions,
         },
         theme: "bubble",
       },
@@ -209,11 +195,6 @@ export default {
 
     onMaxChar(quill) {
       const limit = 10208;
-      this.post.content = quill.html;
-      this.post.content = this.post.content
-        .replace(/&lt;/g, "<")
-        .replace(/&gt;/g, ">");
-      console.log(this.post.content);
       console.log(quill.text.length);
       if (quill.text.length > limit) {
         this.post.content = this.post.content.substring(0, limit + 32);

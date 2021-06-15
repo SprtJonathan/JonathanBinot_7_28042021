@@ -71,9 +71,12 @@ h3 {
   display: flex;
   border-radius: 25px;
   padding: 2rem;
-  margin: 1rem;
+  margin: auto;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
   background-color: var(--background-color3);
   color: var(--text-color);
+  width: 90vw;
 }
 
 .upload-photo {
@@ -122,6 +125,19 @@ h3 {
     }
   }
 }
+.confirmation {
+  animation: slide-up 1s both;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+.delete-button-div {
+  display: flex;
+  justify-content: space-around;
+}
+
+.delete-button {
+  animation: slide-up 1s both;
+}
 
 .modal-header {
   text-align: center;
@@ -149,5 +165,8 @@ h3 {
       display: flex;
       flex-direction: column;
     }
+  }
+  .profile-card {
+    width: 30vw;
   }
 }

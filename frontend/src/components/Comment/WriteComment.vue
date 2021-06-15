@@ -24,15 +24,6 @@
 <script>
 import axios from "axios";
 
-let toolbarOptions = [
-  ["bold", "italic", "underline", "strike"], // toggled buttons
-  [{ script: "sub" }, { script: "super" }], // superscript/subscript
-  ["link"],
-  [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-
-  ["clean"], // remove formatting button
-];
-
 export default {
   name: "WriteComment",
   data() {
@@ -45,7 +36,7 @@ export default {
       hasError: false,
       editorOption: {
         modules: {
-          toolbar: toolbarOptions,
+          toolbar: this.$store.state.toolbarOptions,
         },
         theme: "bubble",
         placeholder: "Commentaire...",
@@ -105,11 +96,6 @@ export default {
 
     onMaxChar(quill) {
       const limit = 10208;
-      this.comment.comment = quill.html;
-      this.comment.comment = this.comment.comment
-        .replace(/&lt;/g, "<")
-        .replace(/&gt;/g, ">");
-      console.log(this.v);
       console.log(quill.text.length);
       if (quill.text.length > limit) {
         this.comment.comment = this.comment.comment.substring(0, limit + 32);

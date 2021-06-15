@@ -38,13 +38,29 @@ iframe {
     color: var(--text-color);
   }
   &--content {
-    padding: 1rem;
     background-color: var(--background-color-text-content);
     color: var(--text-color-content);
-    border: 1px var(--background-color) solid;
     margin-top: 1rem;
     margin-bottom: 1rem;
     text-align: left;
+  }
+  &--editor {
+    padding: 1rem;
+    border: 1px orange solid;
+  }
+}
+
+.selected-url {
+  background-color: var(--background-color2);
+  border: 1px black solid;
+  border-top: none;
+  border-bottom: none;
+  padding: 1rem;
+  text-align: center;
+  color: var(--text-color);
+  p {
+    text-align: center;
+    color: var(--text-color);
   }
 }
 

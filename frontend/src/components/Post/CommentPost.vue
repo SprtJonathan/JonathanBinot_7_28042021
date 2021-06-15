@@ -46,7 +46,7 @@ export default {
   },
   created() {
     let userData = this.$store.state.user;
-    console.log("Le poste est" + this.post.postId);
+    //console.log("Le poste est" + this.post.postId);
     axios
       .get(this.$store.state.apiUrl + "auth/users/" + userData.user.userId, {
         headers: { Authorization: "Bearer " + localStorage.token },
@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     updateCommentsNumber(value) {
-      console.log("Onmbre doné : " + value);
+      //console.log("Nombre donné : " + value);
       this.numberOfComments = value;
     },
   },

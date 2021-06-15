@@ -47,6 +47,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(helmet());
+app.use(helmet.frameguard({ action: "sameorigin" }));
 
 app.use("/images", express.static(path.join(__dirname, "images"))); // Permet de charger les images contenues dans le dossier image de l'application
 
