@@ -9,6 +9,7 @@
             type="text"
             class="create-post--title form-control"
             placeholder="Titre du post"
+            maxlength="50"
             required
           />
 
@@ -16,11 +17,7 @@
             ref="myQuillEditor"
             class="create-post--content"
             placeholder="Contenu du post"
-            v-model="post.content"
             :options="editorOption"
-            @blur="onEditorBlur($event)"
-            @focus="onEditorFocus($event)"
-            @ready="onEditorReady($event)"
             @change="onMaxChar($event)"
             required
           />
@@ -38,19 +35,14 @@
 <script>
 import axios from "axios";
 
-let toolbarOptions = {
-  handlers: {
-    // handlers object will be merged with default handlers object
-    link: function(value) {
-      if (value) {
-        var href = prompt("Insérez l'URL");
-        this.quill.format("link", href);
-      } else {
-        this.quill.format("link", false);
-      }
-    },
-  },
-};
+let toolbarOptions = [
+  ["bold", "italic", "underline", "strike"], // toggled buttons
+  [{ script: "sub" }, { script: "super" }], // superscript/subscript
+  ["link"],
+  [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+
+  ["clean"], // remove formatting button
+];
 
 export default {
   name: "CreatePost",
@@ -68,6 +60,7 @@ export default {
           toolbar: toolbarOptions,
         },
         theme: "bubble",
+        placeholder: "Insérez du texte...",
       },
     };
   },
@@ -91,10 +84,10 @@ export default {
         title: this.post.title,
         content: this.post.content,
       };
-      console.log(post);
+      console.log(this.post.content);
       if (!this.post.title || !this.post.content) {
-        console.log("Erreur titre ou contenu vide");
-        this.$toast.error("Erreur : Titre ou contenu du post vide", {
+        console.log("Erreur Contenu vide");
+        this.$toast.error("Erreur : Contenu du post vide", {
           timeout: 2000,
         });
       } else {
@@ -107,9 +100,7 @@ export default {
             this.$toast.success("Post publié", {
               timeout: 2000,
             });
-            setTimeout(function() {
-              location.reload();
-            }, 2000);
+            location.reload();
           })
           .catch((error) => {
             let errorMessage = error.response.data.error;
@@ -122,21 +113,17 @@ export default {
           });
       }
     },
-    onEditorBlur(quill) {
-      console.log("editor blur!", quill);
-    },
-    onEditorFocus(quill) {
-      console.log("editor focus!", quill);
-    },
-    onEditorReady(quill) {
-      console.log("editor ready!", quill);
-    },
     onMaxChar(quill) {
-      const limit = 100;
+      const limit = 10208;
+      this.post.content = quill.html;
+      this.post.content = this.post.content
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">");
+      console.log(this.post.content);
       console.log(quill.text.length);
       if (quill.text.length > limit) {
-        quill.text = quill.text.slice(0, limit + 1);
-        console.log(quill.text);
+        this.post.content = this.post.content.substring(0, limit + 32);
+        console.log(this.post.content);
       }
       return quill;
     },

@@ -14,19 +14,19 @@
       </div>
       <div class="current--username">
         <h5>Nom d'utilisateur</h5>
-        <p class="current--username--text">{{ user.username }}</p>
+        <p class="current--username--text  text-center">{{ user.username }}</p>
       </div>
       <div class="current--fname">
         <h5>Prénom :</h5>
-        <p>{{ user.fname }}</p>
+        <p class="current--fname--text  text-center">{{ user.fname }}</p>
       </div>
       <div class="current--lname">
         <h5>Nom de famille :</h5>
-        <p>{{ user.lname }}</p>
+        <p class="current--lname--text  text-center">{{ user.lname }}</p>
       </div>
       <article class="account-info card">
-        <p>Compte créé le : {{ user.createdOn | formatDate }}</p>
-        <p v-show="wasAccountUpdated">
+        <p class="text-center">Compte créé le : {{ user.createdOn | formatDate }}</p>
+        <p class="text-center" v-show="wasAccountUpdated">
           Dernière modification le : {{ user.lastUpdated | formatDate }}
         </p>
       </article>

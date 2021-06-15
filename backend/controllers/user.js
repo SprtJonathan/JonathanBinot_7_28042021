@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt"); // Package permettant de chiffrer les mots de passes
 const jwt = require("jsonwebtoken"); // JSON Web Token : Jeton d'authentification utilisé afin de ne pas redemander la connexion à chaque requête
 const mysql = require('mysql'); // Package permettant de se connecter à la base de données mysql
-const helper = require("../helpers/user.js") // Helper permettant de ne pas répéter la fonction de recherche d'un utilisateur
+const helper = require("../helpers/backend.js") // Helper permettant de ne pas répéter certaines requêtes
 
 const validator = require('validator'); // Le validateur permet de vérifier que le format d'email entré est correct
 
@@ -113,20 +113,20 @@ exports.getOneUserNotConnected = (req, res, next) => { // Middleware permettant 
 
 exports.getAllUsers = (req, res, next) => {
     let sql = `SELECT * FROM users`;
-    db.query(sql, (err, result) => {
-        if (err) throw err;
-        res.send(result);
-        //console.log(result);
-    })
+    helper.data.sqlRequest(sql, res)
 };
 
 exports.deleteAccount = (req, res, next) => { // Middleware pour la suppression du compte
+    const errorCode = "400"
+    const errorMessage = "Une erreur s'est produite, veuillez réessayer"
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
     const userId = decodedToken.userId;
     const roleId = decodedToken.roleId;
     const userProfileId = req.params.id;
     if (roleId == 1 || userId == userProfileId) {
+        let sql = `DELETE FROM users WHERE userId = ?`;
+        sql = mysql.format(sql, [userProfileId]);
         let selectUser = `SELECT profilePictureUrl FROM users WHERE userId = ?`;
         selectUser = mysql.format(selectUser, [userProfileId]);
         db.query(selectUser, (error, result) => {
@@ -137,41 +137,33 @@ exports.deleteAccount = (req, res, next) => { // Middleware pour la suppression 
                 const filename = result[0].profilePictureUrl.split("/images/userProfilePictures/uploads/")[1];
                 console.log("Nom du fichier: " + filename);
                 fs.unlink(`images/userProfilePictures/uploads/${filename}`, () => {
-                    let sql = `DELETE FROM users WHERE userId = ?`;
-                    sql = mysql.format(sql, [userProfileId]);
                     console.log("userFound " + userProfileId)
-                    db.query(sql, (err, result) => {
-
-                        if (err) throw err;
-                        res.send(result);
-
-                    })
+                    helper.data.sqlRequest(sql, res, errorCode, errorMessage)
                 });
             } else {
                 console.log("User has default image")
-                let sql = `DELETE FROM users WHERE userId = ?`;
-                sql = mysql.format(sql, [userProfileId]);
                 console.log("userFound " + userProfileId)
-                db.query(sql, (err, result) => {
-
-                    if (err) throw err;
-                    res.send(result);
-                })
+                helper.data.sqlRequest(sql, res, errorCode, errorMessage)
             };
         })
     }
 }
 
 exports.editProfilePicture = (req, res, next) => {
+    const errorCode = "409"
+    const errorMessage = "Cet utilisateur existe déjà"
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
     const roleId = decodedToken.roleId;
     const userId = decodedToken.userId
     const userToEdit = req.params.id;
     const profilePicture = `${req.protocol}://${req.get("host")}/images/userProfilePictures/uploads/${req.file.filename}`;
+    const userProfileId = req.params.id;
 
     if (roleId == 1 || userToEdit == userId) {
         if (profilePicture != `${req.protocol}://${req.get("host")}/images/userProfilePictures/default.png`) {
+            let sql = `DELETE FROM users WHERE userId = ?`;
+            sql = mysql.format(sql, [userProfileId]);
             let selectUser = `SELECT profilePictureUrl FROM users WHERE userId = ?`;
             selectUser = mysql.format(selectUser, [userToEdit]);
             db.query(selectUser, (error, result) => {
@@ -184,15 +176,7 @@ exports.editProfilePicture = (req, res, next) => {
                     sql = mysql.format(sql, [profilePicture, userToEdit]);
                     //console.log(profilePicture)
                     //console.log("profil à éditer : " + userToEdit + "et utilisateur voulant éditer : " + userId + " image? " + profilePicture)
-                    db.query(sql, (error, result) => {
-                        if (error) {
-                            console.log("erreur" + error)
-                            return res.status(409).json({ error: "Erreur: Cet utilisateur existe déjà !" });
-
-                        } else {
-                            res.send(result);
-                        }
-                    })
+                    helper.data.sqlRequest(sql, res, errorCode, errorMessage)
                 });
             })
 
@@ -202,15 +186,7 @@ exports.editProfilePicture = (req, res, next) => {
             sql = mysql.format(sql, [profilePicture, userToEdit]);
             //console.log(profilePicture)
             //console.log("profil à éditer : " + userToEdit + "et utilisateur voulant éditer : " + userId + " image? " + profilePicture)
-            db.query(sql, (error, result) => {
-                if (error) {
-                    console.log("erreur" + error)
-                    return res.status(409).json({ error: "Erreur: Cet utilisateur existe déjà !" });
-
-                } else {
-                    res.send(result);
-                }
-            })
+            helper.data.sqlRequest(sql, res, errorCode, errorMessage)
         }
     }
 }

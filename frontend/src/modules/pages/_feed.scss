@@ -7,8 +7,8 @@
   &--content {
     padding: 1rem;
     overflow-x: hidden;
-    background-color: var(--background-color);
-    color: var(--text-color);
+    background-color: var(--background-color-text-content);
+    color: var(--text-color-content);
   }
   &--title {
     color: var(--text-color);
@@ -29,6 +29,7 @@ iframe {
 .create-post {
   padding: 1rem;
   background-color: var(--background-color3);
+  z-index: 10;
   ::placeholder {
     color: var(--text-color);
   }
@@ -38,11 +39,12 @@ iframe {
   }
   &--content {
     padding: 1rem;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    ::placeholder {
-      color: var(--text-color);
-    }
+    background-color: var(--background-color-text-content);
+    color: var(--text-color-content);
+    border: 1px var(--background-color) solid;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    text-align: left;
   }
 }
 
@@ -91,13 +93,13 @@ iframe {
   }
   &--write {
     margin: 1rem 0px;
-    background-color: var(--background-color);
-    color: var(--text-color);
+    background-color: var(--background-color-text-content);
+    color: var(--text-color-content);
     border: 1px solid var(--text-color);
   }
   &--content {
     margin: 1rem 0px;
-    background-color: var(--background-color);
+    background-color: var(--background-color3);
     color: var(--text-color);
   }
   &--comment {

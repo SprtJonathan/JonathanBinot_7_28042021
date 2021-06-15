@@ -10,6 +10,8 @@
           alt="Groupomania logo"
           src="../assets/images/icon-left-font-monochrome-white.svg"
           class="logo"
+          width="120px"
+          height="40px"
       /></router-link>
       <router-link v-if="isUserConnected" to="/">Accueil</router-link>
       <router-link v-if="!isUserConnected" to="/"

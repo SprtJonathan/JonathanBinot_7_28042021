@@ -8,6 +8,7 @@
           placeholder="Commentaire"
           v-model="comment.comment"
           :options="editorOption"
+          @change="onMaxChar($event)"
           required
         />
         <input
@@ -23,19 +24,14 @@
 <script>
 import axios from "axios";
 
-let toolbarOptions = {
-  handlers: {
-    // handlers object will be merged with default handlers object
-    link: function(value) {
-      if (value) {
-        var href = prompt("Enter the URL");
-        this.quill.format("link", href);
-      } else {
-        this.quill.format("link", false);
-      }
-    },
-  },
-};
+let toolbarOptions = [
+  ["bold", "italic", "underline", "strike"], // toggled buttons
+  [{ script: "sub" }, { script: "super" }], // superscript/subscript
+  ["link"],
+  [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+
+  ["clean"], // remove formatting button
+];
 
 export default {
   name: "WriteComment",
@@ -52,6 +48,7 @@ export default {
           toolbar: toolbarOptions,
         },
         theme: "bubble",
+        placeholder: "Commentaire...",
       },
     };
   },
@@ -106,14 +103,19 @@ export default {
       }
     },
 
-    onEditorBlur(quill) {
-      console.log("editor blur!", quill);
-    },
-    onEditorFocus(quill) {
-      console.log("editor focus!", quill);
-    },
-    onEditorReady(quill) {
-      console.log("editor ready!", quill);
+    onMaxChar(quill) {
+      const limit = 10208;
+      this.comment.comment = quill.html;
+      this.comment.comment = this.comment.comment
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">");
+      console.log(this.v);
+      console.log(quill.text.length);
+      if (quill.text.length > limit) {
+        this.comment.comment = this.comment.comment.substring(0, limit + 32);
+        console.log(this.comment.comment);
+      }
+      return quill;
     },
   },
 };

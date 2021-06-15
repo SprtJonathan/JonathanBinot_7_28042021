@@ -18,6 +18,7 @@ db.connect(function (err) {
 });
 
 const app = express(); // Création de l'application utilisant express
+
 app.use(cors())
 // Middleware permettant de corriger les erreurs CORS pouvant survenir à cause de sécurités et ainsi permettre la connexion à tout utilisateur
 app.use(function (req, res, next) {
@@ -38,8 +39,8 @@ app.use(function (req, res, next) {
 
 // Définition des paramètres du limiteur de requête
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,       // = 15 minutes
-  max: 100 // Chaque IP est limitée à 100 requêtes toutes les 15min
+  windowMs: 5 * 60 * 1000,       // = 5 minutes
+  max: 100 // Chaque IP est limitée à 100 requêtes toutes les 5min
 })
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -55,6 +56,6 @@ const commentRoutes = require('./routes/comment');
 
 app.use("/api/posts", postRoutes);
 app.use("/api/auth", /*limiter,*/ userRoutes); // Utilisation du limiteur de requêtes par IP pour la route d'authentification
-app.use("/api/comments", /*limiter,*/ commentRoutes); // Utilisation du limiteur de requêtes par IP pour la route d'authentification
+app.use("/api/comments", commentRoutes); // Utilisation du limiteur de requêtes par IP pour la route d'authentification
 
 module.exports = app; // Exportation afin d'importer l'application dans le server.js

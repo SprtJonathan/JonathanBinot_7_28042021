@@ -3,7 +3,9 @@
   --background-color2: whitesmoke;
   --background-color3: white;
   --background-color4: whitesmoke;
+  --background-color-text-content: white;
   --text-color: #122442;
+  --text-color-content: black;
   --marked-color: $text-color;
   --background-image: linear-gradient(-127deg, #333333, #080f1b);
   --color-links: #0099ff;
@@ -13,7 +15,9 @@
   --background-color: rgb(10, 10, 10);
   --background-color2: rgb(54, 54, 54);
   --background-color3: rgb(34, 34, 34);
+  --background-color-text-content: whitesmoke;
   --text-color: #f2f2f2;
+  --text-color-content: #122442;
   --marked-color: #f2f2f2;
   --background-image: linear-gradient(-127deg, #0b1424, #080f1b);
   --color-links: #ffe550;
@@ -78,9 +82,6 @@ body {
   background-repeat: no-repeat;
 }
 
-p {
-  text-align: center;
-}
 
 h1 {
   font-family: $primary-font;
@@ -153,7 +154,6 @@ button {
 .ql-editor::placeholder {
   color: white;
 }
-
 
 @media (min-width: 768px) {
   h1 {

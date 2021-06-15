@@ -30,9 +30,7 @@
               placeholder="Contenu du post"
               v-model="comment.comment"
               :options="editorOption"
-              @blur="onEditorBlur($event)"
-              @focus="onEditorFocus($event)"
-              @ready="onEditorReady($event)"
+              @change="onMaxChar($event)"
               required
             />
           </div>
@@ -204,14 +202,19 @@ export default {
         });
     },
 
-    onEditorBlur(quill) {
-      console.log("editor blur!", quill);
-    },
-    onEditorFocus(quill) {
-      console.log("editor focus!", quill);
-    },
-    onEditorReady(quill) {
-      console.log("editor ready!", quill);
+    onMaxChar(quill) {
+      const limit = 10208;
+      this.comment.comment = quill.html;
+      this.comment.comment = this.comment.comment
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">");
+      console.log(this.v);
+      console.log(quill.text.length);
+      if (quill.text.length > limit) {
+        this.comment.comment = this.comment.comment.substring(0, limit + 32);
+        console.log(this.comment.comment);
+      }
+      return quill;
     },
   },
 };

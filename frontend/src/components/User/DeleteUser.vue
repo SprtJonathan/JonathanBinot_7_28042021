@@ -1,8 +1,11 @@
 <template>
   <div class="modal--delete">
-    <b-button v-b-modal.delete-account-modal class="btn btn-danger button"
-      >Supprimer le compte</b-button
-    >
+    <div class="profile-card card">
+      <h2>Gestion du compte</h2>
+      <b-button v-b-modal.delete-account-modal class="btn btn-danger button"
+        >Supprimer le compte</b-button
+      >
+    </div>
 
     <b-modal
       class="modal position-fixed"
@@ -20,11 +23,11 @@
         class="btn btn-danger button"
         @click="deleteAccount()"
       >
-        <h2 class="">
+        <span>
           <b-icon-exclamation-triangle-fill></b-icon-exclamation-triangle-fill>
           Supprimer le compte {{ userPage.username }}
           <b-icon-exclamation-triangle-fill></b-icon-exclamation-triangle-fill>
-        </h2>
+        </span>
       </button>
     </b-modal>
   </div>
