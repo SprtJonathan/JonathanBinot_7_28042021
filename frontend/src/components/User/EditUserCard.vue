@@ -409,7 +409,7 @@ export default {
                 });
               });
           } else {
-            this.$toast.error("Erreur : Mot de passe erroné", {
+            this.$toast.error("Erreur : Nouveau mot de passe erroné", {
               timeout: 2000,
             });
           }

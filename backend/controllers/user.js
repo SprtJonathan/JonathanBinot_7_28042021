@@ -202,7 +202,7 @@ exports.editAccount = (req, res, next) => { // Middleware pour la modification d
     const newPassword = req.body.newPassword;
     //const profilePicture = `${req.protocol}://${req.get("host")}/images/userProfilePictures/${req.body.newProfilePicture}`
     //console.log(newProfilePicture)
-    if (email == null || fname == null || lname == null || password == null) {
+    if (username == null || email == null || fname == null || lname == null || password == null || username == "" || email == "" || fname == "" || lname == "" || password == "") {
         return res.status(400).json({ error: "Champs vides" });
     } else {
         let savedHash = `SELECT * FROM users WHERE userId = ?`;
@@ -263,7 +263,7 @@ exports.editAccountAdmin = (req, res, next) => { // Middleware pour la modificat
     //console.log(newProfilePicture)
     console.log("profil à éditer : " + userToEdit + "et utilisateur voulant éditer : " + userId + " admin? " + roleId)
     if (roleId == 1 || userToEdit == userId) {
-        if (email == null || fname == null || lname == null) {
+        if (username == null || email == null || fname == null || lname == null || username == "" || email == "" || fname == "" || lname == "") {
             return res.status(400).json({ error: "Champs vides" });
         } else {
             if (validator.isEmail(req.body.email)) {
