@@ -1,5 +1,8 @@
 <template>
   <div class="">
+    <div v-if="allPosts.length == 0">
+      <p class="text-center text">Aucun post</p>
+    </div>
     <div
       class="post container card"
       v-for="post in allPosts"

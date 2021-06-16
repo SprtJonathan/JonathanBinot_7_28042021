@@ -1,7 +1,6 @@
 // Corps de l'application Express
 
 const express = require("express"); // Utilisation du framework node Express afin de simplifier la création de l'application
-const rateLimit = require('express-rate-limit'); // Package permettant de limiter les attaques par brute force en limitant le nombre de requêtes par IP
 const bodyParser = require("body-parser"); // Package permettant d'analyser le corps des requêtes
 const path = require("path"); // Package permettant le travail sur les fichiers locaux (utile pour la gestion des images)
 const db = require("./config/config"); // Importation de la configuration de la connexion à la BDD
@@ -37,12 +36,6 @@ app.use(function (req, res, next) {
   next();
 });
 
-// Définition des paramètres du limiteur de requête
-const limiter = rateLimit({
-  windowMs: 5 * 60 * 1000,       // = 5 minutes
-  max: 100 // Chaque IP est limitée à 100 requêtes toutes les 5min
-})
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -56,7 +49,7 @@ const userRoutes = require("./routes/user"); // Routes utilisées pour les utili
 const commentRoutes = require('./routes/comment');
 
 app.use("/api/posts", postRoutes);
-app.use("/api/auth", /*limiter,*/ userRoutes); // Utilisation du limiteur de requêtes par IP pour la route d'authentification
+app.use("/api/auth", userRoutes); // Utilisation du limiteur de requêtes par IP pour la route d'authentification
 app.use("/api/comments", commentRoutes); // Utilisation du limiteur de requêtes par IP pour la route d'authentification
 
 module.exports = app; // Exportation afin d'importer l'application dans le server.js

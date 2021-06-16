@@ -14,14 +14,9 @@
           />
 
           <div class="create-post--content">
-            <button class="btn-warning form-control" @click="embedReddit">
-              Partager un post Reddit
-            </button>
-            <div class="selected-url" :v-show="url != ''">
-              <p v-if="(url != '')">URL sélectionné</p>{{ url }}
-            </div>
             <quill-editor
               ref="myQuillEditor"
+              id="post"
               class="create-post--editor"
               placeholder="Contenu du post"
               v-model="post.content"
@@ -63,7 +58,7 @@ export default {
         modules: {
           toolbar: this.$store.state.toolbarOptions,
         },
-        theme: "bubble",
+        theme: "snow",
         placeholder: "Insérez du texte...",
       },
     };
@@ -83,6 +78,7 @@ export default {
   },
   methods: {
     sumbitPost() {
+      this.detectRedditLink(this.post.content);
       let post = {
         userId: this.user.userId,
         title: this.post.title,
@@ -128,24 +124,43 @@ export default {
       }
       return quill;
     },
-    embedReddit() {
-      event.preventDefault();
-      this.url = window.prompt("Insérer l'URL d'un post reddit");
-      let redditSubString = "www.reddit.com/";
-      console.log(this.url.includes(redditSubString));
-      if (this.url.includes(redditSubString)) {
-        this.url = this.url.replace(redditSubString, "www.redditmedia.com/");
-        this.url = this.url + "?ref_source=embed&amp;ref=share&amp;embed=true";
-        console.log(this.url);
-        this.link =
-          `<iframe class="ql-video" id="reddit-embed" src=` +
-          this.url +
-          ` sandbox="allow-scripts allow-same-origin allow-popups"></iframe>`;
+    detectRedditLink(post) {
+      console.log("le post " + post);
+      let parser = new DOMParser();
+      let element = parser.parseFromString(post, "text/html");
+      console.log("post " + element);
+
+      if (post.includes('<a href="')) {
+        let isLink = element.getElementsByTagName("a");
+        console.log(isLink + " si y a lien");
+        let href = isLink[0].getAttribute("href");
+        console.log("HREF?" + href);
+        this.embedReddit(href);
       } else {
-        this.url = "";
-        this.$toast.error("Erreur: le lien entré n'est pas un lien reddit", {
+        console.log("Pas de lien");
+      }
+    },
+    embedReddit(param) {
+      event.preventDefault();
+      let url = param; //window.prompt("Insérer l'URL d'un post reddit");
+      console.log("Le param URL est " + url);
+      let redditSubString = "https://www.reddit.com/";
+      let redditPostSubString = "/comments/";
+      console.log(url.includes(redditSubString));
+      if (url.includes(redditSubString) && url.includes(redditPostSubString)) {
+        url = url.replace(redditSubString, "https://www.redditmedia.com/");
+        url = url + "?ref_source=embed&amp;ref=share&amp;embed=true";
+        console.log(url);
+        this.link =
+          `<div class="embedded-post">
+          <iframe class="ql-video" id="reddit-embed" src=` +
+          url +
+          ` sandbox="allow-scripts allow-same-origin allow-popups" scrolling="yes" frameborder="0" width="100%" height="528"></iframe></div>`;
+      } else {
+        url = "";
+        /*this.$toast.error("Erreur: le lien entré n'est pas un lien reddit", {
           timeout: 2000,
-        });
+        });*/
       }
       console.log(this.link);
     },

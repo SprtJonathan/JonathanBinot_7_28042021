@@ -1,5 +1,12 @@
 const express = require("express");
 const router = express.Router();
+const rateLimit = require('express-rate-limit'); // Package permettant de limiter les attaques par brute force en limitant le nombre de requêtes par IP
+// Définition des paramètres du limiteur de requête
+const limiter = rateLimit({
+    windowMs: 5 * 60 * 1000,       // = 5 minutes
+    max: 10, // Chaque IP est limitée à 100 requêtes toutes les 5min
+    error: "Erreur : Trop de tentatives de connexion infructueuses"
+})
 
 const userCtrl = require("../controllers/user");
 const auth = require("../middleware/auth");
@@ -7,7 +14,7 @@ const multer = require("../middleware/multer-config") // Récupération du middl
 const passwordValidation = require('../middleware/password-validation')
 
 router.post("/register", passwordValidation, userCtrl.register); // Route pour l'inscription d'un utilisateur / On vérifie que le mot de passe corresponde
-router.post("/login", userCtrl.login); // Route pour la connexion d'un utilisateur
+router.post("/login", limiter, userCtrl.login); // Route pour la connexion d'un utilisateur
 router.put("/users/:id", auth, passwordValidation, userCtrl.editAccount); // Route pour l'édition d'un utilisateur
 router.put("/users/profilepicture/:id", auth, multer, userCtrl.editProfilePicture); // Route pour l'édition d'un utilisateur
 router.put("/users/admin/:id", auth, userCtrl.editAccountAdmin); // Route pour l'édition d'un utilisateur

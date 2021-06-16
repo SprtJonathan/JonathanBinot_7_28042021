@@ -5,10 +5,12 @@
   background-color: var(--background-color3);
   animation: slide-up 1s both;
   &--content {
-    padding: 1rem;
+    padding: 0.2rem;
+    margin: auto;
     overflow-x: hidden;
     background-color: var(--background-color-text-content);
     color: var(--text-color-content);
+    height: 250px;
   }
   &--title {
     color: var(--text-color);
@@ -19,6 +21,15 @@
 }
 
 iframe {
+    width: 100%;
+    overflow-x: visible;
+  html {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.ql-video {
   width: 100%;
 }
 
@@ -175,9 +186,18 @@ iframe {
   .titre {
     font-size: 1em;
   }
+  .post {
+    &--content {
+      height: 500px;
+    }
+  }
   .comment {
     &--info {
       flex-direction: row;
     }
+  }
+  .ql-video {
+    width: 480px;
+    height: 270px;
   }
 }
