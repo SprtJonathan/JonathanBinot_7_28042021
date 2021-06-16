@@ -14,9 +14,8 @@ exports.register = (req, res, next) => { // Middleware pour l'inscription
     const lname = req.body.lname;
     const email = req.body.email;
     const password = req.body.password;
-    const profilePicture = `${req.protocol}://${req.get("host")}/images/userProfilePictures/default.png`
-
-    if (email == null || fname == null || lname == null || password == null) {
+    const profilePicture = `${req.protocol}://${req.get("host")}/images/userProfilePictures/default.png`;
+    if (username == null || email == null || fname == null || lname == null || password == null || username == "" || email == "" || fname == "" || lname == "" || password == "") {
         return res.status(400).json({ error: "Champs vides" });
     } else {
         bcrypt
