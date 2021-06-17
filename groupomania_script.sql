@@ -1,99 +1,102 @@
--- MySQL dump 10.13  Distrib 8.0.25, for Win64 (x86_64)
+-- phpMyAdmin SQL Dump
+-- version 5.0.2
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost    Database: groupomania
--- ------------------------------------------------------
--- Server version	8.0.25
+-- Hôte : 127.0.0.1:3306
+-- Généré le : jeu. 17 juin 2021 à 19:42
+-- Version du serveur :  8.0.25
+-- Version de PHP : 7.3.21
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
--- Table structure for table `comments`
+-- Base de données : `groupomania`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `comments`
 --
 
 DROP TABLE IF EXISTS `comments`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `comments` (
+CREATE TABLE IF NOT EXISTS `comments` (
   `commentId` int NOT NULL AUTO_INCREMENT,
-  `postId` int unsigned DEFAULT NULL,
+  `postId` int UNSIGNED DEFAULT NULL,
   `userId` int DEFAULT NULL,
-  `comment` text NOT NULL,
+  `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `writtenOn` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lastUpdated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`commentId`),
   UNIQUE KEY `commentId_UNIQUE` (`commentId`),
   KEY `fk_commnents_userId_idx` (`userId`),
-  KEY `fk_comments_postId_idx` (`postId`),
-  CONSTRAINT `fk_comments_postId` FOREIGN KEY (`postId`) REFERENCES `posts` (`postId`) ON DELETE CASCADE,
-  CONSTRAINT `fk_comments_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  KEY `fk_comments_postId_idx` (`postId`)
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb3;
 
 --
--- Dumping data for table `comments`
+-- Déchargement des données de la table `comments`
 --
 
-LOCK TABLES `comments` WRITE;
-/*!40000 ALTER TABLE `comments` DISABLE KEYS */;
-INSERT INTO `comments` VALUES (21,26,97,'<p>Comment ├ºa ├ºa c\'est vrai?</p>','2021-06-02 18:24:11','2021-06-03 12:40:53'),(22,30,97,'<p>Je te tiens <em>inform├®</em> quand ce sera fait !</p>','2021-06-03 15:49:37','2021-06-04 11:57:03'),(23,31,97,'<p>non</p>','2021-06-04 11:59:44','2021-06-04 11:59:44'),(24,31,97,'<p>oui</p>','2021-06-04 11:59:49','2021-06-04 11:59:49'),(26,30,97,'<p>C\'est fait !</p>','2021-06-04 13:07:39','2021-06-04 13:07:39'),(32,32,211,'<p>sqdqsd</p>','2021-06-11 14:42:04','2021-06-11 14:42:04'),(33,32,211,'<p>https://www.reddit.com/r/starcitizen/comments/nwzcnr/what_i_think_when_i_saw_the_xian_scratch_wall_in/?utm_source=share&amp;utm_medium=web2x&amp;context=3</p>','2021-06-11 14:42:51','2021-06-11 14:42:51'),(34,73,97,'<iframe class=\"ql-video\" frameborder=\"0\" allowfullscreen=\"true\" src=\"https://www.redditmedia.com/r/france/comments/nx80iw/le_sentier_des_ocres_roussillon/?ref_source=embed&amp;ref=share&amp;embed=true\" height=\"359\" width=\"640\"></iframe><p><br></p>','2021-06-11 15:25:34','2021-06-11 15:25:34');
-/*!40000 ALTER TABLE `comments` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `comments` (`commentId`, `postId`, `userId`, `comment`, `writtenOn`, `lastUpdated`) VALUES
+(40, 203, 215, '<p>Merci pour ce partage !</p><p>Vous nous aidez grandement !</p>', '2021-06-17 09:52:40', '2021-06-17 09:52:59'),
+(41, 206, 179, '<p>Merci pour cette introduction !</p>', '2021-06-17 11:55:02', '2021-06-17 11:55:02'),
+(43, 200, 214, '<p>Bien vu ! C\'est vrai que c\'est tentant !</p>', '2021-06-17 13:40:31', '2021-06-17 13:40:31'),
+(44, 200, 179, '<p>Oh très intéressant !</p>', '2021-06-17 13:40:49', '2021-06-17 13:40:49'),
+(45, 210, 215, '<p><strong>Bonjour </strong>!</p>', '2021-06-17 14:43:44', '2021-06-17 14:43:44');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `posts`
+-- Structure de la table `posts`
 --
 
 DROP TABLE IF EXISTS `posts`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `posts` (
-  `postId` int unsigned NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `posts` (
+  `postId` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `userId` int DEFAULT NULL,
-  `title` varchar(255) NOT NULL,
-  `content` text,
+  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `content` text CHARACTER SET utf8 COLLATE utf8_general_ci,
   `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modificationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`postId`),
   UNIQUE KEY `postid_UNIQUE` (`postId`),
-  KEY `userId_idx` (`userId`),
-  CONSTRAINT `FK_posts_users` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  KEY `userId_idx` (`userId`)
+) ENGINE=InnoDB AUTO_INCREMENT=220 DEFAULT CHARSET=utf8mb3;
 
 --
--- Dumping data for table `posts`
+-- Déchargement des données de la table `posts`
 --
 
-LOCK TABLES `posts` WRITE;
-/*!40000 ALTER TABLE `posts` DISABLE KEYS */;
-INSERT INTO `posts` VALUES (26,97,'Premer post !','<p>Bonjour ! Voici le premier post du site !</p>','2021-06-02 10:58:14','2021-06-03 12:33:16'),(29,179,'test','<blockquote><strong><em>helloiw</em></strong></blockquote>','2021-06-03 15:16:05','2021-06-03 15:16:05'),(30,179,'Pense-b├¬te','<h1>Penser ├á bien plaquer les <em>nanoleaf </em>contre le mur <strong>SURTOUT </strong>du c├┤t├® du Valve Index</h1>','2021-06-03 15:48:47','2021-06-04 11:57:58'),(31,97,'Update','<p>Alors aujourd\'hui, j\'ai mis ├á jour le syst├¿me des commentaires et des posts pour que ce soit plus joli ├á regarder et ├á naviguer sur mobile. Aimez-vous cela?</p>','2021-06-04 11:59:25','2021-06-10 12:14:20'),(32,97,'Titre de poste','<iframe class=\"ql-video\" allowfullscreen=\"true\" src=\"https://www.redditmedia.com/r/vuejs/comments/nthcqm/finished_my_first_deployed_fullstack_vue_3_app/?ref_source=embed&amp;ref=share&amp;embed=true\" width=\"640\" height=\"317\" frameborder=\"0\"></iframe><p><a href=\"https://www.reddit.com/\" rel=\"noopener noreferrer\" target=\"_blank\"><strong><em>Voici le post super int├®ressant</em></strong></a></p>','2021-06-06 23:23:42','2021-06-10 12:14:13'),(65,211,'test','<p>test</p>','2021-06-11 12:13:27','2021-06-11 12:13:27'),(66,211,'test','<p>tes</p>','2021-06-11 14:05:03','2021-06-11 14:05:03'),(68,211,'test','<p>test</p>','2021-06-11 14:29:51','2021-06-11 14:29:51'),(69,211,'test','<p>&lt;iframe id=\"reddit-embed\" src=\"https://www.redditmedia.com/r/vuejs/comments/nx9hdo/wanted_to_show_off_my_companys_vue_django_base/?ref_source=embed&amp;amp;ref=share&amp;amp;embed=true\" sandbox=\"allow-scripts allow-same-origin allow-popups\" style=\"border: none;\" scrolling=\"no\" width=\"640\" height=\"144\"&gt;&lt;/iframe&gt;</p>','2021-06-11 14:51:09','2021-06-11 14:51:09'),(70,97,'test','<iframe class=\"ql-video\" frameborder=\"0\" allowfullscreen=\"true\" src=\"https://www.redditmedia.com/r/vuejs/comments/nx9hdo/wanted_to_show_off_my_companys_vue_django_base/?ref_source=embed&amp;ref=share&amp;embed=true\" height=\"144\" width=\"640\"></iframe><p><br></p>','2021-06-11 14:53:23','2021-06-11 14:53:23'),(71,97,'Reddit post','<iframe class=\"ql-video\" frameborder=\"0\" allowfullscreen=\"true\" src=\"https://www.redditmedia.com/r/vuejs/comments/nx9hdo/wanted_to_show_off_my_companys_vue_django_base/?ref_source=embed&amp;ref=share&amp;embed=true&amp;theme=dark\" height=\"144\" width=\"640\"></iframe><p><br></p>','2021-06-11 14:53:57','2021-06-11 14:53:57'),(72,211,'test','<p>&lt;h1 class=\"watch-title-container\"&gt;&lt;span id=\"eow-title\" class=\"watch-title\" dir=\"ltr\" title=\"Brian Beckman: Don\'t fear the Monad\"&gt;Brian Beckman: Don\'t fear the Monad&lt;/span&gt;&lt;/h1&gt;</p>','2021-06-11 15:02:28','2021-06-11 15:02:28'),(73,211,'test','<p><img src=\"https://preview.redd.it/jt44nayilk471.jpg?width=640&amp;height=272&amp;crop=smart&amp;auto=webp&amp;s=a1570629f0b2acc3cac703858de246b3d2cbf0ad\" alt=\"Image de la publication\"></p>','2021-06-11 15:20:30','2021-06-11 15:20:30');
-/*!40000 ALTER TABLE `posts` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `posts` (`postId`, `userId`, `title`, `content`, `creationDate`, `modificationDate`) VALUES
+(200, 213, 'Petit partage plaisir', '<p>Ce n\'est qu\'en partageant et passant le mot qu\'il sera possible de faire évoluer le média de la VR !</p><p> <a href=\"https://www.reddit.com/r/virtualreality/comments/o0h0ex/bethesdas_next_rpg_starfield_was_shown_off_at_e3/\" rel=\"noopener noreferrer\" target=\"_blank\">(2) Bethesda\'s next RPG, Starfield, was shown off at E3. Want it to support VR like SkyrimVR and FalloutVR? Read this post! : virtualreality (reddit.com)</a></p><p><br></p><iframe title=\"Post reddit partagé\" class=\"ql-video\" id=\"reddit-embed\" src=\"https://www.redditmedia.com/r/virtualreality/comments/o0h0ex/bethesdas_next_rpg_starfield_was_shown_off_at_e3/?ref_source=embed&amp;ref=share&amp;embed=true\" sandbox=\"allow-scripts allow-same-origin allow-popups\" scrolling=\"yes\" frameborder=\"0\" width=\"100%\" height=\"528\"></iframe>', '2021-06-16 10:06:32', '2021-06-17 13:39:57'),
+(201, 213, 'Offre d\'emploi', '<p>Petit partage d\'une offre d\'emploi si vous souhaitez partager à vos contacts : <a href=\"https://www.reddit.com/r/vuejs/comments/o0ol6l/looking_for_vuejs_consultant_part_time_remote/\" rel=\"noopener noreferrer\" target=\"_blank\">(2) Vue.js - The progressive Javascript framework (reddit.com)</a></p><p><br></p><p><br></p><iframe title=\"Post reddit partagé\" class=\"ql-video\" id=\"reddit-embed\" src=\"https://www.redditmedia.com/r/vuejs/comments/o0ol6l/looking_for_vuejs_consultant_part_time_remote/?ref_source=embed&amp;ref=share&amp;embed=true\" sandbox=\"allow-scripts allow-same-origin allow-popups\" scrolling=\"yes\" frameborder=\"0\" width=\"100%\" height=\"528\"></iframe>', '2021-06-16 10:07:29', '2021-06-17 13:38:46'),
+(203, 213, 'Post reddit', '<p><a href=\"https://www.reddit.com/r/vuejs/comments/o0q91f/what_is_the_syntax_for_displaying_hyphenated_api/\" rel=\"noopener noreferrer\" target=\"_blank\">(2) What is the syntax for displaying hyphenated API paths? : vuejs (reddit.com)</a> Voici un petit post concernant un problème rencontré hier. Je vous le partage ici si ça peut aider</p><iframe title=\"Post reddit partagé\" class=\"ql-video\" id=\"reddit-embed\" src=\"https://www.redditmedia.com/r/vuejs/comments/o0q91f/what_is_the_syntax_for_displaying_hyphenated_api/?ref_source=embed&amp;ref=share&amp;embed=true\" sandbox=\"allow-scripts allow-same-origin allow-popups\" scrolling=\"yes\" frameborder=\"0\" width=\"100%\" height=\"528\"></iframe>', '2021-06-16 10:13:04', '2021-06-17 13:37:51'),
+(206, 215, 'Bonjour et bienvenue', '<p>Bonjour à tous et à toutes.</p><p><br></p><p>Bienvenue sur le réseau social de Groupomania !</p><p><br></p><p>Une fois votre inscription faite, vous avez la possibilité d\'écrire des posts visibles à tous, et de les commenter. Si vous vous êtes trompés dans la rédaction du post ou que vous souhaitez revenir dessus, vous avez la possibilité de l\'éditer en cliquant sur le bouton d\'edition (le crayon), ou de le supprimer en cliquant sur la corbeille. Les commentaires fonctionnent de la même manière.</p><p><br></p><p>Vous avez également la possibilité de partager des articles reddit dans vos posts. Pour ce faire, copiez-collez simplement le lien dans la zone de texte, ou utilisez le bouton lien hypertexte (l\'image de chaîne sur la barre d\'outils) afin d\'ajouter un lien à un mot ou une phrase. <a href=\"https://www.reddit.com/r/windows/comments/o1bcu0/how_much_code_from_old_versions_of_windows_is/\" rel=\"noopener noreferrer\" target=\"_blank\">Comme ceci.</a></p><p><br></p><p>Vous disposez également d\'une page de profil publique accessible à tous mais modifiable uniquement par vous, ou les administrateurs du site.</p><p><br></p><p>En espérant que cette première version vous conviendra !</p><iframe title=\"Post reddit partagé\" class=\"ql-reddit\" id=\"reddit-embed\" src=\"https://www.redditmedia.com/r/windows/comments/o1bcu0/how_much_code_from_old_versions_of_windows_is/?ref_source=embed&amp;ref=share&amp;embed=true\" sandbox=\"allow-scripts allow-same-origin allow-popups\" scrolling=\"yes\" frameborder=\"0\" width=\"100%\" height=\"528\"></iframe>', '2021-06-17 11:30:02', '2021-06-17 14:42:27'),
+(210, 179, 'Bonjour à tous et à toutes', '<p>Bonjour chers collègues,</p><p><br></p><p>Je suis gratifiedsheep, je découvre ce réseau tout comme vous !</p><p><br></p><p>Bonne journée !</p>', '2021-06-17 13:54:25', '2021-06-17 19:24:59');
+
+-- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Structure de la table `users`
 --
 
 DROP TABLE IF EXISTS `users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `users` (
+CREATE TABLE IF NOT EXISTS `users` (
   `userId` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) NOT NULL,
-  `fname` varchar(255) NOT NULL,
-  `lname` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `profilePictureUrl` varchar(255) NOT NULL,
+  `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `fname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `lname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `profilePictureUrl` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `roleId` int NOT NULL DEFAULT '0',
   `createdOn` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `lastUpdated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -101,26 +104,46 @@ CREATE TABLE `users` (
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `userId_UNIQUE` (`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=212 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Table contenant les informations des utilisateurs';
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB AUTO_INCREMENT=224 DEFAULT CHARSET=utf8mb3 COMMENT='Table contenant les informations des utilisateurs';
 
 --
--- Dumping data for table `users`
+-- Déchargement des données de la table `users`
 --
 
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (97,'SprtJonathan','Jonathan','Binot','jonathan.binot@gmail.com','$2b$10$JCsSJbb1dnE6JSIV016qN.T1IcrImzebbLIFIVv7crzc3dFbrj5di','http://localhost:3000/images/userProfilePictures/uploads/Discord_PP_3.png1623405804345.png',1,'2021-06-01 16:47:14','2021-06-11 12:03:24'),(175,'capablecat312','Capable','Cat','capablecat@groupomania.com','$2b$10$NyKiFe.4MaXB01ZWGPRJ9O0aagGEFJmkXdhe2YE.4P1HWK5NIzCii','http://localhost:3000/images/userProfilePictures/default.png',0,'2021-06-02 17:16:04','2021-06-04 14:21:46'),(177,'blackfox964','Black','Fox','blackfox@groupomania.com','$2b$10$HZXIzSDVflkVUskw7Cth1.uo99iWL/hmK6wppJsmZ64D29sSKLA.6','http://localhost:3000/images/userProfilePictures/uploads/Illuminati_triangle_eye.png1623406510355.png',0,'2021-06-02 17:16:42','2021-06-11 12:15:10'),(178,'YellowCow','Yellow','Cow','yellowcow@groupomania.com','$2b$10$jvcTtajPAoSb4pmN3Pxvg.lmi8vAPdkWBfq/txaaZrcEh1b8OnnIC','http://localhost:3000/images/userProfilePictures/default.png',0,'2021-06-02 18:45:41','2021-06-09 13:54:31'),(179,'gratifiedsheep460','Gratified','Sheep','gratifiedsheep@groupomania.com','$2b$10$Fs4C7hDmhhNsLxqAQW8wsOpRL1uOyzWBNwju2yX9QPI1ZQT2FoJU2','http://localhost:3000/images/userProfilePictures/uploads/Uganda_knuckkles.png1623406492668.png',0,'2021-06-03 15:03:09','2021-06-11 12:14:52'),(181,'dsf','sdf','sdf','sdf@sdf.sdf','$2b$10$3IwZKaP0yXql1lBP8TMMzeerXOalWHTzKEOsoofJWpV5ZoutwWUM6','http://localhost:3000/images/userProfilePictures/default.png',0,'2021-06-10 11:53:02','2021-06-10 11:53:02'),(211,'test','test','test','test@test.test','$2b$10$D9zVIOhij.sjFKUYqBxKE.YbSNQ0NufxQ8Gqvj3kHHC4kKMQcB8rW','http://localhost:3000/images/userProfilePictures/uploads/Discord_logo1600.png1623414059568.png',0,'2021-06-11 12:13:16','2021-06-11 14:20:59');
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+INSERT INTO `users` (`userId`, `username`, `fname`, `lname`, `email`, `password`, `profilePictureUrl`, `roleId`, `createdOn`, `lastUpdated`) VALUES
+(177, 'blackfox964', 'Black', 'Fox', 'blackfox@groupomania.com', '$2b$10$HZXIzSDVflkVUskw7Cth1.uo99iWL/hmK6wppJsmZ64D29sSKLA.6', 'http://localhost:3000/images/userProfilePictures/uploads/Illuminati_triangle_eye.png1623406510355.png', 0, '2021-06-02 17:16:42', '2021-06-11 12:15:10'),
+(178, 'YellowCow', 'Yellow', 'Cow', 'yellowcow@groupomania.com', '$2b$10$jvcTtajPAoSb4pmN3Pxvg.lmi8vAPdkWBfq/txaaZrcEh1b8OnnIC', 'http://localhost:3000/images/userProfilePictures/uploads/controller.png1623619493912.png', 0, '2021-06-02 18:45:41', '2021-06-13 23:24:53'),
+(179, 'gratifiedsheep', 'Gratified', 'Sheep', 'gratifiedsheep@groupomania.com', '$2b$10$Fs4C7hDmhhNsLxqAQW8wsOpRL1uOyzWBNwju2yX9QPI1ZQT2FoJU2', 'http://localhost:3000/images/userProfilePictures/uploads/Uganda_knuckkles.png1623406492668.png', 0, '2021-06-03 15:03:09', '2021-06-14 13:27:29'),
+(213, 'exquisitejellyfish322', 'exquisite', 'jellyfish', 'exquisitejellyfish@groupomania.com', '$2b$10$iMzP2QbxAjwKYTGB29UWHuJpJF7B9aSbT5m5P9vWn41.jgJdfbYyi', 'http://localhost:3000/images/userProfilePictures/uploads/LowPolyBackgroundBtoC.png1623754488835.png', 0, '2021-06-15 12:46:21', '2021-06-15 12:54:48'),
+(214, 'SprtJonathan', 'Jonathan', 'Binot', 'jonathanbinot@gmail.com', '$2b$10$zO6Il2Kb5Qs5lL43BAl/g.qarwjtyUL2Yicrc1zZk3utMMpLzTkxy', 'http://localhost:3000/images/userProfilePictures/uploads/SpartFR.png1623929241282.png', 1, '2021-06-15 22:42:19', '2021-06-17 13:27:21'),
+(215, 'Admin', 'Service', 'RH', 'service.rh@groupomania.com', '$2b$10$eWenEcBEpnR6NOmfn8N1Q.Hb4ZHKxuuz4gT8ElP5jI9mHeJti7mLa', 'http://localhost:3000/images/userProfilePictures/default.png', 1, '2021-06-17 09:50:38', '2021-06-17 09:50:38'),
+(216, 'greenlion871', 'Green', 'Lion', 'greenlion@groupomania.com', '$2b$10$kBOb2tNf7k3WhHex7pW75uY5zSxEySgG/WEAo9yWNhmgJ7moIv5Za', 'http://localhost:3000/images/userProfilePictures/default.png', 0, '2021-06-17 13:26:12', '2021-06-17 13:26:12'),
+(217, 'closedrobot523', 'Closed', 'Robot', 'closedrobot@groupomania.com', '$2b$10$pRxQj61Tbxo2.2SWTeN1n.yeAZwlABOozNtySSI1x/uBZaJQ0ecrC', 'http://localhost:3000/images/userProfilePictures/default.png', 0, '2021-06-17 13:26:55', '2021-06-17 13:26:55'),
+(218, 'capablecat', 'Capable', 'Cat', 'capablecat@groupomania.com', '$2b$10$FoSiA2rXJN3lZaJZF7t5BOEXq7.QxwAzhavRXeg7X0rYuSesyffD2', 'http://localhost:3000/images/userProfilePictures/uploads/Discord_PP_2.png1623937799029.png', 0, '2021-06-17 14:14:22', '2021-06-17 15:49:59'),
+(219, 'sinistermustang', 'Sinister', 'Mustang', 'sinistermustang@groupomania.com', '$2b$10$ObaOWSa/uNv65lRq26f96.vnETlb9DLqpaVvNE5eze13tlLSC1NKG', 'http://localhost:3000/images/userProfilePictures/uploads/Seehna.jpeg1623939285123.jpg', 0, '2021-06-17 16:14:12', '2021-06-17 16:15:25'),
+(220, 'whitecat676', 'white', 'cat', 'whitecat@groupomania.com', '$2b$10$qtM1RaNo3DVXlBGBAepVaeE/VozXkvvysMF/KvoPf4HuvY1Wb9T.G', 'http://localhost:3000/images/userProfilePictures/default.png', 0, '2021-06-17 16:40:08', '2021-06-17 16:40:08'),
+(221, 'openedfox680', 'opened', 'fox', 'openedfox@groupomania.com', '$2b$10$GSKfBG2Eg3NT4eis8ZQfm.pZBC9B6MUxmWVEkZpaG3zI7ZoJW8ppq', 'http://localhost:3000/images/userProfilePictures/default.png', 0, '2021-06-17 17:04:22', '2021-06-17 17:04:22'),
+(222, 'extendedrobot402', 'extended', 'robot', 'extendedrobot@groupomania.com', '$2b$10$52exAsTOdFlUXVRAUmXqu.GD03gaGcTWvNQNcDN6r6d4ge5r8wxJO', 'http://localhost:3000/images/userProfilePictures/default.png', 0, '2021-06-17 17:05:27', '2021-06-17 17:05:27'),
+(223, 'orangealien825', 'orange', 'alien', 'orangealien@groupomania.com', '$2b$10$FpJea/E9kHhQnWDdraSRhejkcs5isvLEmEZlrd5XfSOj76cBMtzxu', 'http://localhost:3000/images/userProfilePictures/default.png', 0, '2021-06-17 17:06:02', '2021-06-17 17:06:02');
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+--
+-- Contraintes pour les tables déchargées
+--
+
+--
+-- Contraintes pour la table `comments`
+--
+ALTER TABLE `comments`
+  ADD CONSTRAINT `fk_comments_postId` FOREIGN KEY (`postId`) REFERENCES `posts` (`postId`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_comments_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `posts`
+--
+ALTER TABLE `posts`
+  ADD CONSTRAINT `FK_posts_users` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2021-06-11 17:37:51
