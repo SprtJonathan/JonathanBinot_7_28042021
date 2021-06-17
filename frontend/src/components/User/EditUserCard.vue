@@ -81,7 +81,7 @@
           type="password"
           class="form-control"
           id="old-password"
-          autocomplete="new-password"
+          autocomplete="password"
           v-model="password"
           placeholder="Ancien mot de passe"
           required
@@ -135,7 +135,12 @@ export default {
   },
   created() {
     axios
-      .get(this.$store.state.apiUrl + "auth/users/visitor/" + this.routeUserId)
+      .get(
+        this.$store.state.apiUrl + "auth/users/visitor/" + this.routeUserId,
+        {
+          headers: { Authorization: "Bearer " + localStorage.token },
+        }
+      )
       .then((response) => {
         this.user = response.data;
       })
@@ -158,13 +163,6 @@ export default {
         const formData = new FormData();
         formData.append("image", this.file);
         console.log(formData);
-
-        /*let config = {
-        header: {
-          "Content-Type": "image/*",
-        },
-      };*/
-
         axios
           .put(
             this.$store.state.apiUrl +
@@ -332,7 +330,7 @@ export default {
         "Format d'email incorrect " + badValueChar
       );
 
-      if (!this.newPassword) {
+      if (!this.newPassword && !this.adminConnected) {
         this.$toast.error(
           "Veuillez entrer un nouveau mot de passe ou votre mot de passe actuel",
           {
@@ -394,11 +392,11 @@ export default {
               .then((result) => {
                 console.log(result);
                 this.$toast.warning("Utilisateur modifié", {
-                  timeout: 2000,
+                  timeout: 1000,
                 });
                 setTimeout(function() {
                   location.reload();
-                }, 2000);
+                }, 1000);
               })
               .catch((error) => {
                 let errorMessage = error.response.data.error;

@@ -17,9 +17,11 @@
                 <span v-show="comment.roleId != 1" class="regular">{{
                   comment.username
                 }}</span>
+                <!-- Affichage de l'auteur du commentaire en couleur normale -->
                 <span v-show="comment.roleId == 1" class="admin">{{
                   comment.username
                 }}</span>
+                <!-- Affichage de l'auteur du commentaire dans un code couleur admin afin de le différencier des utilisateurs réguliers -->
               </RouterLink>
               le <em>{{ comment.writtenOn | formatDate }}</em> <br />
             </p>
@@ -31,6 +33,7 @@
             <p>
               Dernière modification le
               <em>{{ comment.lastUpdated | formatDate }}</em>
+              <!-- Affichage de la date de dernière modification si le commentaire a été modifié -->
             </p>
           </div>
         </div>
@@ -38,15 +41,20 @@
         <div class="comment--footer">
           <RouterLink
             class="comment--btn--button"
+            title="Modifier le commentaire"
             v-if="
               $store.state.user.user.userId == comment.userId ||
                 $store.state.user.user.roleId == 1
             "
             :to="`/comment/${comment.commentId}/edit`"
-            ><b-icon icon="pencil-square"></b-icon
+            ><b-icon
+              aria-label="Modifier le commentaire"
+              icon="pencil-square"
+            ></b-icon
           ></RouterLink>
           <button
             type="submit"
+            title="Supprimer le commentaire"
             class="comment--btn--button"
             v-if="
               $store.state.user.user.userId == comment.userId ||
@@ -54,7 +62,7 @@
             "
             @click="deleteComment(comment.commentId)"
           >
-            <b-icon icon="trash"></b-icon>
+            <b-icon aria-label="Supprimer le commentaire" icon="trash"></b-icon>
           </button>
           <hr />
         </div>
@@ -110,7 +118,7 @@ export default {
           //console.log("Commentaires : ", response.data);
           this.allComments = response.data;
           this.commentsNumber = this.allComments.length;
-          console.log("Le nombre : " + this.commentsNumber)
+          console.log("Le nombre : " + this.commentsNumber);
           this.$emit("commentsNumber", this.commentsNumber);
         })
         .catch((error) => {
@@ -118,7 +126,6 @@ export default {
         });
     },
     deleteComment(commentId) {
-      let errorString = [];
       axios
         .delete(this.$store.state.apiUrl + "comments/" + commentId, {
           headers: { Authorization: "Bearer " + localStorage.token },
@@ -131,12 +138,11 @@ export default {
           this.loadComments();
         })
         .catch((error) => {
-          let errorMessage = error.toString();
-          errorString.push(errorMessage);
+          let errorMessage = error.response.data.error;
           console.log(errorMessage);
-          this.formError = errorString.toString();
-          console.log(this.formError);
-          this.hasError = true;
+          this.$toast.error(errorMessage, {
+            timeout: 2000,
+          });
         });
     },
   },

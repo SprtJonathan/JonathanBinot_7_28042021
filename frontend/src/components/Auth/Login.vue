@@ -20,7 +20,7 @@
         <input
           type="password"
           class="form-control"
-          id="password"
+          id="login-password"
           autocomplete="current-password"
           v-model="userCredentials.password"
           placeholder="Mot de passe"
@@ -42,29 +42,34 @@ export default {
   data() {
     return {
       userCredentials: {
+        // Objet qui sera envoyé à l'API pour la connexion
         credentials: null,
         password: null,
       },
     };
   },
-  components: {},
   methods: {
     login() {
+      // Fonction de login
       if (
         this.userCredentials.credentials !== null ||
         this.userCredentials.password !== null
       ) {
+        // Si les champs de connexion ne sont pas vides, on envoie les informations
         axios
           .post(this.$store.state.apiUrl + "auth/login", this.userCredentials)
           .then((response) => {
+            // Si la requête aboutit et donne des résultats, on stocke le token et l'objet user dans le localStorage afin de permettre une authentification rapide de l'utilisateur
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("user", JSON.stringify(response.data.user));
             console.log(localStorage.getItem("token"));
-            location.replace(location.origin);
+            location.replace(location.origin); // Une fois connecté, on rafraîchit la page.
           })
           .catch((error) => {
-            let errorMessage = error.response.data.error;
-            console.log("erreur: " + error + " test " + error.response.data.error);
+            let errorMessage = error.response.data.error; // Si une erreur se produit, on la retourne
+            console.log(
+              "erreur: " + error + " test " + error.response.data.error
+            );
             if (errorMessage == undefined) {
               this.$toast.error(
                 "Une erreur s'est produite, veuillez réessayer ultérieurement",

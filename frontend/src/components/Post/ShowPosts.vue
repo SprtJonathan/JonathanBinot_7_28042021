@@ -17,15 +17,17 @@
         <section class="footer-section">
           <RouterLink
             class="footer-section--btn btn"
+            title="Modifier le post"
             v-if="
               $store.state.user.user.userId == post.userId ||
                 $store.state.user.user.roleId == 1
             "
             :to="`/post/${post.postId}/edit`"
-            ><b-icon icon="pencil-square"></b-icon
+            ><b-icon aria-label="Modifier le post" icon="pencil-square"></b-icon
           ></RouterLink>
           <button
             type="submit"
+            title="Supprimer le post"
             class="footer-section--btn btn "
             v-if="
               $store.state.user.user.userId == post.userId ||
@@ -33,7 +35,7 @@
             "
             @click="deletePost(post.postId)"
           >
-            <b-icon icon="trash"></b-icon>
+            <b-icon aria-label="Supprimer le post" icon="trash"></b-icon>
           </button>
           <div class="post--info">
             <hr />
@@ -44,15 +46,18 @@
                 <span v-show="post.roleId != 1" class="regular">{{
                   post.username
                 }}</span>
+                <!-- Affichage de l'auteur du post en couleur normale -->
                 <span v-show="post.roleId == 1" class="admin">{{
                   post.username
                 }}</span>
+                <!-- Affichage de l'auteur du post dans un code couleur admin afin de le différencier des utilisateurs réguliers -->
               </RouterLink>
               le <em>{{ post.creationDate | formatDate }}</em> <br />
             </span>
             <span v-if="post.creationDate != post.modificationDate">
               Dernière modification le
               <em>{{ post.modificationDate | formatDate }}</em>
+              <!-- Affichage de la date de dernière modification si le commentaire a été modifié -->
             </span>
           </div>
           <hr />
@@ -109,7 +114,7 @@ export default {
         })
         .then((response) => {
           console.log("publication", response.data);
-          this.allPosts = response.data;
+          this.allPosts = response.data; // Récupération des posts
         })
         .catch((error) => {
           console.log(error);
@@ -135,15 +140,6 @@ export default {
             timeout: 2000,
           });
         });
-    },
-    forceRerender() {
-      // remove the my-component component from the DOM
-      this.renderComponent = false;
-
-      this.$nextTick(() => {
-        // add my-component component in DOM
-        this.renderComponent = true;
-      });
     },
   },
 };

@@ -3,7 +3,7 @@
     <Auth v-show="!isUserConnected" />
     <CreatePost v-show="isUserConnected" />
     <hr />
-    <ShowPosts v-on:test="this.$forceUpdate();" v-show="isUserConnected" />
+    <ShowPosts v-show="isUserConnected" />
   </div>
 </template>
 
@@ -15,7 +15,7 @@ import ShowPosts from "@/components/Post/ShowPosts.vue";
 export default {
   name: "Home",
   computed: {
-    isUserConnected() {
+    isUserConnected() { // On vérifie si l'uilisateur est connecté
       return this.$store.getters["user/isUserConnected"];
     },
   },

@@ -4,27 +4,27 @@ const helper = require("../helpers/backend.js") // Helper permettant de ne pas r
 const errorCode = "500"
 const errorMessage = "Une erreur s'est produite, veuillez réessayer"
 
-exports.getAllPosts = (req, res, _next) => {
+exports.getAllPosts = (req, res, _next) => { // Récupération de tous les posts présents dans la BDD
     let sql = `SELECT posts.postId, posts.userId, posts.title, posts.content, posts.creationDate, posts.modificationDate, users.username, users.roleId FROM posts INNER JOIN users ON posts.userId = users.userId ORDER BY creationDate DESC`
 
     helper.data.sqlRequest(sql, res, errorCode, errorMessage)
 }
 
-exports.getOnePost = (req, res, next) => {
+exports.getOnePost = (req, res, next) => { // Récupération d'un post en particulier grâce à son ID et récupération de l'ID de l'auteur
     let sql = `SELECT * FROM posts INNER JOIN users ON posts.userId = users.userId WHERE postId=?; `;
     let id = req.params.id;
 
     helper.data.sqlRequestWithParameters(sql, res, id, errorCode, errorMessage)
 }
 
-exports.getPostsFromUser = (req, res, next) => {
+exports.getPostsFromUser = (req, res, next) => { // Récupération de tous les posts d'un utilisateur présents dans la BDD
     let sql = `SELECT * FROM posts INNER JOIN users ON posts.userId = users.userId WHERE users.userId=? ORDER BY creationDate DESC`;
     let id = req.params.id;
 
     helper.data.sqlRequestWithParameters(sql, res, id, errorCode, errorMessage)
 }
 
-exports.createPost = (req, res, next) => {
+exports.createPost = (req, res, next) => { // Création d'un post en envoyant les informations requises à la BDD comme le titre, le contenu et l'auteur
     let title = req.body.title;
     let content = req.body.content;
     let userId = req.body.userId;
@@ -39,7 +39,7 @@ exports.createPost = (req, res, next) => {
     });
 }
 
-exports.modifyPost = (req, res, next) => {
+exports.modifyPost = (req, res, next) => { // Modification d'un post en le séléctionnant par son ID
     let postId = req.params.id;
     let title = req.body.title;
     let content = req.body.content;
@@ -49,7 +49,7 @@ exports.modifyPost = (req, res, next) => {
 }
 
 
-exports.deletePost = (req, res, next) => {
+exports.deletePost = (req, res, next) => { // Suppression d'un post
     let postId = req.params.id;
     let sql = `DELETE FROM posts WHERE postId= ?`;
 

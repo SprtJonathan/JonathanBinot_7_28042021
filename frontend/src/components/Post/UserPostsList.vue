@@ -59,7 +59,7 @@
             <hr />
           </section>
           <section class="comment--section shadow-sm">
-            <CommentPost :post="post" :allPosts="allPosts"/>
+            <CommentPost :post="post" :allPosts="allPosts" />
           </section>
         </div>
       </div>
@@ -93,7 +93,12 @@ export default {
   },
   created() {
     axios
-      .get(this.$store.state.apiUrl + "auth/users/visitor/" + this.routeUserId)
+      .get(
+        this.$store.state.apiUrl + "auth/users/visitor/" + this.routeUserId, // Récupération des informations utilisateurs via l'ID passé dans l'URL de la page
+        {
+          headers: { Authorization: "Bearer " + localStorage.token },
+        }
+      )
       .then((response) => {
         this.user = response.data;
         console.log(this.user);
@@ -109,6 +114,7 @@ export default {
     loadPosts() {
       axios
         .get(this.$store.state.apiUrl + "posts/from/" + this.routeUserId, {
+          // Chargement des informations des posts en utilisant l'ID de leur auteur passé dans l'URL
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -124,24 +130,23 @@ export default {
         });
     },
     deletePost(postId) {
-      let errorString = [];
-      console.log("id du post : " + postId);
       axios
         .delete(this.$store.state.apiUrl + "posts/" + postId, {
           headers: { Authorization: "Bearer " + localStorage.token },
         })
         .then((result) => {
           console.log(result);
-          alert("Post supprimé");
-          location.replace(location.origin);
+          this.$toast("Post supprimé", {
+            timeout: 1000,
+          });
+          this.loadPosts();
         })
         .catch((error) => {
-          let errorMessage = error.toString();
-          errorString.push(errorMessage);
+          let errorMessage = error.response.data.error;
           console.log(errorMessage);
-          this.formError = errorString.toString();
-          console.log(this.formError);
-          this.hasError = true;
+          this.$toast.error(errorMessage, {
+            timeout: 2000,
+          });
         });
     },
   },

@@ -7,12 +7,12 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/', // Route de la page d'accueil
     name: 'Home',
     component: Home
   },
   {
-    path: '/user/:userId',
+    path: '/user/:userId', // Route de la page de profil
     name: 'user',
     component: () => import('../views/Profile.vue'),
     props: true,
@@ -21,7 +21,7 @@ const routes = [
     }
   },
   {
-    path: '/user/:userId/posts/',
+    path: '/user/:userId/posts/', // Route de la page comprenant toutes les publications d'un utilisateur
     name: 'UserPostsList',
     component: () => import('../components/Post/UserPostsList.vue'),
     props: true,
@@ -30,7 +30,7 @@ const routes = [
     }
   },
   {
-    path: '/users',
+    path: '/users', // Route de la page de la liste des utilisateurs (accessible uniquement pour les admins)
     name: 'UsersList',
     component: () => import('../components/User/UsersList.vue'),
     props: true,
@@ -39,7 +39,7 @@ const routes = [
     }
   },
   {
-    path: '/post/:postId/edit',
+    path: '/post/:postId/edit', // Route de la page de modification de posts
     name: 'EditPost',
     component: () => import('../components/Post/EditPost.vue'),
     props: true,
@@ -48,7 +48,7 @@ const routes = [
     }
   },
   {
-    path: '/comment/:commentId/edit',
+    path: '/comment/:commentId/edit', // Route de la page de modification de commentaires
     name: 'EditComment',
     component: () => import('../components/Comment/EditComment.vue'),
     props: true,

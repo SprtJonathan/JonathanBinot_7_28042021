@@ -3,27 +3,34 @@
     <div class="profile-card card">
       <h2>Gestion du compte</h2>
       <button
-        class="btn btn-danger button delete-button"
+        class="btn btn-danger button delete--button"
         @click="showConfirmation = !showConfirmation"
         v-show="showConfirmation == false"
       >
-        <span>
-          <b-icon-exclamation-triangle-fill></b-icon-exclamation-triangle-fill>
-          Supprimer le compte {{ userPage.username }}
-          <b-icon-exclamation-triangle-fill></b-icon-exclamation-triangle-fill>
-        </span>
+        <div class="delete--pre-button--div">
+          <div>
+            <b-icon-exclamation-triangle-fill></b-icon-exclamation-triangle-fill>
+          </div>
+          <div class="delete--pre-button--text">
+            Supprimer le compte <i>{{ userPage.username }}</i>
+          </div>
+          <div>
+            <b-icon-exclamation-triangle-fill></b-icon-exclamation-triangle-fill>
+          </div>
+        </div>
       </button>
       <div
         class="card confirmation"
         title="Supression du compte"
         v-show="showConfirmation == true"
       >
+        <!-- Message de confirmation pour la suppression du compte -->
         <p id="confirmation-text">
           En cliquant sur "Oui, supprimer", le compte et toutes les informations
           relatives au compte seront supprimées. Souhaitez-vous vraiment
           continuer?
         </p>
-        <div class="delete-button-div">
+        <div class="delete--button-div">
           <button
             type="submit"
             class="btn btn-danger button"
@@ -56,9 +63,10 @@ export default {
       showConfirmation: false,
     };
   },
-  props: ["user", "userPage"],
+  props: ["user", "userPage"], // Informations de l'utilisateur connecté et de l'utilisateur associé à la page de profil
   methods: {
     deleteAccount() {
+      // Suppression du compte utilisateur associé à la page
       console.log("User : " + this.routeUserId);
       axios
         .delete(this.$store.state.apiUrl + "auth/users/" + this.routeUserId, {
@@ -68,7 +76,6 @@ export default {
           console.log(response);
           if (this.userIsAdmin && !this.userIsOwner) {
             // Si l'utilisateur est admin mais pas propriétaire de la page, alors on le redirige vers la homepage du site après la suppression
-
             this.$toast.info("Utilisateur sélectionné supprimé", {
               timeout: 2000,
             });

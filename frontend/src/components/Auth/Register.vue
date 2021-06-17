@@ -16,6 +16,7 @@
         <button
           class="btn btn-secondary"
           alt="Générer un pseudonyme aléatoire"
+          title="Pseudonyme aléatoire"
           @click="readRandLine()"
         >
           <svg
@@ -23,6 +24,7 @@
             width="16"
             height="16"
             fill="currentColor"
+            aria-label="Pseudonyme aléatoire"
             class="bi bi-arrow-counterclockwise"
             viewBox="0 0 16 16"
           >
@@ -85,7 +87,7 @@
       <input
         type="password"
         class="form-control"
-        id="password"
+        id="password-confirmation"
         autocomplete="new-password"
         v-model="passwordConfirmation"
         placeholder="Confirmez le mot de passe"
@@ -127,23 +129,21 @@ export default {
     };
   },
   methods: {
-    countDownChanged(dismissCountDown) {
-      this.dismissCountDown = dismissCountDown;
-    },
-
     readRandLine() {
+      // Fonction permettant de générer un pseudo aléatoire
       let randIntAdjectives =
-        Math.floor(Math.random() * randomWords.adjectives.length) + 0;
+        Math.floor(Math.random() * randomWords.adjectives.length) + 0; // Récupération d'un adjectif aléatoire dans la liste
       let randIntNames =
-        Math.floor(Math.random() * randomWords.names.length) + 0;
-      let randIntNumber = JSON.stringify(Math.floor(Math.random() * 999) + 0);
+        Math.floor(Math.random() * randomWords.names.length) + 0; // Récupération d'un nom aléatoire dans la liste
+      let randIntNumber = JSON.stringify(Math.floor(Math.random() * 999) + 0); // Génération d'un nombre entre 0 et 999 pour augmenter les chances que le pseudo généré soit unique
       this.username =
         randomWords.adjectives[randIntAdjectives] +
         randomWords.names[randIntNames] +
-        randIntNumber;
+        randIntNumber; // On assemble les trois résultats dans la variable username
     },
 
     register() {
+      // Inscription et vérification des champs
       this.formError = "";
       let formBoolean = false;
       // Vérification des caractères via des regex
@@ -276,7 +276,6 @@ export default {
         this.$toast.error(errorString.toString(), {
           timeout: 2000,
         });
-        //this.formError = errorString.toString();
         this.hasError = true;
       } else {
         // Construction de l'objet contenant les infos utilisateur
@@ -292,12 +291,11 @@ export default {
 
         if (this.password == this.passwordConfirmation && formBoolean == true) {
           axios
-            .post(this.$store.state.apiUrl + "auth/register", newUser)
+            .post(this.$store.state.apiUrl + "auth/register", newUser) // On envoie l'objet nouvellement créé à l'API
             .then((result) => {
               console.log(result);
-              this.isHidden = true;
               this.$toast.success("Utilisateur créé", {
-                timeout: 2000,
+                timeout: 1000,
               });
               setTimeout(function() {
                 location.reload();
@@ -309,9 +307,12 @@ export default {
               this.hasError = true;
               //this.formError = errorString.toString();
               if (!errorMessage) {
-                this.$toast.error("Une erreur s'est produite, veuillez réessayer ultérieurement", {
-                  timeout: 2000,
-                });
+                this.$toast.error(
+                  "Une erreur s'est produite, veuillez réessayer ultérieurement",
+                  {
+                    timeout: 2000,
+                  }
+                );
               } else {
                 this.$toast.error(errorMessage, {
                   timeout: 2000,

@@ -16,7 +16,5 @@ export default {
   components: {
     UserProfile,
   },
-  methods: {},
 };
 </script>
-

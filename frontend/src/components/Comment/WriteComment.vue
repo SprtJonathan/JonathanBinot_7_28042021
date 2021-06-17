@@ -76,11 +76,11 @@ export default {
           .then((result) => {
             console.log(result);
             this.$toast.success("Commentaire posté", {
-              timeout: 2000,
+              timeout: 1000,
             });
             setTimeout(function() {
               location.reload();
-            }, 2000);
+            }, 1000);
           })
           .catch((error) => {
             let errorMessage = error.response.data.error;
@@ -94,11 +94,11 @@ export default {
       }
     },
 
-    onMaxChar(quill) {
-      const limit = 10208;
+    onMaxChar(quill) { // Fonction permettant de limiter le nombre maximal de caractères pour un commentaire
+      const limit = 4096;
       console.log(quill.text.length);
       if (quill.text.length > limit) {
-        this.comment.comment = this.comment.comment.substring(0, limit + 32);
+        this.comment.comment = this.comment.comment.substring(0, limit);
         console.log(this.comment.comment);
       }
       return quill;

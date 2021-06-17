@@ -71,7 +71,7 @@
           this.$store.state.user.user.roleId != 1
       "
     >
-      <div class="card container">
+      <div class="card container"> <!-- Si l'utilisateur connecté n'est pas admin ou l'auteur du commentaire, alors on renvoie une erreur et on n'affiche pas le commentaire -->
         Erreur, vous n'êtes pas l'auteur du commentaire, veuillez revenir à
         l'accueil
         <RouterLink to="/">Revenir à l'accueil</RouterLink>
@@ -97,10 +97,11 @@ export default {
         },
         theme: "bubble",
       },
-      routeCommentId: this.$route.params.commentId,
+      routeCommentId: this.$route.params.commentId, // Id du commentaire, récupéré dans l'URL
     };
   },
   created() {
+    // Récupération des infos utilisateur
     let userData = this.$store.state.user;
     console.log(userData.user.userId);
     axios
@@ -113,9 +114,10 @@ export default {
       })
       .catch((err) => console.log(err));
   },
-  props: ["post"],
+  props: ["post"], // Le post lié au commentaire est passé en prop afin de récupérer ses informations
   methods: {
     loadComment() {
+      // Chargement du commentaire
       axios
         .get(
           this.$store.state.apiUrl + "comments/comment/" + this.routeCommentId,
@@ -135,10 +137,9 @@ export default {
     },
     sumbitComment() {
       let comment = {
+        // Le nouvel objet comment est envoyé à l'API.
         comment: this.comment.comment,
       };
-      console.log("edit du com " + comment);
-      let errorString = [];
       if (!this.comment.comment) {
         console.log("Erreur commentaire vide");
         this.$toast.error("Erreur : Commentaire vide", {
@@ -156,23 +157,20 @@ export default {
           .then((result) => {
             console.log(result);
             this.$toast.warning("Commentaire modifié", {
-              timeout: 2000,
-            });
+              timeout: 1000,
+            }); // Si tout fonctionne, alors on envoie un message de succès et on retourne à l'accueil
             setTimeout(function() {
               location.replace(location.origin);
-            }, 2000);
+            }, 1000);
           })
           .catch((error) => {
             let errorMessage = error.toString();
-            errorString.push(errorMessage);
-            console.log(errorMessage);
-            this.formError = errorString.toString();
-            console.log(this.formError);
+            console.log(errorMessage); // On renvoie une erreur sinon
             this.hasError = true;
           });
       }
     },
-    deleteComment() {
+    deleteComment() { // Suppression du commentaire en utilisant son ID
       axios
         .delete(this.$store.state.apiUrl + "comments/" + this.routeCommentId, {
           headers: { Authorization: "Bearer " + localStorage.token },
@@ -196,9 +194,10 @@ export default {
     },
 
     onMaxChar(quill) {
-      const limit = 10208;
+      const limit = 4096;
+      console.log(quill.text.length);
       if (quill.text.length > limit) {
-        this.comment.comment = this.comment.comment.substring(0, limit + 32);
+        this.comment.comment = this.comment.comment.substring(0, limit);
         console.log(this.comment.comment);
       }
       return quill;

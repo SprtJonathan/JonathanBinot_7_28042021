@@ -25,7 +25,9 @@
         <p class="current--lname--text  text-center">{{ user.lname }}</p>
       </div>
       <article class="account-info card">
-        <p class="text-center">Compte créé le : {{ user.createdOn | formatDate }}</p>
+        <p class="text-center">
+          Compte créé le : {{ user.createdOn | formatDate }}
+        </p>
         <p class="text-center" v-show="wasAccountUpdated">
           Dernière modification le : {{ user.lastUpdated | formatDate }}
         </p>
@@ -55,10 +57,16 @@ export default {
   },
   async created() {
     axios
-      .get(this.$store.state.apiUrl + "auth/users/visitor/" + this.routeUserId)
+      .get(
+        this.$store.state.apiUrl + "auth/users/visitor/" + this.routeUserId,
+        {
+          headers: { Authorization: "Bearer " + localStorage.token },
+        }
+      )
       .then((response) => {
         this.user = response.data;
         if (this.user.createdOn == this.user.lastUpdated) {
+          // On vérifie si le profil utilisateur a déjà été modifié
           this.wasAccountUpdated = false;
         } else {
           this.wasAccountUpdated = true;
@@ -69,7 +77,6 @@ export default {
         console.log(this.routeUserId);
       });
   },
-  methods: {},
 };
 </script>
 

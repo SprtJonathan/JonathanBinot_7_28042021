@@ -55,10 +55,6 @@ export default {
     };
   },
   created() {
-    /*let sentData = {
-      id: this.routeUserId,
-    };*/
-    //console.log(sentData);
     let userData = JSON.parse(localStorage.getItem("user"));
     console.log(userData.userId);
     axios
@@ -70,14 +66,6 @@ export default {
 
         if (this.routeUserId == this.user.userId) {
           this.isProfileFromUser = true;
-          console.log(
-            this.isProfileFromUser +
-              " est la réponse quant à est-ce que l'ID est le même et " +
-              this.routeUserId +
-              " est l'id du lien et " +
-              this.user.userId +
-              " est l'id utilisateur"
-          );
         } else {
           this.isProfileFromUser = false;
         }
@@ -86,7 +74,12 @@ export default {
       .catch((err) => console.log(err));
 
     axios
-      .get(this.$store.state.apiUrl + "auth/users/visitor/" + this.routeUserId)
+      .get(
+        this.$store.state.apiUrl + "auth/users/visitor/" + this.routeUserId,
+        {
+          headers: { Authorization: "Bearer " + localStorage.token },
+        }
+      )
       .then((response) => {
         this.userPage = response.data;
       })

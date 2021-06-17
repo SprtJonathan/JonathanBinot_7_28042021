@@ -115,6 +115,7 @@ export default {
       }
     },
     onMaxChar(quill) {
+      // Fonction permettant de limiter le nombre maximal de caractères pour un poste
       const limit = 10208;
       console.log(quill.text.length);
       console.log(this.post.content);
@@ -125,12 +126,14 @@ export default {
       return quill;
     },
     detectRedditLink(post) {
+      // Fonction permettant de détecter si un lien reddit est entré dans le post
       console.log("le post " + post);
       let parser = new DOMParser();
       let element = parser.parseFromString(post, "text/html");
       console.log("post " + element);
 
       if (post.includes('<a href="')) {
+        // Si le texte inclut un lien, alors on récupère son HREF et on appelle la fonction embedReddit()
         let isLink = element.getElementsByTagName("a");
         console.log(isLink + " si y a lien");
         let href = isLink[0].getAttribute("href");
@@ -141,26 +144,24 @@ export default {
       }
     },
     embedReddit(param) {
+      // Fonction permettant de transformer un lien reddit en un bloc iframe permettant ainsi d'afficher l'article sous forme de page web intégrée
       event.preventDefault();
-      let url = param; //window.prompt("Insérer l'URL d'un post reddit");
+      let url = param; // Le paramètre est le lien récupéré grâce à l'attribut href
       console.log("Le param URL est " + url);
       let redditSubString = "https://www.reddit.com/";
       let redditPostSubString = "/comments/";
       console.log(url.includes(redditSubString));
       if (url.includes(redditSubString) && url.includes(redditPostSubString)) {
+        // Si le lien inclut la chaîne de caractères redditSubString, alors on la remplace par le lien permettant d'intégrer le post
         url = url.replace(redditSubString, "https://www.redditmedia.com/");
-        url = url + "?ref_source=embed&amp;ref=share&amp;embed=true";
+        url = url + "?ref_source=embed&amp;ref=share&amp;embed=true"; // On ajoute à la fin du lien les options d'intégration
         console.log(url);
         this.link =
-          `<div class="embedded-post">
-          <iframe class="ql-video" id="reddit-embed" src=` +
+          `<iframe title="Post reddit partagé" class="ql-reddit" id="reddit-embed" src="` +
           url +
-          ` sandbox="allow-scripts allow-same-origin allow-popups" scrolling="yes" frameborder="0" width="100%" height="528"></iframe></div>`;
+          `" sandbox="allow-scripts allow-same-origin allow-popups" scrolling="yes" frameborder="0" width="100%" height="528"></iframe>`; // On transforme le lien en code iframe
       } else {
-        url = "";
-        /*this.$toast.error("Erreur: le lien entré n'est pas un lien reddit", {
-          timeout: 2000,
-        });*/
+        url = param; // Sinon on assigne une valeur nulle à URL
       }
       console.log(this.link);
     },

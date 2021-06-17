@@ -46,10 +46,10 @@ app.use("/images", express.static(path.join(__dirname, "images"))); // Permet de
 
 const postRoutes = require("./routes/post"); // Routes utilisées pour les sauces
 const userRoutes = require("./routes/user"); // Routes utilisées pour les utilisateurs;
-const commentRoutes = require('./routes/comment');
+const commentRoutes = require('./routes/comment'); // Routes utilisées pour les commentaires;
 
 app.use("/api/posts", postRoutes);
-app.use("/api/auth", userRoutes); // Utilisation du limiteur de requêtes par IP pour la route d'authentification
-app.use("/api/comments", commentRoutes); // Utilisation du limiteur de requêtes par IP pour la route d'authentification
+app.use("/api/auth", userRoutes); 
+app.use("/api/comments", commentRoutes);
 
 module.exports = app; // Exportation afin d'importer l'application dans le server.js

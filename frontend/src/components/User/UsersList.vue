@@ -1,7 +1,16 @@
 <template>
   <div>
-    <h2 class="">Utilisateur inscrits</h2>
     <div class="container user--container">
+      <div class="user container card">
+        <button
+          aria-label="Retour"
+          class="back-button btn shadow-sm"
+          @click="$router.go(-1)"
+        >
+          <b-icon class="back-button--icon" icon="arrow-left"></b-icon>
+        </button>
+        <h2 class="">Utilisateur inscrits</h2>
+      </div>
       <div
         class="user container card"
         v-for="user in allUsers"
@@ -44,6 +53,7 @@ export default {
   created() {
     axios
       .get(this.$store.state.apiUrl + "auth/users", {
+        // Récupération de la liste des utilisateurss
         headers: { Authorization: "Bearer " + localStorage.token },
       })
       .then((response) => {

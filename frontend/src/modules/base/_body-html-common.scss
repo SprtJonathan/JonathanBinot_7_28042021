@@ -4,18 +4,20 @@
   --background-color3: white;
   --background-color4: whitesmoke;
   --background-color-text-content: white;
+  --background-focus: rgb(228, 242, 255);
   --text-color: #122442;
   --text-color-content: black;
   --marked-color: $text-color;
   --background-image: linear-gradient(-127deg, #333333, #080f1b);
-  --color-links: #0099ff;
+  --color-links: #005aff;
 }
 
 [data-theme="darkMode"] {
-  --background-color: rgb(10, 10, 10);
+  --background-color: #1e1e1e;
   --background-color2: rgb(54, 54, 54);
   --background-color3: rgb(34, 34, 34);
   --background-color-text-content: whitesmoke;
+  --background-focus: rgb(71, 108, 141);
   --text-color: #f2f2f2;
   --text-color-content: #122442;
   --marked-color: #f2f2f2;
@@ -114,9 +116,22 @@ a.link {
   text-decoration: none;
 }
 
+a {
+  &:focus {
+    background-color: var(--background-focus);
+    color: black;
+    border: black 1px dashed;
+  }
+}
+
 button {
   &:hover {
     cursor: pointer;
+  }
+  &:focus {
+    background-color: var(--background-focus);
+    color: black;
+    border: black 1px dashed;
   }
 }
 

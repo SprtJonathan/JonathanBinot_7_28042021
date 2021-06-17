@@ -3,7 +3,7 @@ const db = require("../config/config"); // Importation de la configuration de la
 
 let backendHelper = {
 
-    findUser: function (req, res, next, id) {
+    findUser: function (req, res, next, id) { // Recherche d'un utilisateur
         let sql = `SELECT * FROM users WHERE userId = ?`;
         sql = mysql.format(sql, [id])
         //console.log("Token : " + token);
@@ -16,7 +16,7 @@ let backendHelper = {
         })
     },
 
-    sqlRequest: function (sql, res, errorCode, errorMessage) {
+    sqlRequest: function (sql, res, errorCode, errorMessage) { // Requête sql commune 
         db.query(sql, (error, result) => {
             if (error) {
                 console.log("erreur" + error)
@@ -28,7 +28,7 @@ let backendHelper = {
         })
     },
 
-    sqlRequestWithParameters: function (sql, res, param, errorCode, errorMessage) {
+    sqlRequestWithParameters: function (sql, res, param, errorCode, errorMessage) { // Requête sql commune incluant un paramètre
         db.query(sql, param, (error, result) => {
             if (error) {
                 console.log("erreur" + error)

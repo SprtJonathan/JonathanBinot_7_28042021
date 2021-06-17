@@ -21,14 +21,15 @@
 }
 
 iframe {
-    width: 100%;
-    overflow-x: visible;
+  width: 100%;
+  overflow-x: visible;
   html {
     width: 100%;
     height: 100%;
   }
 }
 
+.ql-reddit,
 .ql-video {
   width: 100%;
 }
@@ -54,6 +55,7 @@ iframe {
     margin-top: 1rem;
     margin-bottom: 1rem;
     text-align: left;
+    z-index: 100;
   }
   &--editor {
     padding: 1rem;
@@ -107,7 +109,9 @@ iframe {
   }
 }
 .admin {
-  color: $secondary-color;
+  color: black;
+  background-color: #EABA14 ;
+  padding: 0px 0.25rem 0px 0.25rem;
   text-decoration: none;
 }
 
@@ -196,8 +200,9 @@ iframe {
       flex-direction: row;
     }
   }
+  .ql-reddit,
   .ql-video {
     width: 480px;
-    height: 270px;
+    height: 360px;
   }
 }
