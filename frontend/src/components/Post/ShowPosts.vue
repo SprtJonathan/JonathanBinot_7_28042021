@@ -109,7 +109,7 @@ export default {
       axios
         .get(this.$store.state.apiUrl + "posts/", {
           headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
+            Authorization: "Bearer " + localStorage.token,
           },
         })
         .then((response) => {

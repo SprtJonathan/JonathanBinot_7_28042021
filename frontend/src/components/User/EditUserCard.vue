@@ -147,19 +147,19 @@ export default {
       .catch((err) => console.log(err));
   },
   methods: {
-    addImage() {
+    addImage() { // Fonction permettant d'ajouter une image de profil
       const file = this.$refs.file.files[0];
       this.file = file;
-      this.modifyPicture();
+      this.modifyPicture(); 
     },
-    modifyPicture() {
-      if (this.file.size > this.maxSize) {
-        alert(
+    modifyPicture() { // Modification de la photo
+      if (this.file.size > this.maxSize) { // Vérification de la taille du fichier
+        alert( // On revoie une erreur si le fichier est trop lourd
           "Attention : fichier trop lourd, veuillez changer votre sélection." +
             " Taille du fichier: " +
             this.file.size
         );
-      } else {
+      } else { // Sinon on l'envoie à l'API.
         const formData = new FormData();
         formData.append("image", this.file);
         console.log(formData);
