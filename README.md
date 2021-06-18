@@ -18,7 +18,7 @@ Afin de pouvoir faire fonctionner l'application, il vous faudra :
 - Afin de pouvoir vous connecter à la base de données, il vous faudra copier le fichier `P7_02_.env` de l'archive contenant les livrables dans le dossier backend et le renommer en `.env`.
 
 - Pour faciliter la création de la base de données, un script est fourni dans le dossier principal du repository : `groupomania_script.sql`
-- Afin de pouvoir l'utiliser, il faudra créer une base de données nommée `groupomania`
+- Afin de pouvoir l'utiliser, il faudra créer une base de données nommée `groupomania`, avec comme moteur de stockage `INNODB` et comme encodage `utf8`
 - Créer un utilisateur nommé `tableEditor`, lui assigner le mot de passe disponible dans fichier .env pour la variable `DB_EDITOR_PASS` et lui octroyer tous les droits sur la base de données. Sinon, il faudra remplacer les identifiants en modifiant les variables `DB_EDITOR_NAME` et `DB_EDITOR_PASS`
 - Une fois la base de données et l'utilisateur créés, importer le script `groupomania_script.sql` dans la base de données avec la commande `mysql -u tableEditor -p groupomania < groupomania_script.sql` ou en utilisant un outil de gestion tel que phpMyAdmin
 - Une fois le script correctement importé, le site devrait être fonctionnel
