@@ -94,7 +94,7 @@ export default {
   created() {
     axios
       .get(
-        this.$store.state.apiUrl + "auth/users/visitor/" + this.routeUserId, // Récupération des informations utilisateurs via l'ID passé dans l'URL de la page
+        this.$store.state.apiUrl + "auth/users/" + this.routeUserId, // Récupération des informations utilisateurs via l'ID passé dans l'URL de la page
         {
           headers: { Authorization: "Bearer " + localStorage.token },
         }

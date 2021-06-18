@@ -21,7 +21,6 @@ router.put("/users/profilepicture/:id", auth, multer, userCtrl.editProfilePictur
 router.put("/users/admin/:id", auth, userCtrl.editAccountAdmin); // Route pour l'édition d'un utilisateur par l'admin
 router.delete("/users/:id", auth, userCtrl.deleteAccount); // Route pour la suppression d'un utilisateur
 router.get('/users/:id', auth, userCtrl.getOneUser); // Route pour la récupération d'un utilisateur en particulier
-router.get('/users/visitor/:id', auth, userCtrl.getOneUserNotConnected); // Route pour la récupération d'un utilisateur en particulier par un autre utilisateur
 router.get('/users', auth, userCtrl.getAllUsers); // Route pour la récupération de tous les utilisateurs
 
 module.exports = router;

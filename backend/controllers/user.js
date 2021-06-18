@@ -98,17 +98,8 @@ exports.login = (req, res, next) => { // Middleware pour la connexion
 };
 
 exports.getOneUser = (req, res, next) => { // Middleware permettant la récupération des infos d'un utilisateur d'après son ID
-    const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
-    const userId = decodedToken.userId;
-    console.log("Token : " + token)
+    const userId = req.params.id;
     helper.data.findUser(req, res, next, userId)
-};
-
-exports.getOneUserNotConnected = (req, res, next) => { // Middleware permettant la récupération des infos d'un utilisateur d'après son ID sans avoir besoin de s'authentifier
-    const urlUserId = req.params.id;
-    console.log(urlUserId)
-    helper.data.findUser(req, res, next, urlUserId)
 };
 
 exports.getAllUsers = (req, res, next) => { // Récupération de tous les utilisateurs stockés dans la BDD

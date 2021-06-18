@@ -75,7 +75,7 @@ export default {
 
     axios
       .get(
-        this.$store.state.apiUrl + "auth/users/visitor/" + this.routeUserId,
+        this.$store.state.apiUrl + "auth/users/" + this.routeUserId,
         {
           headers: { Authorization: "Bearer " + localStorage.token },
         }
