@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `comments` (
   UNIQUE KEY `commentId_UNIQUE` (`commentId`),
   KEY `fk_commnents_userId_idx` (`userId`),
   KEY `fk_comments_postId_idx` (`postId`)
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `comments`
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `posts` (
   PRIMARY KEY (`postId`),
   UNIQUE KEY `postid_UNIQUE` (`postId`),
   KEY `userId_idx` (`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=220 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=220 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `posts`
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `userId_UNIQUE` (`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=224 DEFAULT CHARSET=utf8mb3 COMMENT='Table contenant les informations des utilisateurs';
+) ENGINE=InnoDB AUTO_INCREMENT=224 DEFAULT CHARSET=utf8 COMMENT='Table contenant les informations des utilisateurs';
 
 --
 -- Déchargement des données de la table `users`
