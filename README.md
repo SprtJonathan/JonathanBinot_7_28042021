@@ -20,7 +20,7 @@ Afin de pouvoir faire fonctionner l'application, il vous faudra :
 - Pour faciliter la création de la base de données, un script est fourni dans le dossier principal du repository : `groupomania_script.sql`
 - Afin de pouvoir l'utiliser, il faudra créer une base de données nommée `groupomania`, avec comme moteur de stockage `INNODB` et comme encodage `utf8mb4` avec interclassement `utf8mb4_unicode_ci`
 - Créer un utilisateur nommé `tableEditor`, lui assigner le mot de passe disponible dans fichier .env pour la variable `DB_EDITOR_PASS` et lui octroyer tous les droits sur la base de données. Sinon, il faudra remplacer les identifiants en modifiant les variables `DB_EDITOR_NAME` et `DB_EDITOR_PASS` dans le `.env`
-- Une fois la base de données et l'utilisateur créés, importer le script `groupomania_script.sql` dans la base de données avec la commande `mysql -u tableEditor -p groupomania < groupomania_script.sql` ou en utilisant un outil de gestion tel que phpMyAdmin
+- Une fois la base de données et l'utilisateur créés, importer le script `groupomania_script.sql` dans la base de données avec la commande `mysql -u tableEditor -p groupomania < groupomania_script.sql` ou `SOURCE` ou en utilisant un outil de gestion tel que phpMyAdmin
 - Une fois le script correctement importé, le site devrait être fonctionnel
 
 ## Consultation du site :
